@@ -1,0 +1,194 @@
+/*
+// Light
+button_bg_color #efeae9
+dark_bg_color #e7e5eb
+dark_fg_color #655370
+header_button_bg_color #efeae9
+osd_base #e7e5eb;
+theme_base_color #FBF8EF
+theme_bg_color #FBF8EF
+theme_fg_color #655370
+theme_text_color #655370
+theme_tooltip_bg_color #FBF8EF
+theme_selected_bg_color #655370
+theme_selected_fg_color #d3d3e7
+theme_tooltip_fg_color #655370
+theme_unfocused_selected_fg_color #d3d3e7
+
+titlebar_fg_unfocused mix(#655370,#FBF8EF,0.4);
+borders mix(#FBF8EF,#655370,0.1);
+unfocused_borders mix(#FBF8EF,mix(#FBF8EF,#655370,0.1),0.9);
+insensitive_bg_color mix(#FBF8EF,#FBF8EF,0.6);
+insensitive_fg_color mix(#655370,#FBF8EF,0.5);
+osd_insensitive_bg_color mix(#655370,rgba(231, 229, 235, 0.8),0.5);
+osd_insensitive_fg_color mix(#655370,#e7e5eb,0.6);
+theme_unfocused_fg_color mix(#655370,#FBF8EF,0.5);
+wm_title_unfocused mix(#655370,#FBF8EF,0.4);
+wm_icons_unfocused mix(#655370,#FBF8EF,0.4);
+
+// Dark
+button_bg_color #212026
+dark_bg_color #222226
+dark_fg_color #CBC1D5
+header_button_bg_color #212026
+osd_base #222226
+theme_base_color #292b2e
+theme_bg_color #292b2e
+theme_fg_color #b2b2b2
+theme_text_color #b2b2b2
+theme_tooltip_bg_color #292b2e
+theme_selected_bg_color #5d4d7a
+theme_selected_fg_color #CBC1D5
+theme_tooltip_fg_color #b2b2b2
+theme_unfocused_selected_fg_color #CBC1D5
+
+titlebar_fg_unfocused mix(#b2b2b2,#292b2e,0.4);
+borders mix(#292b2e,#b2b2b2,0.18);
+unfocused_borders mix(#292b2e,mix(#292b2e,#b2b2b2,0.18),0.9);
+insensitive_bg_color mix(#292b2e,#292b2e,0.6);
+insensitive_fg_color mix(#b2b2b2,#292b2e,0.5);
+osd_insensitive_bg_color mix(#CBC1D5,rgba(34, 34, 38, 0.8),0.5);
+osd_insensitive_fg_color mix(#CBC1D5,#222226,0.6);
+theme_unfocused_fg_color mix(#b2b2b2,#292b2e,0.5);
+wm_title_unfocused mix(#b2b2b2,#292b2e,0.4);
+wm_icons_unfocused mix(#b2b2b2,#292b2e,0.4);
+*/
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "SFNS Display Bold", "SauceCodePro Nerd Font Reular", Arial, sans-serif;
+  font-size: 16px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: transparent;
+  opacity: 0.8;
+}
+
+window#waybar:first-child > box {
+  margin-top: 8px;
+  margin-left: 21px;
+  margin-right: 21px;
+  border-radius: 290486px;
+  background-color: @dark_bg_color;
+  border-bottom: 0;
+}
+
+#custom-start, #custom-powermenu {
+  padding: 5px 21px;
+  border-radius: 290486px;
+  background-color: @theme_selected_bg_color;
+  color: @theme_unfocused_selected_fg_color;
+}
+
+#custom-start {
+  margin-right: 5px;
+  margin-left: -1px;
+}
+
+#custom-powermenu {
+  margin-right: -1px;
+  margin-left: 5px;
+}
+
+window#waybar.hidden {
+  opacity: 0.21;
+}
+
+#waybar {
+  color: @theme_fg_color;
+  background: @button_bg_color;
+}
+
+#workspaces {
+  margin: 0 2px;
+}
+
+#workspaces button {
+  margin: 3px 2px;
+  padding: 3px 5px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: @theme_fg_color;
+  background-color: @osd_insensitive_fg_color;
+  font-family: SFMono Nerd Font Mono;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#workspaces button:hover {
+  color: @theme_selected_fg_color;
+  background: @theme_selected_bg_color;
+  box-shadow: inherit;
+}
+
+#workspaces button.focused {
+  color: @theme_selected_fg_color;
+  background-color: @theme_selected_bg_color;
+}
+
+#workspaces button.urgent {
+  background-color: @error_color;
+}
+
+#mode {
+  background-color: @error_color;
+  border-bottom: 0px;
+}
+
+#battery,
+#temperature,
+#tray,
+#mode,
+#window,
+#custom-todo,
+#custom-kblayout {
+    padding:   0 4px;
+    margin:    0 4px;
+    min-width: 40px;
+    color:     @dark_fg_color;
+}
+
+#pulseaudio,
+#memory,
+#cpu,
+#custom-cpu,
+#custom-memory {
+    padding:   0 4px;
+    margin:    0 4px;
+    min-width: 40px;
+    color:     @dark_fg_color;
+    font-family: "SFNS Display Bold", "Font Awesome 5 Free", "SauceCodePro Nerd Font Reular", Arial, sans-serif;
+}
+
+#clock {
+  padding: 0 4px;
+  margin: 0 4px;
+  color: @theme_fg_color;
+  font-family: SFMono Nerd Font Mono;
+}
+
+@keyframes blink {
+  to {
+      background-color: @button_bg_color;
+      color: @theme_fg_color;
+  }
+}
+
+#battery.critical:not(.charging) {
+  background-color: @error_color;
+  color: @theme_fg_color;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+label:focus {
+  background-color: @button_bg_color;
+}
+
+#temperature.critical {
+  color: @error_color;
+}

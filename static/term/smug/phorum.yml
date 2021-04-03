@@ -1,0 +1,30 @@
+session: Phorum
+
+root: ~/Code/phorum
+
+windows:
+  - name: Frontend
+    root: frontend
+    layout: main-horizontal
+    commands: 
+      - $EDITOR src/lib.rs
+
+  - name: Backend
+    root: backend
+    layout: main-horizontal
+    commands: 
+      - $EDITOR src/main.rs
+
+  - name: Batman
+    layout: main-vertical
+    commands:
+      - firefox http://localhost:8081/ && RUSTDOCFLAGS="--enable-index-page -Zunstable-options"  cargo watch -s 'cargo doc && browser-sync start --ss target/doc -s target/doc --directory --no-open --port 8081'
+    panes:
+      - type: vertical
+        root: frontend
+        commands:
+          - firefox http://localhost:8082/ && cargo watch --clear --watch . --watch ../shared -s "wasm-pack build --target web --out-name package --dev && browser-sync start --ss . -s . --directory --no-open --port 8082"
+      - type: horizontal
+        root: backend
+        commands:
+          -  cargo watch -x run

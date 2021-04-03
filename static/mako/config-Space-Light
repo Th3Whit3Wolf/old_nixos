@@ -1,0 +1,18 @@
+font=SF Pro Display 13
+default-timeout=10000
+anchor=top-center
+background-color=#FBF8EF
+text-color=#655370
+border-color=#d3d3e780
+ignore-timeout=1
+border-size=10
+border-radius=12
+margin=25
+
+[hidden]
+format=(and %h more)
+text-color=#686868
+
+[urgency=high]
+background-color=#c00000
+border-color=#ff0000
