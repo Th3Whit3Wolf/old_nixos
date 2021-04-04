@@ -7,8 +7,21 @@ let
   configDir = config.dotfiles.configDir;
   pactl = "${config.hardware.pulseaudio.package}/bin/pactl";
   bright = "${pkgs.brightnessctl}/bin/brightnessctl";
-  lockCommand =
-    "${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
+  lockCommand = ''
+    ${pkgs.swaylock-effects}/bin/swaylock \
+      --screenshots \
+      --clock \
+      --indicator \
+      --indicator-radius 100 \
+      --indicator-thickness 7 \
+      --effect-blur 7x5 \
+      --effect-vignette 0.5:0.5 \
+      --effect-pixelate 3 \
+      --ring-color 5d4d7a \
+      --grace 2 \
+      --fade-in 0.7
+  '';
+    #"${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
 in {
   options.modules.desktop.sway = { enable = mkBoolOpt false; };
 
@@ -31,17 +44,21 @@ in {
         gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
         gnome3.seahorse
         gnome3.libsecret
+	gnome3.gnome-keyring
+	gnome3.libgnome-keyring
+	libgnome-keyring
         gnome3.gvfs
         gnome3.nautilus
         gnome3.nautilus-python
         gnome3.sushi
         breeze-qt5 # For them sweet cursors
       ]);
-
       # Make sure that the user session imports the environment
       extraSessionCommands = "systemctl --user import-environment";
     };
-
+    programs.seahorse.enable = true;
+    
+    security.pam.services.gdm.enableGnomeKeyring = true;
     user.extraGroups = [ "video" ];
 
     services = {
@@ -55,10 +72,10 @@ in {
             enable = true;
             wayland = true;
           };
-          autoLogin = {
-            enable = true;
-            user = config.user.name;
-          };
+          #autoLogin = {
+          #  enable = true;
+          #  user = config.user.name;
+          #};
         };
       };
     };

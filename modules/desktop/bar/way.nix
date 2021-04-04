@@ -5,7 +5,20 @@ with lib.my;
 let
   cfg = config.modules.desktop.bar.way;
   configDir = config.dotfiles.configDir;
-  lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
+  lockCommand = ''
+    ${pkgs.swaylock-effects}/bin/swaylock \
+      --screenshots \
+      --clock \
+      --indicator \
+      --indicator-radius 100 \
+      --indicator-thickness 7 \
+      --effect-blur 7x5 \
+      --effect-vignette 0.5:0.5 \
+      --effect-pixelate 3 \
+      --ring-color 5d4d7a \
+      --fade-in 0.6
+  '';
+  #lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
   nwgPath = "${configDir}/bar/waybar/nwg-launchers/";
   nwgbarImages =
     "/home/${config.user.name}/.config/nwg-launchers/nwgbar/images/";
