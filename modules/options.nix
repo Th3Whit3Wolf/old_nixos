@@ -52,7 +52,7 @@ in{
       home = "/home/${name}";
       group = "users";
       uid = 1000;
-      initialPassword = if (pathExists passPath) then strings.fileContents passPath else warn "${passPath} does not exist" "nixos"; 
+      initialHashedPassword = if (pathExists passPath) then strings.fileContents passPath else warn "${passPath} does not exist" "nixos"; 
     };
     systemd.services."home-manager-${config.user.name}" = {
       before = [ "display-manager.service" ];
