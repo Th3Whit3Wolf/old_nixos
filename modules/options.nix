@@ -1,7 +1,10 @@
 { inputs, config, options, lib, pkgs, home-manager, ... }:
 
 with lib;
-with lib.my; {
+with lib.my; 
+let
+    passPath = ../hosts + "/${config.networking.hostName}/secrets/${config.user.name}";
+in{
   options = with types; {
     user = mkOpt attrs { };
 
@@ -49,6 +52,7 @@ with lib.my; {
       home = "/home/${name}";
       group = "users";
       uid = 1000;
+      initialPassword = if (pathExists passPath) then strings.fileContents passPath else warn "${passPath} does not exist" "nixos"; 
     };
     systemd.services."home-manager-${config.user.name}" = {
       before = [ "display-manager.service" ];
@@ -160,6 +164,8 @@ with lib.my; {
 
     # Immutable users due to tmpfs
     users.mutableUsers = false;
+
+    # user.initialPassword = if (pathExists passPath) then builtins.fileContents passPath else "nixos"; 
 
     nix = let users = [ "root" config.user.name ];
     in {
