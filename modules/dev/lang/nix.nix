@@ -4,6 +4,7 @@ with lib;
 with lib.my;
 let 
   cfg = config.modules.dev.lang.nix;
+  configDir = config.dotfiles.configDir;
   pluginWithConfigType = types.submodule {
     options = {
       config = mkOption {
@@ -47,5 +48,6 @@ in {
     services.lorri.enable = true;
 
     home-manager.users.${config.user.name}.programs.direnv = { enable = true; };
+    home.dataFile."nvim/ftplugin/nix.vim".text = "packadd vim-nix";
   };
 }

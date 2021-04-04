@@ -3,7 +3,7 @@
 with lib;
 with lib.my;
 let
-  cfg = config.modules.editors.vscode;
+  cfg = config.modules.editor.vscode;
   lang = config.modules.dev.lang;
   vcs  = config.modules.dev.vcs;
 
@@ -79,7 +79,7 @@ let
     skellock.just
   ];
 in {
-  options.modules.editors.vscode = { enable = mkBoolOpt false; };
+  options.modules.editor.vscode = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [

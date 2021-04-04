@@ -7,6 +7,7 @@ let
   configDir = config.dotfiles.configDir;
   lang = config.modules.dev.lang;
   vcs = config.modules.dev.vcs;
+  editor = config.modules.editor;
 in {
   options.modules.shell.zsh = with types; {
     enable = mkBoolOpt false;
@@ -183,6 +184,10 @@ in {
 
         ${optionalString (lang.rust.enable) ''
           ${lang.rust.zsh_plugin_text}
+        ''}
+
+	${optionalString (editor.nvim.enable) ''
+          ${editor.nvim.zsh_plugin_text}
         ''}
 
         # Environment variables

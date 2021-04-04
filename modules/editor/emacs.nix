@@ -7,10 +7,10 @@
 with lib;
 with lib.my;
 let
-  cfg = config.modules.editors.emacs;
+  cfg = config.modules.editor.emacs;
   configDir = config.dotfiles.configDir;
 in {
-  options.modules.editors.emacs = {
+  options.modules.editor.emacs = {
     enable = mkBoolOpt false;
     doom = {
       enable = mkBoolOpt true;

@@ -124,7 +124,7 @@ in {
       extraConfig = {
         core = {
           quotepath = "off";
-          editor = "${config.modules.editors.default}";
+          editor = "${config.modules.editor.default}";
           excludesfile = "~/.config/git/ignore";
           whitespace = "trailing-space,space-before-tab";
         };
