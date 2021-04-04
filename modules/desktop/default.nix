@@ -25,6 +25,7 @@ in {
 
     user.packages = with pkgs;
       [
+        lxappearance
         neofetch
         procs
         openssl
