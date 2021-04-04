@@ -55,69 +55,8 @@ with lib.my; {
 
   # Just the bear necessities...
   environment.systemPackages = with pkgs; [
-    bind
-    cached-nix-shell
     coreutils
     git
     micro
-    wget
-    gnumake
-    compsize
-    dbus-broker
-    irqbalance
-    fzf
-
-    # Compression
-    unzip
-    unrar
-    pigz
-    pbzip2
-    commonsCompress
-    lhasa
-    lrzip
-    lzop
-    p7zip
-
-    # Codecs
-    faac
-    a52dec
-    faad2
-    flac
-    libdv
-    libmad
-    libmpeg2
-    libtheora
-    libvorbis
-    wavpack
-    xvidcore
-    libde265
-    gst_all_1.gstreamer
-    gst_all_1.gst-plugins-good
-    gst_all_1.gst-plugins-bad
-    gst_all_1.gst-plugins-ugly
-    gst_all_1.gst-plugins-base
-    gst_all_1.gst-libav
-    gst_all_1.gst-vaapi
-    lame
-
-    # Some of my favorite rust tools
-    ripgrep
-    bat
-    bat-extras.prettybat
-    bat-extras.batman
-    bat-extras.batgrep
-    bat-extras.batdiff
-    bat-extras.batwatch
-    exa
-    fd
-    tokei
-    skim
-    xsv
-    hyperfine
-    just
-    zoxide
-    hexyl
-    bingrep
-    nushell
   ];
 }
