@@ -4,13 +4,12 @@ with lib;
 with lib.my;
 let 
   cfg = config.modules.services.psd;
-  browser = config.modules.desktop.browsers;
-  firefox = if browser.firefox.enable then "firefox" else ""
+  browsers = config.modules.desktop.browsers;
 in {
   options.modules.services.psd = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    services.ps.enable = true;
+    services.psd.enable = true;
     user.packages = [ pkgs.fuse-overlayfs ];
     home.configFile."psd/psd.conf".text = ''
       #
