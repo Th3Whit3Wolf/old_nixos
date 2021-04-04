@@ -63,20 +63,24 @@ in {
       description = "How to source necessary zsh plugins";
       default = ''
         # Open lazygit commit window inside neovim
-        if [ -n "$NVIM_LISTEN_ADDRESS" ];
-            alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-            alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-            alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-            alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-        end
+        if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+          alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+          alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+          alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+          alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+        else
+          alias vim="nvim"
+          alias vi="nvim"
+          alias v="nvim"
+	fi
 
-        if [ -n "$NVIM_LISTEN_ADDRESS" ];
+        if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
             export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
             export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
         else
             export VISUAL="nvim"
             export EDITOR="nvim"
-        end
+        fi
 
 	alias suvim="sudo -E nvim"
 	alias suvi="sudo -E nvim"
