@@ -18,7 +18,6 @@ let
       --ring-color 5d4d7a \
       --fade-in 0.6
   '';
-  #lockCommand = "${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
   nwgPath = "${configDir}/bar/waybar/nwg-launchers/";
   nwgbarImages =
     "/home/${config.user.name}/.config/nwg-launchers/nwgbar/images/";
@@ -28,25 +27,21 @@ let
       exec = "${lockCommand}";
       icon = "${nwgbarImages}/lock.svg";
     }
-
     {
       name = "Suspend";
       exec = "systemctl suspend; ${lockCommand}";
       icon = "${nwgbarImages}/suspend.svg";
     }
-
     {
       name = "Logout";
       exec = "loginctl terminate-user ${config.user.name}";
       icon = "${nwgbarImages}/logout.svg";
     }
-
     {
       name = "Reboot";
       exec = "systemctl reboot";
       icon = "${nwgbarImages}/reboot.svg";
     }
-
     {
       name = "Shutdown";
       exec = "systemctl -i poweroff";
@@ -184,7 +179,10 @@ in {
       "nwg-launchers/nwggrid/style.css" = {
         source = "${nwgPath}/nwggrid/style.css";
       };
-
+      "eww" = {
+        source = "${configDir}/eww";
+	recursive = true;
+      };
     };
   };
 }
