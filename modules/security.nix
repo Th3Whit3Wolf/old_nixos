@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   ## System security tweaks
@@ -106,6 +106,8 @@
       extraConfig = ''
         # rollback results in sudo lectures after each reboot
         Defaults lecture = never
+        # For profile-sync-daemon with overlaysfs
+	user ALL=(ALL) NOPASSWD: ${pkgs.profile-sync-daemon}/bin/psd-overlay-helper
       '';
       wheelNeedsPassword = false;
     };
