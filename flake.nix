@@ -95,8 +95,17 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, naersk, rust, persway
-    , wayland, neovim-nightly, ... }:
+  outputs = inputs@{ 
+    self, 
+    nixpkgs, 
+    nixpkgs-unstable, 
+    naersk, 
+    rust,
+    persway, 
+    wayland, 
+    neovim-nightly, 
+    ... 
+  }:
     let
       inherit (lib.my) mapModules mapModulesRec mapHosts;
 
@@ -111,7 +120,7 @@
         };
       pkgs = mkPkgs nixpkgs [
         self.overlay
-        rust.overlay
+	rust.overlay
         neovim-nightly.overlay
         persway.overlay
         wayland.overlay
