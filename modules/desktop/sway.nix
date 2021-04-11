@@ -7,88 +7,100 @@ let
   configDir = config.dotfiles.configDir;
   pactl = "${config.hardware.pulseaudio.package}/bin/pactl";
   bright = "${pkgs.brightnessctl}/bin/brightnessctl";
-  lockCommand = ''
-    ${pkgs.swaylock-effects}/bin/swaylock \
-      --screenshots \
-      --clock \
-      --indicator \
-      --indicator-radius 100 \
-      --indicator-thickness 7 \
-      --effect-blur 7x5 \
-      --effect-vignette 0.5:0.5 \
-      --effect-pixelate 3 \
-      --ring-color 5d4d7a \
-      --grace 2 \
-      --fade-in 0.7
+  lockCommand = "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
+  swayRun = pkgs.writeShellScript "sway-run" ''
+    exec "${pkgs.greetd.gtkgreet}/bin/gtkgreet -l; swaymsg exit"
+    bindsym Mod4+e exec swaynag \
+      -t warning \
+      -b "What do you want to do?" \
+      -b "Poweroff" "systemctl poweroff" \
+      -b "Reboot" "systemctl reboot"
+
   '';
-    #"${pkgs.swaylock-effects}/bin/swaylock -f --effect-greyscale effect-blur 7x7 --effect-pixelate 3 --ring-color 5d4d7a --fade-in 3 -F -S";
 in {
   options.modules.desktop.sway = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
 
-    environment.sessionVariables = {
-      _JAVA_AWT_WM_NONREPARENTING = "1";
-      XDG_SESSION_TYPE = "wayland";
-      QT_QPA_PLATFORM = "wayland";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    environment = {
+      etc."greetd/environments".text = ''
+sway
+zsh
+      '';
+      etc."greetd/sway".text = ''
+	exec "${pkgs.greetd.gtkgreet}/bin/gtkgreet -l; swaymsg exit"
+	bindsym Mod4+e exec swaynag \
+      -t warning \
+      -b "What do you want to do?" \
+      -b "Poweroff" "systemctl poweroff" \
+      -b "Reboot" "systemctl reboot"
+	'';
+      sessionVariables = {
+        _JAVA_AWT_WM_NONREPARENTING = "1";
+        XDG_SESSION_TYPE = "wayland";
+        QT_QPA_PLATFORM = "wayland";
+	QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      };
     };
-
-    programs.sway = {
-      enable = true;
-      wrapperFeatures.gtk = true;
-      extraPackages = lib.mkForce (with pkgs; [
+    programs.sway.enable = true;
+    user.extraGroups = [ "video" ];
+    user.packages = with pkgs; [
+      my.eww
+      my.kile
+      sway
+      unstable.greetd.greetd
+      unstable.greetd.gtkgreet
         swaylock-effects
         swayidle
         brightnessctl
-        gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
-        gnome3.seahorse
-        gnome3.libsecret
-	gnome3.gnome-keyring
-	gnome3.libgnome-keyring
-	libgnome-keyring
-        gnome3.gvfs
+	gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
         gnome3.nautilus
         gnome3.nautilus-python
         gnome3.sushi
         breeze-qt5 # For them sweet cursors
-      ]);
-      # Make sure that the user session imports the environment
-      extraSessionCommands = "systemctl --user import-environment";
-    };
-    programs.seahorse.enable = true;
-    
-    security.pam.services.gdm.enableGnomeKeyring = true;
-    user.extraGroups = [ "video" ];
-
+    ];
     services = {
-      gnome3.gnome-keyring.enable = true;
-      xserver = {
-        enable = true;
-        # Loginmanager
-        displayManager = {
-          defaultSession = "sway";
-          gdm = {
-            enable = true;
-            wayland = true;
-          };
-          #autoLogin = {
-          #  enable = true;
-          #  user = config.user.name;
-          #};
-        };
+      gvfs.enable = true;
+      greetd = {
+      enable = true;
+      restart = false;
+      settings = {
+	default_session = {
+	  command = "${pkgs.sway}/bin/sway --config /etc/greetd/sway";
+	};
       };
     };
+      #xserver = {
+      #  enable = true;
+        # Loginmanager
+      #  displayManager = {
+      #    defaultSession = "sway";
+      #    gdm = {
+      #      enable = true;
+      #      wayland = true;
+      #    };
+      #    autoLogin = {
+      #      enable = true;
+     #       user = config.user.name;
+     #     };
+     #   };
+     # };
+    }; 
 
     home-manager.users.${config.user.name} = {
       gtk = {
         enable = true;
-        #theme = "${inputs.space-gtk-theme}/share/themes/Space-Dark/gtk-3.20/dist/gtk.css"l
-
         theme.name = "Space-Dark";
-        iconTheme.name = "oomox-Space-Dark";
+	iconTheme.name = "Space-Dark";
+	font.name = "SFNS Display Regular";
+	font.size = 12;
+	gtk3.extraConfig = {
+	  gtk-cursor-theme-name = "breeze_cursors";
+	  gtk-cursor-theme-size = 24;
+	};
       };
       programs.mako = {
+	enable = true;
         anchor = "top-center";
         backgroundColor = "#292b2e";
         borderColor = "#5d4d7a";
@@ -105,12 +117,16 @@ in {
                       border-color=#ff0000
           	  '';
         font = "SFNS Display Bold 13";
-        margin = 25;
+        margin = "25";
         textColor = "#b2b2b2";
       };
       wayland.windowManager.sway = {
         enable = true;
-        xwayland = true;
+	xwayland = true;
+	wrapperFeatures = {
+	  gtk = true;
+	};
+	extraSessionCommands = "systemctl --user import-environment";
         config = rec {
           bars = [{
             command = mkIf config.modules.desktop.bar.way.enable
@@ -300,22 +316,17 @@ in {
                 "${pkgs.persway}/bin/persway -w -a -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1'";
             }
             { command = "${pkgs.kanshi}/bin/kanshi >/tmp/kanshi.log 2>&1"; }
-            {
-
-              command = "systemd-notify --ready";
-            }
-            {
-              command =
-                "swayidle -w timeout 300 '${lockCommand}' timeout 600 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${lockCommand}'";
-            }
+	    { command = "systemd-notify --ready"; }
+	    { command =
+	        "${pkgs.swayidle}/bin/sway/idle -w -d timeout 300 '${lockCommand}' timeout 600 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${lockCommand}'";
+	    }
           ];
         };
-        wrapperFeatures = { gtk = true; };
         extraConfig = ''
-                default_border pixel 1
+          default_border pixel 1
           seat seat0 xcursor_theme breeze_cursors 24 
-                mouse_warping container
-                exec pkill swaynag
+          mouse_warping container
+          workspace number 1 
         '';
       };
     };
