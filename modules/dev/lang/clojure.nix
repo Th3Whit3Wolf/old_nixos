@@ -32,7 +32,7 @@ in {
     neovimPlugins  = mkOption {
       type = with types; listOf (either package pluginWithConfigType);
       default = [
-        { plugin = pkgs.vimPlugins.vim-clojure-statuc;    optional = true;}
+        { plugin = pkgs.vimPlugins.vim-clojure-static;    optional = true;}
         { plugin = pkgs.vimPlugins.vim-clojure-highlight; optional = true;}
         { plugin = pkgs.vimPlugins.vim-fireplace;         optional = true;}
         { plugin = pkgs.vimPlugins.conjure;               optional = true;}
