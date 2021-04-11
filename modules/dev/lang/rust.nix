@@ -13,6 +13,23 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.dev.lang.rust;
+  rust-stable = pkgs.rust-bin.stable.latest.default.override {
+    extensions = [ 
+      "cargo"
+      "clippy"
+      "rust-docs"
+      "rust-src"
+      "rust-std"
+      "rustc"
+      "rustfmt"
+    ];
+    targets = [ 
+      "x86_64-unknown-linux-gnu"
+      "x86_64-unknown-linux-musl"
+      "wasm32-unknown-unknown"
+      "wasm32-wasi"
+    ];
+  };
   jsonFormat = pkgs.formats.json { };
   pluginWithConfigType = types.submodule {
     options = {
@@ -63,9 +80,11 @@ in {
           <filename>settings.json</filename>.
         '';
         default = {
-          "rust-analyzer" = {
+	  "rust-analyzer" = {
+	    "cargo.allFeatures" = true;
             "checkOnSave.command" = "clippy";
-            "procMacro.enable" = true;
+	    "procMacro.enable" = true;
+	    "rustcSource" = "${pkgs.rust-analyzer}";
           };
         };
       };
@@ -77,19 +96,15 @@ in {
         # Cargo Completions
         path+="${inputs.zsh-completion-cargo}"
         fpath+="${inputs.zsh-completion-cargo}"
-        #source ${inputs.zsh-completion-cargo}/rustup.plugin.zsh
 
-        # Rustup Completions
-        path+="${inputs.zsh-completion-rustup}"
-        fpath+="${inputs.zsh-completion-rustup}"
-        #source ${inputs.zsh-completion-rustup}/rustup.plugin.zsh
+        alias rsc="rustc"
+        alias ca="cargo"
       '';
     };
   };
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      cargo
       cargo-deb
       cargo-asm
       cargo-wipe
@@ -114,15 +129,13 @@ in {
       cargo-release
       cargo-tarpaulin
       cargo-whatfeatures
-      clippy
       git-ignore
       licensor
       microserver
+      rust-stable
       rust-analyzer
-      rustc
-      rustfmt
       systemfd
-      # unstable.trunk
+      unstable.trunk
       wabt
       wasm-pack
       wasm-strip
@@ -132,15 +145,9 @@ in {
     ];
 
     # See https://discourse.nixos.org/t/rust-src-not-found-and-other-misadventures-of-developing-rust-on-nixos/11570/3?u=samuela.
-    env.RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+    #env.RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/src";
     env.RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
     env.CARGO_HOME = "$XDG_DATA_HOME/cargo";
     env.PATH = [ "$CARGO_HOME/bin" ];
-
-    environment.shellAliases = {
-      rsc = "rustc";
-      rup = "rustup";
-      ca = "cargo";
-    };
   };
 }
