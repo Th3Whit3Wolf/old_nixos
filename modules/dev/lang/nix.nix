@@ -48,6 +48,9 @@ in {
     services.lorri.enable = true;
 
     home-manager.users.${config.user.name}.programs.direnv = { enable = true; };
-    home.dataFile."nvim/ftplugin/nix.vim".text = "packadd vim-nix";
+    home.dataFile."nvim/site/ftplugin/nix.vim".text = ''
+	    packadd vim-nix
+	    setlocal shiftwidth=2
+    '';
   };
 }
