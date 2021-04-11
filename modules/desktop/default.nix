@@ -6,9 +6,10 @@ let
   cfg = config.modules.desktop;
   isX11 = config.modules.desktop.bspwm.enable
     || config.modules.desktop.stumpwm.enable;
-  isWayland = config.modules.desktop.sway.enable;
+    isWayland = config.modules.desktop.sway.enable;
+  hasDesktop = isX11 || isWayland;
 in {
-  config = mkIf config.services.xserver.enable {
+  config = mkIf hasDesktop {
     assertions = [
       {
         assertion = (countAttrs (n: v: n == "enable" && value) cfg) < 2;
@@ -17,7 +18,7 @@ in {
       }
       {
         assertion = let srv = config.services;
-        in srv.xserver.enable || srv.sway.enable || !(anyAttrs
+        in srv.xserver.enable || srv.greetd.enable || !(anyAttrs
           (n: v: isAttrs v && anyAttrs (n: v: isAttrs v && v.enable)) cfg);
         message = "Can't enable a desktop app without a desktop environment";
       }
@@ -91,6 +92,7 @@ in {
 	bingrep
 	nushell
         my.spacemacs-theme
+	my.spacemacs-icons
         (makeDesktopItem {
           name = "scratch-calc";
           desktopName = "Calculator";
