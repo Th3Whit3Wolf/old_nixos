@@ -46,8 +46,15 @@ in {
         # PIP Completions
         path+="${inputs.zsh-completion-pipenv}"
         fpath+="${inputs.zsh-completion-pipenv}"
-        #source ${inputs.zsh-completion-pipenv}/pipenv.plugin.zsh
-                '';
+	#source ${inputs.zsh-completion-pipenv}/pipenv.plugin.zsh
+        
+	alias py="python"
+        alias py2="python2"
+        alias py3="python3"
+        alias po="poetry"
+        alias ipy="ipython --no-banner"
+        alias ipylab="ipython --pylab=qt5 --no-banner"
+      '';
     };
   };
 
@@ -76,14 +83,5 @@ in {
     env.PYTHON_EGG_CACHE = "$XDG_CACHE_HOME/python-eggs";
     env.JUPYTER_CONFIG_DIR = "$XDG_CONFIG_HOME/jupyter";
     env.WORKON_HOME = "$XDG_DATA_HOME/virtualenvs";
-
-    environment.shellAliases = {
-      py = "python";
-      py2 = "python2";
-      py3 = "python3";
-      po = "poetry";
-      ipy = "ipython --no-banner";
-      ipylab = "ipython --pylab=qt5 --no-banner";
-    };
   };
 }

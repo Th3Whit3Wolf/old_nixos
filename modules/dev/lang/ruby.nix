@@ -75,8 +75,57 @@ in {
         path+="${inputs.zsh-rbenv}"
         fpath+="${inputs.zsh-rbenv}"
         #source ${inputs.zsh-rbenv}/rbenv.plugin.zsh
-
-              '';
+        sgem="sudo gem"
+        rfind="fd . -e rb -0 | xargs rg"
+        rb="ruby"
+        gin="gem install"
+        gun="gem uninstall"
+        gli="gem list"
+        jimweirich="rake"
+        rake="rake"
+        brake="bundle exec rake"
+        srake="sudo rake"
+        sbrake="sudo bundle exec rake"
+        devlog="tail -f log/development.log"
+        prodlog="tail -f log/production.log"
+        testlog="tail -f log/test.log"
+        rc="rails console"
+        rcs="rails console --sandbox"
+        rd="rails destroy"
+        rdb="rails dbconsole"
+        rgen="rails generate"
+        rgm="rails generate migration"
+        rp="rails plugin"
+        ru="rails runner"
+        rs="rails server"
+        rsd="rails server --debugger"
+        rsp="rails server --port"
+        rdm="rake db:migrate"
+        rdms="rake db:migrate:status"
+        rdr="rake db:rollback"
+        rdc="rake db:create"
+	rds="rake db:seed"
+	rdd="rake db:drop"
+	rdrs="rake db:reset"
+	rdtc="rake db:test:clone"
+	rdtp="rake db:test:prepare"
+	rdmtc="rake db:migrate db:test:clone"
+	rdsl="rake db:schema:load"
+	rlc="rake log:clear"
+	rn="rake notes"
+	rr="rake routes"
+	rrg="rake routes | rg"
+	rt="rake test"
+	rmd="rake middleware"
+	rsts="rake stats"
+	sstat="thin --stats '/thin/stats' start"
+	sg="ruby script/generate"
+	sd="ruby script/server --debugger"
+	sp="ruby script/plugin"
+	sr="ruby script/runner"
+	ssp="ruby script/spec"
+	sc="ruby script/console"
+      '';
     };
   };
 
@@ -97,58 +146,5 @@ in {
     env.GEM_HOME = "$XDG_DATA_HOME/gem";
     env.GEM_SPEC_CACHE = "$XDG_CACHE_HOME/gem";
     env.PATH = [ "$GEM_HOME/bin" ];
-
-    environment.shellAliases = {
-      sgem = "sudo gem";
-      rfind = "fd . -e rb -0 | xargs rg";
-      rb = "ruby";
-      gin = "gem install";
-      gun = "gem uninstall";
-      gli = "gem list";
-      jimweirich = "rake";
-      rake = "rake";
-      brake = "bundle exec rake";
-      srake = "sudo rake";
-      sbrake = "sudo bundle exec rake";
-      devlog = "tail -f log/development.log";
-      prodlog = "tail -f log/production.log";
-      testlog = "tail -f log/test.log";
-      rc = "rails console";
-      rcs = "rails console --sandbox";
-      rd = "rails destroy";
-      rdb = "rails dbconsole";
-      rgen = "rails generate";
-      rgm = "rails generate migration";
-      rp = "rails plugin";
-      ru = "rails runner";
-      rs = "rails server";
-      rsd = "rails server --debugger";
-      rsp = "rails server --port";
-      rdm = "rake db:migrate";
-      rdms = "rake db:migrate:status";
-      rdr = "rake db:rollback";
-      rdc = "rake db:create";
-      rds = "rake db:seed";
-      rdd = "rake db:drop";
-      rdrs = "rake db:reset";
-      rdtc = "rake db:test:clone";
-      rdtp = "rake db:test:prepare";
-      rdmtc = "rake db:migrate db:test:clone";
-      rdsl = "rake db:schema:load";
-      rlc = "rake log:clear";
-      rn = "rake notes";
-      rr = "rake routes";
-      rrg = "rake routes | rg";
-      rt = "rake test";
-      rmd = "rake middleware";
-      rsts = "rake stats";
-      sstat = "thin --stats '/thin/stats' start";
-      sg = "ruby script/generate";
-      sd = "ruby script/server --debugger";
-      sp = "ruby script/plugin";
-      sr = "ruby script/runner";
-      ssp = "ruby script/spec";
-      sc = "ruby script/console";
-    };
   };
 }

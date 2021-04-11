@@ -60,7 +60,6 @@ in {
         auchenberg.vscode-browser-preview
         ritwickdey.LiveServer
         xabikos.JavaScriptSnippets
-        WallabyJs.quokka-vscode
         ritwickdey.live-sass
         dsznajder.es7-react-js-snippets
         denoland.vscode-deno
@@ -89,7 +88,33 @@ in {
         path+="${inputs.zsh-completion-yarn}"
         fpath+="${inputs.zsh-completion-yarn}"
         source ${inputs.zsh-completion-yarn}/yarn-autocompletions.plugin.zsh
-              '';
+        
+	alias n='PATH="$(${pkgs.nodejs}/bin/npm bin):$PATH"'
+        alias y="yarn"
+        alias ya="yarn add"
+        alias yad="yarn add --dev"
+        alias yap="yarn add --peer"
+        alias yb="yarn build"
+        alias ycc="yarn cache clean"
+        alias yga="yarn global add"
+        alias ygls="yarn global list"
+        alias ygrm="yarn global remove"
+        alias ygu="yarn global upgrade"
+        alias yh="yarn help"
+        alias yi="yarn init"
+        alias yin="yarn install"
+        alias yls="yarn list"
+        alias yout="yarn outdated"
+        alias yp="yarn pack"
+        alias yrm="yarn remove"
+        alias yrun="yarn run"
+        alias ys="yarn serve"
+        alias yst="yarn start"
+        alias yt="yarn test"
+        alias yuc="yarn global upgrade && yarn cache clean"
+        alias yui="yarn upgrade-interactive"
+        alias yup="yarn upgrade"
+      '';
     };
   };
 
@@ -113,35 +138,6 @@ in {
     env.NVM_DIR = "$XDG_DATA_HOME/nvm";
     env.NODE_REPL_HISTORY = "$XDG_CACHE_HOME/node/repl_history";
     env.PATH = [ "$(${pkgs.yarn}/bin/yarn global bin)" ];
-
-    # Run locally installed bin-script, e.g. n coffee file.coffee
-    environment.shellAliases = {
-      n = ''PATH="$(${pkgs.nodejs}/bin/npm bin):$PATH"'';
-      y = "yarn";
-      ya = "yarn add";
-      yad = "yarn add --dev";
-      yap = "yarn add --peer";
-      yb = "yarn build";
-      ycc = "yarn cache clean";
-      yga = "yarn global add";
-      ygls = "yarn global list";
-      ygrm = "yarn global remove";
-      ygu = "yarn global upgrade";
-      yh = "yarn help";
-      yi = "yarn init";
-      yin = "yarn install";
-      yls = "yarn list";
-      yout = "yarn outdated";
-      yp = "yarn pack";
-      yrm = "yarn remove";
-      yrun = "yarn run";
-      ys = "yarn serve";
-      yst = "yarn start";
-      yt = "yarn test";
-      yuc = "yarn global upgrade && yarn cache clean";
-      yui = "yarn upgrade-interactive";
-      yup = "yarn upgrade";
-    };
 
     home.configFile."npm/config".text = ''
       cache=$XDG_CACHE_HOME/npm
