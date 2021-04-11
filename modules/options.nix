@@ -105,9 +105,10 @@ in{
               ".config/pipewire/media-session.d"
               ".gnupg"
               ".cache/starship"
-              ".cache/lollypop"
+	      ".cache/gstreamer-1.0"
+	      ".cache/lollypop"
               ".config/gtk-3.0"
-              ".config/VSCodium/"
+	      ".config/VSCodium/"
               ".local/share/cargo"
               ".local/share/direnv"
               ".local/share/gnupg"
@@ -133,7 +134,7 @@ in{
               "Vids"
               "Gits"
             ];
-            files = [ ".config/zsh/.zcompdump" ];
+	    #files = [ ".config/zsh/.zcompdump" ];
             allowOther = true;
           };
           # Necessary for home-manager to work with flakes, otherwise it will
