@@ -15,8 +15,6 @@ stdenv.mkDerivation rec {
   installPhase = ''
     for icon in $(ls icons); do
       mkdir -p $out/share/icons/$icon
-      #chmod 755 icons/$icon/index.icon
-      sed '/s/oomox//g' icons/$icon/index.theme
       cp -R icons/$icon/* $out/share/icons/$icon/
     done
   '';
