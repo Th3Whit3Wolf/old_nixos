@@ -43,9 +43,11 @@ in {
   };
 
   config = mkIf cfg.enable {
-    user.packages = with pkgs; [ rnix-lsp nixfmt direnv lorri ];
-
-    services.lorri.enable = true;
+    user.packages = with pkgs; [ rnix-lsp nixfmt direnv unstable.lorri ];    
+    services.lorri = {
+      enable = true;
+      package = pkgs.unstable.lorri;
+    };
 
     home-manager.users.${config.user.name}.programs.direnv = { enable = true; };
     home.dataFile."nvim/site/ftplugin/nix.vim".text = ''
