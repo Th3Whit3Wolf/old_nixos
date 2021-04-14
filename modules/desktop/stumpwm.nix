@@ -25,7 +25,7 @@ in {
 
     # link recursively so other modules can link files in their folders
     home.configFile."stumpwm" = {
-      source = "${configDir}/stumpwm";
+      source = "${configDir}/wm/stumpwm";
       recursive = true;
     };
   };

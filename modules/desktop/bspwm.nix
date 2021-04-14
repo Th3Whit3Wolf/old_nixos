@@ -49,9 +49,9 @@ in {
 
     # link recursively so other modules can link files in their folders
     home.configFile = {
-      "sxhkd".source = "${configDir}/sxhkd";
+      "sxhkd".source = "${configDir}/bspwm/sxhkd";
       "bspwm" = {
-        source = "${configDir}/bspwm";
+        source = "${configDir}/bspwm/bspwm";
         recursive = true;
       };
     };
