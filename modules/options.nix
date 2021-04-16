@@ -107,7 +107,7 @@ in{
               ".cache/starship"
 	      ".cache/gstreamer-1.0"
 	      ".cache/lollypop"
-              ".config/gtk-3.0"
+	     # ".config/gtk-3.0"
 	      ".config/VSCodium/"
               ".local/share/cargo"
               ".local/share/direnv"
