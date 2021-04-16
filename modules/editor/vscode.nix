@@ -6,7 +6,9 @@ let
   cfg = config.modules.editor.vscode;
   lang = config.modules.dev.lang;
   vcs  = config.modules.dev.vcs;
+  theme = config.modules.theme.editor.vscode;
 
+  useTheme      = (config.modules.theme.active != null);
   useGit        = vcs.git.enable;
   useCC         = lang.cc.enable;
   useClojure    = lang.clojure.enable;
@@ -21,6 +23,7 @@ let
   useScala      = lang.scala.enable;
   useShell      = lang.shell.enable;
 
+  themeExt      = if (useTheme && theme.extension != null)   then theme.extension else   [ ];
   gitExt        = if useGit        then vcs.git.vscodeExt else [ ];
   ccExt         = if useCC         then lang.cc.vscodeExt else [ ];
   clojureExt    = if useClojure    then lang.clojure.vscodeExt else [ ];
@@ -41,8 +44,10 @@ let
   rustSettings   = if useRust   then lang.rust.vscode.settings else [ ];
   shellSettings  = if useShell  then lang.shell.vscode.settings else [ ];
 
+  colorScheme = if useTheme then theme.colorTheme else "Visual Studio Dark";
+  fontFamily  = if useTheme then theme.fontFamily else "'JetBrainsMono Nerd Font Mono'";
+
   defaultExt = with pkgs.vscode-extensions; [
-    cometeer.spacemacs
     pkief.material-icon-theme
     #ms-azuretools.vscode-docker
     #ms-kubernetes-tools.vscode-kubernetes-tools
@@ -93,13 +98,13 @@ in {
     home-manager.users.${config.user.name}.programs.vscode = {
       enable = true;
       package = pkgs.vscodium;
-      extensions = defaultExt ++ gitExt ++ ccExt ++ clojureExt ++ commonLispExt
+      extensions = defaultExt ++ themeExt ++ gitExt ++ ccExt ++ clojureExt ++ commonLispExt
         ++ goExt ++ luaExt ++ nixExt ++ nodeExt ++ pythonExt ++ rubyExt ++ rustExt
         ++ scalaExt ++ shellExt;
       userSettings = {
         "dashboard.projectData" = null;
         "editor" = {
-          "fontFamily" = "'JetBrainsMono Nerd Font Mono'";
+          "fontFamily" = fontFamily;
           "fontLigatures" = true;
           "fontSize" = 14;
           "formatOnPaste" = true;
@@ -137,7 +142,7 @@ in {
           "menuBarVisibility" = "toggle";
         };
         "workbench" = {
-          "colorTheme" = "Spacemacs - dark";
+          "colorTheme" = colorScheme;
           "editor.closeOnFileDelete" = true;
           "iconTheme" = "material-icon-theme";
           "list.smoothScrolling" = true;
