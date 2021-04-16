@@ -43,21 +43,16 @@ in {
 	      manage = "desktop";
 	      name = "river";
 	      start = ''
-		exec ${pkgs.unstable.river}/bin/river &
+		systemd-cat -t river -- ${pkgs.unstable.river}/bin/river &
 		waitPID=$!
 	      '';
 	    }
 	  ];
-          gdm = {
-            enable = true;
-            wayland = true;
-          };
-	  #autoLogin = {
-	  #  enable = true;
-	  #  user = config.user.name;
-	  #};
-        };
+	};
       };
+	greetd.settings = {
+	  default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd ${pkgs.unstable.river}/bin/river";
+        };
     }; 
 
     home.configFile = {
