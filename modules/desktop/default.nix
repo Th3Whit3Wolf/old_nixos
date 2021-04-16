@@ -6,8 +6,9 @@ let
   cfg = config.modules.desktop;
   isX11 = config.modules.desktop.bspwm.enable
     || config.modules.desktop.stumpwm.enable;
-    isWayland = config.modules.desktop.sway.enable;
+  isWayland = config.modules.desktop.sway.enable;
   hasDesktop = isX11 || isWayland;
+  portals = if isWayland then [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ] else [ xdg-desktop-portal-gtk ];
 in {
   config = mkIf hasDesktop {
     assertions = [
@@ -91,8 +92,6 @@ in {
 	hexyl
 	bingrep
 	nushell
-        my.spacemacs-theme
-	my.spacemacs-icons
         (makeDesktopItem {
           name = "scratch-calc";
           desktopName = "Calculator";
@@ -127,8 +126,6 @@ in {
       enableGhostscriptFonts = true;
       fontconfig.cache32Bit = true;
       fonts = with pkgs; [
-        my.san-francisco-font
-        my.san-francisco-mono-font
         ubuntu_font_family
         dejavu_fonts
         symbola
@@ -193,7 +190,7 @@ in {
     # XDG Portals
     xdg.portal = {
       enable = true;
-      extraPortals = mkIf isWayland [ pkgs.xdg-desktop-portal-wlr ];
+      extraPortals = portals;
     };
 
     # Set Wayland variables
