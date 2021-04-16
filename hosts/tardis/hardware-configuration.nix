@@ -1,6 +1,10 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-{
+let 
+  themeAct = config.modules.theme.active;
+  themeVt = config.modules.theme.vt;
+  colors = if (themeAct != null) then "vt.default_red=${themeVt.red} vt.default_grn=${themeVt.grn} vt.default_blu=${themeVt.blu}" else "";
+in {
   imports = [ "${modulesPath}/installer/scan/not-detected.nix" ];
 
   boot = {
@@ -27,6 +31,7 @@
       "quiet"
 
       "add_efi_memmap"
+      colors
     ];
 
     # Refuse ICMP echo requests on my desktop/laptop; nobody has any business
