@@ -114,10 +114,10 @@ in {
     home.dataFile."nvim/site/ftdetect/ftdetect.vim".source =
 	    "${configDir}/term/nvimData/ftdetect/ftdetect.vim";
 
-    home.dataFile."nvim/site/ftplugin" = {
-      source = "${configDir}/term/nvimData/ftplugin";
-      recursive = true;
-    };
+    #home.dataFile."nvim/site/ftplugin" = {
+    #  source = "${configDir}/term/nvimData/ftplugin";
+    #  recursive = true;
+    #};
 
   };
 }
