@@ -55,14 +55,10 @@ in {
     }; 
 
     home.configFile = {
-      #"river" = {
-	#source = "${configDir}/wm/river";
-	#recursive = true;
-      #};
       "river/init" = {
 	text = '' 
 #!/bin/sh
-mod="Mod1"
+mod="Mod4"
 
 riverctl map normal $mod Return spawn alacritty
 
@@ -97,7 +93,7 @@ riverctl map normal $mod E exit
           }];
           output = {
             eDP-1 = {
-              bg = "${config.theme.wallpaper} fill";
+              bg = "${config.modules.theme.wallpaper} fill";
             };
           };
           left = "h";
