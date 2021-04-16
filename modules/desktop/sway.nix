@@ -19,13 +19,12 @@ in {
         XDG_SESSION_TYPE = "wayland";
         QT_QPA_PLATFORM = "wayland";
 	QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    };
+      };
     programs.sway.enable = true;
     user.extraGroups = [ "video" ];
     user.packages = with pkgs; [
       my.eww
       my.kile
-      # my.river
       unstable.river
       sway
       unstable.greetd.greetd
@@ -37,6 +36,7 @@ in {
       gnome3.nautilus
       gnome3.nautilus-python
       gnome3.sushi
+      mesa
       breeze-qt5 # For them sweet cursors
     ];
     services = {
@@ -51,6 +51,7 @@ in {
 	  };
 	};
       };
+
     }; 
 
     home.configFile = {
@@ -61,9 +62,11 @@ in {
       "river/init" = {
 	text = '' 
 #!/bin/sh
-mod="Mod4"
+mod="Mod1"
 
 riverctl map normal $mod Return spawn alacritty
+
+riverctl map normal $mod W spawn firefox
 
 # Mod+Q to close the focused view
 riverctl map normal $mod Q close
@@ -75,37 +78,10 @@ riverctl map normal $mod E exit
     };
 
     home-manager.users.${config.user.name} = {
-      gtk = {
-        enable = true;
-        theme.name = "Space-Dark";
-	iconTheme.name = "Space-Dark";
-	font.name = "SFNS Display Regular";
-	font.size = 12;
-	gtk3.extraConfig = {
-	  gtk-cursor-theme-name = "breeze_cursors";
-	  gtk-cursor-theme-size = 24;
-	};
-      };
       programs.mako = {
 	enable = true;
-        anchor = "top-center";
-        backgroundColor = "#292b2e";
-        borderColor = "#5d4d7a";
-        borderRadius = 12;
-        borderSize = 10;
-        defaultTimeout = 10000;
-        extraConfig = ''
-          	    [hidden]
-                      format=(and %h more)
-                      text-color=#686868
-
-                      [urgency=high]
-                      background-color=#c00000
-                      border-color=#ff0000
-          	  '';
-        font = "SFNS Display Bold 13";
-        margin = "25";
-        textColor = "#b2b2b2";
+	anchor = "top-center";
+	defaultTimeout = 5000;
       };
       wayland.windowManager.sway = {
         enable = true;
@@ -121,7 +97,7 @@ riverctl map normal $mod E exit
           }];
           output = {
             eDP-1 = {
-              bg = "${config.user.home}/Pics/wallpaper/flower_dark.jpg fill";
+              bg = "${config.theme.wallpaper} fill";
             };
           };
           left = "h";
