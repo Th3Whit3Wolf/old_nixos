@@ -250,7 +250,7 @@ in {
         alias mktar='tar -cvf'
         alias mountedinfo='df -hT'
 	alias ngr='sudo nginx -s reload'
-	alias nrfb='sudo nixos-rebuild --flake "/persist/etc/nixos#tardis boot'
+	alias nrfb='sudo nixos-rebuild --flake "/persist/etc/nixos#tardis" boot'
         alias openports='netstat -nape --inet'
         alias p='ps aux | grep '
         alias play='mpv --hwdec=auto'
