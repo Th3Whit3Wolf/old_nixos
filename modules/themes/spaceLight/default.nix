@@ -40,7 +40,6 @@ in {
 	      extension = [ pkgs.vscode-extensions.cometeer.spacemacs ];
 	      colorTheme = "Spacemacs - light";
 	      fontFamily = "'JetBrainsMono Nerd Font Mono'";
-	      fontSize = 14;
 	    };
 	  };
           gtk = {
