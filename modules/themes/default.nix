@@ -27,37 +27,29 @@ in {
       toFilteredImage cfg.wallpaper "-gaussian-blur 0x2 -modulate 70 -level 5%"
     else
       null);
-    
+
     editor = {
       vscode = {
-	extension = mkOption {
-          type = types.package;
+        extension = mkOption {
+          type = types.listOf types.package;
           default = null;
-          example = "pkgs.vscode-extensions.cometeer.spacemacs";
+          example = "[ pkgs.vscode-extensions.cometeer.spacemacs ]";
           description = ''
             VScode colorscheme extension.
-	  '';
-	};
-	colorTheme = mkOption {
+          '';
+        };
+        colorTheme = mkOption {
           type = types.str;
           default = "";
           example = "Space-Dark";
           description = ''
             Name of the colorscheme to activate in vscode user settings.
           '';
-	};
-	fontFamily = mkOption {
+        };
+        fontFamily = mkOption {
           type = types.str;
           default = "";
           example = "JetBrainsMono";
-          description = ''
-            The family name of the font within the package.
-          '';
-	};
-	fontSize = mkOption {
-          type = types.str;
-          default = 14;
-          example = "14";
           description = ''
             The family name of the font within the package.
           '';
@@ -69,41 +61,70 @@ in {
       iconTheme = mkOpt str "";
       font = {
         name = mkOption {
-	  type = types.str;
-	  default = "";
-	  example = "DejaVu Sans";
-	  description = ''
-	    The family name of the font within the package.
-	  '';
-	};
+          type = types.str;
+          default = "";
+          example = "DejaVu Sans";
+          description = ''
+            The family name of the font within the package.
+          '';
+        };
 
-	size = mkOption {
-	  type = types.nullOr types.int;
-	  default = 12;
-	  example = "8";
-	  description = ''
-	    The size of the font.
-	  '';
-	};
+        size = mkOption {
+          type = types.nullOr types.int;
+          default = 12;
+          example = "8";
+          description = ''
+            The size of the font.
+          '';
+        };
       };
       cursor = {
         name = mkOption {
-	  type = types.str;
-	  default = "";
-	  example = "breeze_cursors";
-	  description = ''
-	    The name of the cursor theme
-	  '';
-	};
+          type = types.str;
+          default = "";
+          example = "breeze_cursors";
+          description = ''
+            The name of the cursor theme
+          '';
+        };
 
-	size = mkOption {
-	  type = types.nullOr types.int;
-	  default = 24;
-	  example = "8";
-	  description = ''
-	    The size of the cursor.
-	  '';
-	};
+        size = mkOption {
+          type = types.nullOr types.int;
+          default = 24;
+          example = "8";
+          description = ''
+            The size of the cursor.
+          '';
+        };
+      };
+    };
+    vt = {
+      red = mkOption {
+        type = types.str;
+        default = "";
+        example =
+          "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+        description = ''
+          List of red values to be used for linux console colors.
+        '';
+      };
+      grn = mkOption {
+        type = types.str;
+        default = "";
+        example =
+          "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+        description = ''
+          List of green values to be used for linux console colors.
+        '';
+      };
+      blu = mkOption {
+        type = types.str;
+        default = "";
+        example =
+          "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+        description = ''
+          List of blue values to be used for linux console colors.
+        '';
       };
     };
 
@@ -122,22 +143,22 @@ in {
 
     {
       home-manager.users.${config.user.name} = {
-	gtk = {
-	  enable = true;
-	  theme.name = cfg.gtk.theme;
-	  iconTheme.name = cfg.gtk.iconTheme;
-	  font = {
-	    name = cfg.gtk.font.name;
-	    size = cfg.gtk.font.size;
-	  };
-	  gtk3.extraConfig = {
-	    gtk-cursor-theme-name = cfg.gtk.cursor.name;
-	    gtk-cursor-theme-size = cfg.gtk.cursor.size;
-	    gtk-xft-hinting = 1;
-	    gtk-xft-hintstyle = "hintfull";
-	    gtk-xft-rgba = "none";
-	  };
-	};
+        gtk = {
+          enable = true;
+          theme.name = cfg.gtk.theme;
+          iconTheme.name = cfg.gtk.iconTheme;
+          font = {
+            name = cfg.gtk.font.name;
+            size = cfg.gtk.font.size;
+          };
+          gtk3.extraConfig = {
+            gtk-cursor-theme-name = cfg.gtk.cursor.name;
+            gtk-cursor-theme-size = cfg.gtk.cursor.size;
+            gtk-xft-hinting = 1;
+            gtk-xft-hintstyle = "hintfull";
+            gtk-xft-rgba = "none";
+          };
+        };
       };
     }
 

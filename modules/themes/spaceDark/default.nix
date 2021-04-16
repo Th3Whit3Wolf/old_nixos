@@ -7,8 +7,6 @@ with lib.my;
 let
   cfg = config.modules.theme;
   static = config.dotfiles.configDir;
-  lockCommand =
-    "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
 in {
   config = mkIf (cfg.active == "spaceDark") (mkMerge [
 
@@ -41,7 +39,6 @@ in {
               extension = [ pkgs.vscode-extensions.cometeer.spacemacs ];
               colorTheme = "Spacemacs - dark";
               fontFamily = "'JetBrainsMono Nerd Font Mono'";
-              fontSize = 14;
             };
           };
           gtk = {
@@ -55,9 +52,14 @@ in {
               name = "SFNS Display Regular";
               size = 12;
             };
-          };
+	  };
+	  vt = {
+	    red = "0x29,0xaf,0x00,0xd7,0x87,0x87,0x0d,0xb2,0x29,0xf2,0x23,0xff,0x1a,0xd7,0x14,0xf";
+	    grn = "0x2b,0x87,0x99,0xaf,0xaf,0x5f,0xcd,0xb2,0x2b,0x20,0xfd,0xfd,0x8f,0x5f,0xff,0xff";
+	    blu = "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
         };
       };
+    };
 
       home-manager.users.${config.user.name} = {
         programs = {
@@ -124,7 +126,7 @@ in {
             borderRadius = 12;
             borderSize = 10;
             font = "SFNS Display Bold 13";
-            padding = 0;
+            padding = "0";
             margin = "25";
             textColor = "#b2b2b2";
             extraConfig = ''
@@ -164,7 +166,7 @@ in {
       };
     }
 
-    (mkIf options.modules.desktop.bar.way.enable {
+    (mkIf config.modules.desktop.bar.way.enable {
       home.configFile = {
         "waybar" = {
           source = ./config/waybar;
