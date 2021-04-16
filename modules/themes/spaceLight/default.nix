@@ -7,10 +7,8 @@ with lib.my;
 let
   cfg = config.modules.theme;
   static = config.dotfiles.configDir;
-  lockCommand =
-    "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
 in {
-  config = mkIf (cfg.active == "spaceDark") (mkMerge [
+  config = mkIf (cfg.active == "spaceLight") (mkMerge [
 
     # Desktop-agnostic configuration
     {
@@ -35,15 +33,16 @@ in {
 
       modules = {
         theme = {
-          wallpaper = mkDefault ./config/wallpaper/bg_1.jpg;
-          editor = {
-            vscode = {
-              extension = [ pkgs.vscode-extensions.cometeer.spacemacs ];
-              colorTheme = "Spacemacs - dark";
-              fontFamily = "'JetBrainsMono Nerd Font Mono'";
-              fontSize = 14;
-            };
-          };
+          wallpaper =
+	    mkDefault ./config/wallpaper/bg_1.jpg;
+	  editor = {
+	    vscode = {
+	      extension = [ pkgs.vscode-extensions.cometeer.spacemacs ];
+	      colorTheme = "Spacemacs - light";
+	      fontFamily = "'JetBrainsMono Nerd Font Mono'";
+	      fontSize = 14;
+	    };
+	  };
           gtk = {
             theme = "Space-Dark";
             iconTheme = "Space-Dark";
@@ -82,51 +81,51 @@ in {
               colors = {
                 # Default colors
                 primary = {
-                  foreground = "#b2b2b2";
-                  background = "#292b2e";
+                  foreground = "#655370";
+                  background = "#fbf8ef";
                 };
 
                 # Cursor colors
                 cursor = {
-                  text = "#e3dedd";
-                  cursor = "#292b2e";
+                  text = "#100a14";
+                  cursor = "#efeae9";
                 };
 
                 # Normal colors
                 normal = {
-                  black = "#0a0814";
+                  black = "#d2ceda";
                   red = "#f2241f";
                   green = "#67b11d";
                   yellow = "#b1951d";
                   blue = "#3a81c3";
                   magenta = "#a31db1";
                   cyan = "#21b8c7";
-                  white = "#B2B2B2";
+                  white = "#655370";
                 };
 
                 # Bright colors
                 bright = {
-                  black = "#42444a";
+                  black = "#efeae9";
                   red = "#DF201C";
                   green = "#29A0AD";
                   yellow = "#DB742E";
                   blue = "#3980C2";
                   magenta = "#2C9473";
                   cyan = "#6B3062";
-                  white = "#686868";
+                  white = "#a094a2";
                 };
               };
             };
           };
           mako = {
-            backgroundColor = "#292b2e";
-            borderColor = "#5d4d7a";
+            backgroundColor = "#FBF8EF";
+            borderColor = "#D3D3E780";
             borderRadius = 12;
             borderSize = 10;
             font = "SFNS Display Bold 13";
-            padding = 0;
-            margin = "25";
-            textColor = "#b2b2b2";
+	    margin = "25";
+	    padding = 0;
+            textColor = "#655370";
             extraConfig = ''
               [hidden]
               format=(and %h more)
@@ -140,46 +139,29 @@ in {
         };
         wayland.windowManager.sway.config.colors = {
           focused = {
-            background = "#292B2E";
-            border = "#292B2E";
-            childBorder = "#292B2E";
+            background = "#FBF8EF";
+            border = "#FBF8EF";
+            childBorder = "#FBF8EF";
             indicator = "#5D4D7A";
-            text = "#B2B2B2";
+            text = "#655370";
           };
           focusedInactive = {
-            background = "#292B2E";
-            border = "#292B2E";
-            childBorder = "#292B2E";
-            indicator = "#292B2E";
-            text = "#686868";
+            background = "#FBF8EF";
+            border = "#FBF8EF";
+            childBorder = "#FBF8EF";
+            indicator = "#FBF8EF";
+            text = "#a094a2";
           };
           unfocused = {
-            background = "#292B2E";
-            border = "#292B2E";
-            childBorder = "#292B2E";
-            indicator = "#292B2E";
-            text = "#555555";
+            background = "#FBF8EF";
+            border = "#FBF8EF";
+            childBorder = "#FBF8EF";
+            indicator = "#FBF8EF";
+            text = "#b3a7b5";
           };
         };
       };
     }
-
-    (mkIf options.modules.desktop.bar.way.enable {
-      home.configFile = {
-        "waybar" = {
-          source = ./config/waybar;
-          recursive = true;
-        };
-        "nwg-launchers" = {
-          source = ./config/nwg-launchers;
-          recursive = true;
-        };
-        "eww" = {
-          source = ./config/eww;
-          recursive = true;
-        };
-      };
-    })
 
     # Desktop (X11) theming
     (mkIf config.services.xserver.enable {

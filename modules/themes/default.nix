@@ -27,11 +27,84 @@ in {
       toFilteredImage cfg.wallpaper "-gaussian-blur 0x2 -modulate 70 -level 5%"
     else
       null);
-
+    
+    editor = {
+      vscode = {
+	extension = mkOption {
+          type = types.package;
+          default = null;
+          example = "pkgs.vscode-extensions.cometeer.spacemacs";
+          description = ''
+            VScode colorscheme extension.
+	  '';
+	};
+	colorTheme = mkOption {
+          type = types.str;
+          default = "";
+          example = "Space-Dark";
+          description = ''
+            Name of the colorscheme to activate in vscode user settings.
+          '';
+	};
+	fontFamily = mkOption {
+          type = types.str;
+          default = "";
+          example = "JetBrainsMono";
+          description = ''
+            The family name of the font within the package.
+          '';
+	};
+	fontSize = mkOption {
+          type = types.str;
+          default = 14;
+          example = "14";
+          description = ''
+            The family name of the font within the package.
+          '';
+        };
+      };
+    };
     gtk = {
       theme = mkOpt str "";
       iconTheme = mkOpt str "";
-      cursorTheme = mkOpt str "";
+      font = {
+        name = mkOption {
+	  type = types.str;
+	  default = "";
+	  example = "DejaVu Sans";
+	  description = ''
+	    The family name of the font within the package.
+	  '';
+	};
+
+	size = mkOption {
+	  type = types.nullOr types.int;
+	  default = 12;
+	  example = "8";
+	  description = ''
+	    The size of the font.
+	  '';
+	};
+      };
+      cursor = {
+        name = mkOption {
+	  type = types.str;
+	  default = "";
+	  example = "breeze_cursors";
+	  description = ''
+	    The name of the cursor theme
+	  '';
+	};
+
+	size = mkOption {
+	  type = types.nullOr types.int;
+	  default = 24;
+	  example = "8";
+	  description = ''
+	    The size of the cursor.
+	  '';
+	};
+      };
     };
 
     onReload = mkOpt (attrsOf lines) { };
@@ -48,35 +121,23 @@ in {
     })
 
     {
-      home.configFile = {
-        # GTK
-        "gtk-3.0/settings.ini".text = ''
-          [Settings]
-          ${optionalString (cfg.gtk.theme != "")
-          "gtk-theme-name=${cfg.gtk.theme}"}
-          ${optionalString (cfg.gtk.iconTheme != "")
-          "gtk-icon-theme-name=${cfg.gtk.iconTheme}"}
-          ${optionalString (cfg.gtk.cursorTheme != "")
-          "gtk-cursor-theme-name=${cfg.gtk.cursorTheme}"}
-          gtk-fallback-icon-theme=gnome
-          gtk-application-prefer-dark-theme=true
-          gtk-xft-hinting=1
-          gtk-xft-hintstyle=hintfull
-          gtk-xft-rgba=none
-        '';
-        # GTK2 global theme (widget and icon theme)
-        "gtk-2.0/gtkrc".text = ''
-          ${optionalString (cfg.gtk.theme != "")
-          ''gtk-theme-name="${cfg.gtk.theme}"''}
-          ${optionalString (cfg.gtk.iconTheme != "")
-          ''gtk-icon-theme-name="${cfg.gtk.iconTheme}"''}
-          gtk-font-name="Sans 10"
-        '';
-        # QT4/5 global theme
-        "Trolltech.conf".text = ''
-          [Qt]
-          ${optionalString (cfg.gtk.theme != "") "style=${cfg.gtk.theme}"}
-        '';
+      home-manager.users.${config.user.name} = {
+	gtk = {
+	  enable = true;
+	  theme.name = cfg.gtk.theme;
+	  iconTheme.name = cfg.gtk.iconTheme;
+	  font = {
+	    name = cfg.gtk.font.name;
+	    size = cfg.gtk.font.size;
+	  };
+	  gtk3.extraConfig = {
+	    gtk-cursor-theme-name = cfg.gtk.cursor.name;
+	    gtk-cursor-theme-size = cfg.gtk.cursor.size;
+	    gtk-xft-hinting = 1;
+	    gtk-xft-hintstyle = "hintfull";
+	    gtk-xft-rgba = "none";
+	  };
+	};
       };
     }
 

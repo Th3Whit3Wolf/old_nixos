@@ -15,7 +15,9 @@ in {
           gtk = {
             theme = "Dracula";
             iconTheme = "Paper";
-            cursorTheme = "Paper";
+	    cursor = {
+	      name = "Paper";
+	    };
           };
         };
 
