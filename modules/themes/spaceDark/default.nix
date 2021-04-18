@@ -119,7 +119,11 @@ in {
                 };
               };
             };
-          };
+	  };
+	  bat = {
+	    enable = true;
+	    config = { theme = "TwoDark"; };
+	  };
           mako = {
             backgroundColor = "#292b2e";
             borderColor = "#5d4d7a";
@@ -163,6 +167,22 @@ in {
             text = "#555555";
           };
         };
+      };
+      home.configFile = {
+	"bottom/bottom.toml" = {
+	  source = ./config/term/bottom/bottom.toml;
+	};
+	"wofi" = {
+	  source = ./config/term/wofi;
+	  recursive = true;
+	};
+	"gitui" = {
+	  source = ./config/term/gitui;
+	  recursive = true;
+	};
+	"procs/config.toml" = { 
+	  source = ./config/term/procs/config.toml;
+	};
       };
     }
 

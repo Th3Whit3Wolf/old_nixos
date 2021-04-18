@@ -16,27 +16,7 @@ in {
     env.TERMINAL = mkIf isX11 cfg.default;
 
     home-manager.users.${config.user.name}.programs = {
-      bat = {
-        enable = true;
-        config = { theme = "TwoDark"; };
-      };
       jq.enable = true;
-    };
-    home.configFile = {
-      "bottom/bottom.toml" = {
-        source = "${configDir}/term/bottom/space_dark.toml";
-      };
-      "wofi" = {
-        source = "${configDir}/term/wofi";
-        recursive = true;
-      };
-      "gitui/theme.ron" = {
-        source = "${configDir}/term/gitui/space_dark.ron";
-      };
-      "gitui/key_config.ron" = {
-        source = "${configDir}/term/gitui/key_config.ron";
-      };
-      "procs/config.toml" = { source = "${configDir}/term/procs/config.toml"; };
     };
   };
 }

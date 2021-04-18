@@ -115,7 +115,11 @@ in {
                 };
               };
             };
-          };
+	  };
+	  bat = {
+	    enable = true;
+	    config = { theme = "Github"; };
+	  };
           mako = {
             backgroundColor = "#FBF8EF";
             borderColor = "#D3D3E780";
@@ -159,6 +163,22 @@ in {
             text = "#b3a7b5";
           };
         };
+      };
+      home.configFile = {
+	"bottom/bottom.toml" = {
+	  source = ./config/term/bottom/bottom.toml;
+	};
+	"wofi" = {
+	  source = ./config/term/wofi;
+	  recursive = true;
+	};
+	"gitui" = {
+	  source = ./config/term/gitui;
+	  recursive = true;
+	};
+	"procs/config.toml" = {
+	  source = ./term/procs/config.toml;
+	};
       };
     }
 
