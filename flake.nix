@@ -14,6 +14,7 @@
     # Core dependencies.
     nixpkgs.url = "nixpkgs/nixos-unstable"; # primary nixpkgs
     nixpkgs-unstable.url = "nixpkgs/master"; # for packages on the edge
+    nur.url = github:nix-community/NUR; # for NUR packages
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,6 +105,7 @@
     persway, 
     wayland, 
     neovim-nightly, 
+    nur,
     ... 
   }:
     let
@@ -120,9 +122,10 @@
         };
       pkgs = mkPkgs nixpkgs [
         self.overlay
-	rust.overlay
-        neovim-nightly.overlay
         persway.overlay
+	neovim-nightly.overlay
+	nur.overlay
+	rust.overlay
         wayland.overlay
       ];
       pkgs' = mkPkgs nixpkgs-unstable [ ];
