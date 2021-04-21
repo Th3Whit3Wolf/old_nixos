@@ -128,9 +128,9 @@ in {
             backgroundColor = "#292b2e";
             borderColor = "#5d4d7a";
             borderRadius = 12;
-            borderSize = 10;
+            borderSize = 6;
             font = "SFNS Display Bold 13";
-            padding = "0";
+            padding = "6";
             margin = "25";
             textColor = "#b2b2b2";
             extraConfig = ''
