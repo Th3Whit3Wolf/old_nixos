@@ -352,7 +352,7 @@ in {
     # dropdown, or using keyword search shortcuts you configure in options (e.g. 'd' for DuckDuckGo)
     # [SETUP-CHROME] If you don't, or rarely, type URLs, or you use a default search
     # engine that respects privacy, then you probably don't need this 
-    "keyword.enabled" = false;
+    "keyword.enabled" = true;
     # 0802: disable location bar domain guessing
     # domain guessing intercepts DNS "hostname not found errors" and resends a
     # request (e.g. by adding www or .com). This is inconsistent use (e.g. FQDNs), does not work
@@ -410,7 +410,7 @@ in {
     # [SETTING] Privacy & Security>History>Custom Settings>Remember search and form history
     # [1] https://blog.mindedsecurity.com/2011/10/autocompleteagain.html
     # [2] https://bugzilla.mozilla.org/381681 
-    "browser.formfill.enable" = false;
+    # "browser.formfill.enable" = false;
     # 0862: disable browsing and download history
     # [NOTE] We also clear history and downloads on exiting Firefox (see 2803)
     # [SETTING] Privacy & Security>History>Custom Settings>Remember browsing and download history ***/
@@ -427,7 +427,7 @@ in {
     # 0901: disable saving passwords
     # [NOTE] This does not clear any passwords already saved
     # [SETTING] Privacy & Security>Logins and Passwords>Ask to save logins and passwords for websites
-    "signon.rememberSignons" = false;
+    # "signon.rememberSignons" = false;
     #  0902: use a primary password
     # There are no preferences for this. It is all handled internally.
     # [SETTING] Privacy & Security>Logins and Passwords>Use a Primary Password
@@ -443,9 +443,9 @@ in {
     # [NOTE] Username & password is still available when you enter the field
     # [SETTING] Privacy & Security>Logins and Passwords>Autofill logins and passwords
     # [1] https://freedom-to-tinker.com/2017/12/27/no-boundaries-for-user-identities-web-trackers-exploit-browser-login-managers/
-    "signon.autofillForms" = false;
+    # "signon.autofillForms" = false;
     # 0909: disable formless login capture for Password Manager [FF51+]
-    "signon.formlessCapture.enabled" = false;
+    # "signon.formlessCapture.enabled" = false;
     # 0912: limit (or disable) HTTP authentication credentials dialogs triggered by sub-resources [FF41+]
     # hardens against potential credentials phishing
     # 0=don't allow sub-resources to open HTTP authentication credentials dialogs
