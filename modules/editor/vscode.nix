@@ -175,7 +175,7 @@ in {
       ];
     };
 
-    env.VSCODE_PORTABL = "$XDG_DATA_HOME/vscode";
+    #env.VSCODE_PORTABL = "$XDG_DATA_HOME/vscode";
     environment.shellAliases = { code = "codium"; };
   };
 }
