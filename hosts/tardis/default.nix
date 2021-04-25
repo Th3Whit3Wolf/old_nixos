@@ -79,7 +79,30 @@
   };
   services = {
     openssh.startWhenNeeded = true;
-    chrony.enable = true;
+    # Disable NTP, enable chrony...
+    ntp.enable = false;
+    chrony = {
+      enable = true;
+      servers = [
+	"0.uk.pool.ntp.org"
+	"1.uk.pool.ntp.org"
+	"2.uk.pool.ntp.org"
+	"3.uk.pool.ntp.org"
+	"0.nixos.pool.ntp.org"
+	"1.nixos.pool.ntp.org"
+	"2.nixos.pool.ntp.org"
+	"3.nixos.pool.ntp.org"
+      ];
+      serverOption = "offline";
+      extraConfig = ''
+	# In first three updates step the system clock instead of slew
+	# if the adjustment is larger than 1 second.
+	makestep 1.0 3
+
+	# Enable kernel synchronization of the real-time clock (RTC).
+	rtcsync
+      '';
+    };
     tlp = {
       enable = true;
       settings = {
@@ -138,19 +161,50 @@
   networking = {
     networkmanager = {
       enable = true;
+      dispatcherScripts = [{
+	source = pkgs.writeText "10-chrony" ''
+	  #!/bin/sh
+
+	  INTERFACE=\$1
+	  STATUS=\$2
+
+	  # Make sure we're always getting the standard response strings
+	  LANG='C'
+
+	  CHRONY=${pkgs.chrony}/bin/chrony
+
+	  chrony_cmd() {
+	      echo "Chrony going \$1."
+	      exec \$CHRONY -a \$1
+	  }
+
+	  nm_connected() {
+	      [ "\$(nmcli -t --fields STATE g)" = 'connected' ]
+	  }
+
+	  case "\$STATUS" in
+	      up)
+		  chrony_cmd online
+	      ;;
+	      vpn-up)
+		  chrony_cmd online
+	      ;;
+	      down)
+		  # Check for active interface, take offline if none is active
+		  nm_connected || chrony_cmd offline
+	      ;;
+	      vpn-down)
+		  # Check for active interface, take offline if none is active
+		  nm_connected || chrony_cmd offline
+	      ;;
+	  esac
+	'';
+	type = "basic";
+      }];
       wifi.powersave = true;
     };
     useDHCP = false;
-    timeServers = [
-      "0.uk.pool.ntp.org"
-      "1.uk.pool.ntp.org"
-      "2.uk.pool.ntp.org"
-      "3.uk.pool.ntp.org"
-      "0.nixos.pool.ntp.org"
-      "1.nixos.pool.ntp.org"
-      "2.nixos.pool.ntp.org"
-      "3.nixos.pool.ntp.org"
-    ];
+    
   };
   
   environment.systemPackages = [ pkgs.irqbalance pkgs.dbus-broker ];
