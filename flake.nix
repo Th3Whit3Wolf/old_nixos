@@ -15,18 +15,23 @@
     nixpkgs.url = "nixpkgs/nixos-unstable"; # primary nixpkgs
     nixpkgs-unstable.url = "nixpkgs/master"; # for packages on the edge
     nur.url = github:nix-community/NUR; # for NUR packages
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    impermanence.url = "github:nix-community/impermanence";
-    impermanence.flake = false;
     nixos-hardware = {
       url = "github:nixos/nixos-hardware";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    wayland.url = "github:colemickens/nixpkgs-wayland";
-    wayland.inputs.master.follows = "master";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      flake = false;
+    };
+    nix-polyglot.url = "/persist/etc/nixos/flakes/nix-polyglot";
+    wayland = {
+      url = "github:colemickens/nixpkgs-wayland";
+      inputs.master.follows = "master";
+    };
     naersk = {
       url = "github:nmattia/naersk";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,6 +45,7 @@
       url = "github:johnae/persway";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zsh-jq = {
       url = "github:reegnz/jq-zsh-plugin";
       flake = false;
@@ -100,6 +106,7 @@
     self, 
     nixpkgs, 
     nixpkgs-unstable, 
+    nix-polyglot,
     naersk, 
     rust,
     persway, 
