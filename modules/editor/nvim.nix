@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ inputs, config, options, lib, pkgs, ... }:
 
 with lib;
 with lib.my;
@@ -62,30 +62,30 @@ in {
       type = types.lines;
       description = "How to source necessary zsh plugins";
       default = ''
-        # Open lazygit commit window inside neovim
-        if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-          alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-          alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-          alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-          alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-        else
-          alias vim="nvim"
-          alias vi="nvim"
-          alias v="nvim"
-	fi
+                # Open lazygit commit window inside neovim
+                if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+                  alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                  alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                  alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                  alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                else
+                  alias vim="nvim"
+                  alias vi="nvim"
+                  alias v="nvim"
+        	fi
 
-        if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-            export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-            export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-        else
-            export VISUAL="nvim"
-            export EDITOR="nvim"
-        fi
+                if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+                    export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                    export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+                else
+                    export VISUAL="nvim"
+                    export EDITOR="nvim"
+                fi
 
-	alias suvim="sudo -E nvim"
-	alias suvi="sudo -E nvim"
-	alias suv="sudo -E nvim"
-      '';
+        	alias suvim="sudo -E nvim"
+        	alias suvi="sudo -E nvim"
+        	alias suv="sudo -E nvim"
+              '';
     };
   };
 
@@ -103,7 +103,7 @@ in {
 
     environment.systemPackages = [ pkgs.unstable.neovim ];
 
-    home-manager.users.${config.user.name}.programs.neovim = {
+    home-manager.users.${config.user.name} = {
       enable = true;
       package = pkgs.neovim-nightly;
       plugins = defaultPlugins ++ clojurePlugins ++ goPlugins ++ nixPlugins
@@ -112,12 +112,6 @@ in {
       withNodeJs = true;
     };
     home.dataFile."nvim/site/ftdetect/ftdetect.vim".source =
-	    "${configDir}/term/nvimData/ftdetect/ftdetect.vim";
-
-    #home.dataFile."nvim/site/ftplugin" = {
-    #  source = "${configDir}/term/nvimData/ftplugin";
-    #  recursive = true;
-    #};
-
+      "${configDir}/term/nvimData/ftdetect/ftdetect.vim";
   };
 }

@@ -125,6 +125,7 @@ in {
       deno
       nodePackages.purescript-language-server
       nodePackages.typescript-language-server
+      nodePackages.typescript
       elmPackages.elm-language-server
       nodePackages.vue-language-server
       nodePackages.javascript-typescript-langserver

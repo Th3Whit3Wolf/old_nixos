@@ -43,7 +43,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    user.packages = with pkgs; [ rnix-lsp nixfmt direnv unstable.lorri ];    
+    user.packages = with pkgs; [ rnix-lsp nixfmt direnv unstable.lorri nixpkgs-fmt ];    
     services.lorri = {
       enable = true;
       package = pkgs.unstable.lorri;
