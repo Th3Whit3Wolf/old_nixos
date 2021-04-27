@@ -25,7 +25,8 @@ in {
     user.packages = with pkgs; [
       my.eww
       my.kile
-      unstable.river
+      my.river
+      #unstable.river
       sway
       unstable.greetd.greetd
       unstable.greetd.gtkgreet
