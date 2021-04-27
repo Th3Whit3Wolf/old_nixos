@@ -14,7 +14,7 @@
     # Core dependencies.
     nixpkgs.url = "nixpkgs/nixos-unstable"; # primary nixpkgs
     nixpkgs-unstable.url = "nixpkgs/master"; # for packages on the edge
-    nur.url = github:nix-community/NUR; # for NUR packages
+    nur.url = "github:nix-community/NUR"; # for NUR packages
     nixos-hardware = {
       url = "github:nixos/nixos-hardware";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +27,6 @@
       url = "github:nix-community/impermanence";
       flake = false;
     };
-    nix-polyglot.url = "/persist/etc/nixos/flakes/nix-polyglot";
     wayland = {
       url = "github:colemickens/nixpkgs-wayland";
       inputs.master.follows = "master";
@@ -102,19 +101,8 @@
     };
   };
 
-  outputs = inputs@{ 
-    self, 
-    nixpkgs, 
-    nixpkgs-unstable, 
-    nix-polyglot,
-    naersk, 
-    rust,
-    persway, 
-    wayland, 
-    neovim-nightly, 
-    nur,
-    ... 
-  }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, naersk, rust
+    , persway, wayland, neovim-nightly, nur, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec mapHosts;
 
@@ -130,9 +118,9 @@
       pkgs = mkPkgs nixpkgs [
         self.overlay
         persway.overlay
-	neovim-nightly.overlay
-	nur.overlay
-	rust.overlay
+        neovim-nightly.overlay
+        nur.overlay
+        rust.overlay
         wayland.overlay
       ];
       pkgs' = mkPkgs nixpkgs-unstable [ ];
