@@ -362,7 +362,7 @@ in {
     #and is a security risk (e.g. common typos & malicious sites set up to exploit this) 
     "browser.fixup.alternate.enabled" = false;
     # 0803: display all parts of the url in the location bar
-    "browser.urlbar.trimURLs" = false;
+    # "browser.urlbar.trimURLs" = false;
     # 0805: disable coloring of visited links - CSS history leak
     # [SETUP-HARDEN] Bulk rapid history sniffing was mitigated in 2010 [1][2]. Slower and more expensive
     # redraw timing attacks were largely mitigated in FF77+ [3]. Using RFP (4501) further hampers timing
@@ -827,7 +827,7 @@ in {
     # 2607: disable various developer tools in browser context
     # [SETTING] Devtools>Advanced Settings>Enable browser chrome and add-on debugging toolboxes
     # [1] https://github.com/pyllyukko/user.js/issues/179#issuecomment-246468676 ***/
-    "devtools.chrome.enabled" = false;
+    # "devtools.chrome.enabled" = false;
     #2608: reset remote debugging to disabled
     # [1] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/16222
     # "devtools.debugger.remote-enabled" = false; # [DEFAULT: false]
@@ -981,7 +981,7 @@ in {
 
     # 2802: enable Firefox to clear items on shutdown (see 2803)
     # [SETTING] Privacy & Security>History>Custom Settings>Clear history when Firefox closes
-    "privacy.sanitize.sanitizeOnShutdown" = true;
+    # "privacy.sanitize.sanitizeOnShutdown" = true;
     # 2803: set what items to clear on shutdown (if 2802 is true) [SETUP-CHROME]
     # [NOTE] If 'history' is true, downloads will also be cleared regardless of the value
     # but if 'history' is false, downloads can still be cleared independently
