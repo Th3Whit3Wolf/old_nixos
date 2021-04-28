@@ -44,6 +44,19 @@ with lib; {
         esac
     '';
   };
+
+  #system.autoUpgrade = {
+  #  enable = true;
+  #  flake = "/persist/etc/nixos";
+  #  allowReboot = false;
+  #  dates = "17:30";
+  #  randomizedDelaySec = "1min";
+  #  flags = [
+  #    "--recreate-lock-file"
+  #    "--no-write-lock-file"
+  #  ];
+  #};
+  
   systemd.tmpfiles.rules = [
     "L /var/lib/NetworkManager/secret_key - - - - /persist/var/lib/NetworkManager/secret_key"
     "L /var/lib/NetworkManager/timestamps - - - - /persist/var/lib/NetworkManager/timestamps"
