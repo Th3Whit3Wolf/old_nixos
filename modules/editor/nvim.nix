@@ -103,7 +103,7 @@ in {
 
     environment.systemPackages = [ pkgs.unstable.neovim ];
 
-    home-manager.users.${config.user.name} = {
+    home-manager.users.${config.user.name}.programs.neovim = {
       enable = true;
       package = pkgs.neovim-nightly;
       plugins = defaultPlugins ++ clojurePlugins ++ goPlugins ++ nixPlugins
