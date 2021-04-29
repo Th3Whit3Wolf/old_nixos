@@ -1365,9 +1365,7 @@ in {
 	rycee.firefox-addons.lastpass-password-manager
 	rycee.firefox-addons.netflix-1080p
 	rycee.firefox-addons.octotree
-	rycee.firefox-addons.reddit-enhancement-suite
 	rycee.firefox-addons.refined-github
-	rycee.firefox-addons.tabcenter-reborn
 	rycee.firefox-addons.temporary-containers
 	rycee.firefox-addons.terms-of-service-didnt-read
 	rycee.firefox-addons.ublock-origin
