@@ -988,14 +988,14 @@ in {
     # However, this may not always be the case. The interface combines and syncs these
     # prefs when set from there, and the sanitize code may change at any time
     # [SETTING] Privacy & Security>History>Custom Settings>Clear history when Firefox closes>Settings
-    # "privacy.clearOnShutdown.cache" = true;
-    # "privacy.clearOnShutdown.cookies" = true;
+    "privacy.clearOnShutdown.cache" = false;
+    "privacy.clearOnShutdown.cookies" = false;
     # "privacy.clearOnShutdown.downloads" = true; # see not above
     # "privacy.clearOnShutdown.formdata" = true; # Form & Search History
-    # "privacy.clearOnShutdown.history" = true; # Browsing & Download History
-    # "privacy.clearOnShutdown.offlineApps" = true; # Offline Website Data
-    # "privacy.clearOnShutdown.sessions" = true; # Active Logins
-    # "privacy.clearOnShutdown.siteSettings" = false; # Site Preferences
+    "privacy.clearOnShutdown.history" = false; # Browsing & Download History
+    "privacy.clearOnShutdown.offlineApps" = false; # Offline Website Data
+    "privacy.clearOnShutdown.sessions" = false; # Active Logins
+    "privacy.clearOnShutdown.siteSettings" = false; # Site Preferences
     # 2804: reset default items to clear with Ctrl-Shift-Del (to match 2803) [SETUP-CHROME]
     # This dialog can also be accessed from the menu History>Clear Recent History
     # Firefox remembers your last choices. This will reset them when you start Firefox.
