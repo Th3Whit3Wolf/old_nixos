@@ -1,171 +1,96 @@
-# flake.nix --- the heart of my dotfiles
-#
-# Author:  Henrik Lissner <henrik@lissner.net>
-# URL:     https://github.com/hlissner/dotfiles
-# License: MIT
-#
-# Welcome to ground zero. Where the whole flake gets set up and all its modules
-# are loaded.
-
 {
-  description = "A grossly incandescent nixos config.";
+  description = "A highly structured configuration database.";
 
-  inputs = {
-    # Core dependencies.
-    nixpkgs.url = "nixpkgs/nixos-unstable"; # primary nixpkgs
-    nixpkgs-unstable.url = "nixpkgs/master"; # for packages on the edge
-    nur.url = "github:nix-community/NUR"; # for NUR packages
-    nixos-hardware = {
-      url = "github:nixos/nixos-hardware";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      flake = false;
-    };
-    wayland = {
-      url = "github:colemickens/nixpkgs-wayland";
-      inputs.master.follows = "master";
-    };
-    naersk = {
-      url = "github:nmattia/naersk";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    rust = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
-    persway = {
-      url = "github:johnae/persway";
-      inputs.nixpkgs.follows = "nixpkgs";
+  inputs =
+    {
+      nixos.url = "nixpkgs/nixos-unstable";
+      latest.url = "nixpkgs";
+      devlib.url = "github:divnix/devlib";
+      devlib.inputs = {
+        nixpkgs.follows = "nixos";
+      };
+
+      ci-agent = {
+        url = "github:hercules-ci/hercules-ci-agent";
+        inputs = { nix-darwin.follows = "darwin"; nixos-20_09.follows = "nixos"; nixos-unstable.follows = "latest"; };
+      };
+      darwin.url = "github:LnL7/nix-darwin";
+      darwin.inputs.nixpkgs.follows = "latest";
+      home.url = "github:nix-community/home-manager";
+      home.inputs.nixpkgs.follows = "nixos";
+      naersk.url = "github:nmattia/naersk";
+      naersk.inputs.nixpkgs.follows = "latest";
+      nixos-hardware.url = "github:nixos/nixos-hardware";
+
+      pkgs.url = "path:./pkgs";
+      pkgs.inputs.nixpkgs.follows = "nixos";
     };
 
-    zsh-jq = {
-      url = "github:reegnz/jq-zsh-plugin";
-      flake = false;
-    };
+  outputs = inputs@{ self, pkgs, devlib, nixos, ci-agent, home, nixos-hardware, nur, ... }:
+    devlib.lib.mkFlake {
+      inherit self inputs;
 
-    zsh-histdb = {
-      url = "github:larkery/zsh-histdb";
-      flake = false;
-    };
+      channelsConfig = { allowUnfree = true; };
 
-    zsh-completion-rustup = {
-      url = "github:pkulev/zsh-rustup-completion";
-      flake = false;
-    };
-
-    zsh-completion-cargo = {
-      url = "github:MenkeTechnologies/zsh-cargo-completion";
-      flake = false;
-    };
-
-    zsh-completion-npm = {
-      url = "github:lukechilds/zsh-better-npm-completion";
-      flake = false;
-    };
-
-    zsh-completion-rake = {
-      url = "github:unixorn/rake-completion.zshplugin";
-      flake = false;
-    };
-
-    zsh-rbenv = {
-      url = "github:/ELLIOTTCABLE/rbenv.plugin.zsh";
-      flake = false;
-    };
-
-    zsh-completion-pipenv = {
-      url = "github:owenstranathan/pipenv.zsh";
-      flake = false;
-    };
-
-    zsh-completion-yarn = {
-      url = "github:g-plane/zsh-yarn-autocompletions";
-      flake = false;
-    };
-
-    zsh-completion-git-flow = {
-      url = "github:petervanderdoes/git-flow-completion";
-      flake = false;
-    };
-
-    zsh-tool-forgit = {
-      url = "github:wfxr/forgit";
-      flake = false;
-    };
-  };
-
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, naersk, rust
-    , persway, wayland, neovim-nightly, nur, ... }:
-    let
-      inherit (lib.my) mapModules mapModulesRec mapHosts;
-
-      system = "x86_64-linux";
-
-      naersk-lib = naersk.lib."${system}".override;
-      mkPkgs = pkgs: extraOverlays:
-        import pkgs {
-          inherit system;
-          config.allowUnfree = true; # forgive me Stallman senpai
-          overlays = extraOverlays ++ (lib.attrValues self.overlays);
+      channels = {
+        nixos = {
+          overlays = [
+            (devlib.lib.pathsIn ./overlays)
+            ./pkgs/default.nix
+            pkgs.overlay # for `srcs`
+            nur.overlay
+          ];
         };
-      pkgs = mkPkgs nixpkgs [
-        self.overlay
-        persway.overlay
-        neovim-nightly.overlay
-        nur.overlay
-        rust.overlay
-        wayland.overlay
+        latest = { };
+      };
+
+      lib = import ./lib { lib = devlib.lib // nixos.lib; };
+
+      sharedOverlays = [
+        (final: prev: {
+          ourlib = self.lib;
+        })
       ];
-      pkgs' = mkPkgs nixpkgs-unstable [ ];
 
-      lib = nixpkgs.lib.extend (self: super: {
-        my = import ./lib {
-          inherit pkgs inputs;
-          lib = self;
+      nixos = {
+        hostDefaults = {
+          system = "x86_64-linux";
+          channelName = "nixos";
+          modules = ./modules/module-list.nix;
+          externalModules = [
+            { _module.args.ourlib = self.lib; }
+            ci-agent.nixosModules.agent-profile
+            home.nixosModules.home-manager
+            ./modules/customBuilds.nix
+          ];
         };
-      });
-    in {
-      lib = lib.my;
-
-      overlay = final: prev: {
-        unstable = pkgs';
-        my = self.packages."${system}";
-      };
-
-      overlays = mapModules ./overlays import;
-
-      packages."${system}" = mapModules ./packages (p: pkgs.callPackage p { });
-
-      nixosModules = {
-        dotfiles = import ./.;
-      } // mapModulesRec ./modules import;
-
-      nixosConfigurations = mapHosts ./hosts { };
-
-      devShell."${system}" = import ./shell.nix { inherit pkgs; };
-
-      templates = {
-        full = {
-          path = ./.;
-          description = "A grossly incandescent nixos config";
-        };
-        minimal = {
-          path = ./templates/minimal;
-          description = "A grossly incandescent and minimal nixos config";
+        hosts = nixos.lib.mkMerge [
+          (devlib.lib.importHosts ./hosts)
+          { /* set host specific properties here */ }
+        ];
+        profiles = [ ./profiles ./users ];
+        suites = { profiles, users, ... }: with profiles; {
+          base = [ cachix core users.nixos users.root ];
         };
       };
-      defaultTemplate = self.templates.minimal;
 
-      defaultApp."${system}" = {
-        type = "app";
-        program = ./bin/hey;
+      home = {
+        modules = ./users/modules/module-list.nix;
+        externalModules = [ ];
+        profiles = [ ./users/profiles ];
+        suites = { profiles, ... }: with profiles; {
+          base = [ direnv git ];
+        };
       };
-    };
+
+      homeConfigurations = devlib.lib.mkHomeConfigurations self.nixosConfigurations;
+
+      deploy.nodes = devlib.lib.mkDeployNodes self.nixosConfigurations { };
+
+      #defaultTemplate = self.templates.flk;
+      templates.flk.path = ./.;
+      templates.flk.description = "flk template";
+
+    }
+  ;
 }

@@ -1,25 +1,54 @@
-{ lib, ... }:
-
-with builtins;
-with lib; rec {
-  # attrsToList
-  attrsToList = attrs:
-    mapAttrsToList (name: value: { inherit name value; }) attrs;
-
+{ lib }:
+rec {
   # mapFilterAttrs ::
-  #   (name -> value -> bool)
+  #   (name -> value -> bool )
   #   (name -> value -> { name = any; value = any; })
   #   attrs
-  mapFilterAttrs = pred: f: attrs: filterAttrs pred (mapAttrs' f attrs);
+  mapFilterAttrs = seive: f: attrs:
+    lib.filterAttrs
+      seive
+      (lib.mapAttrs' f attrs);
 
   # Generate an attribute set by mapping a function over a list of values.
-  genAttrs' = values: f: listToAttrs (map f values);
+  genAttrs' = values: f: lib.listToAttrs (map f values);
 
-  # anyAttrs :: (name -> value -> bool) attrs
-  anyAttrs = pred: attrs:
-    any (attr: pred attr.name attr.value) (attrsToList attrs);
+  # Convert a list of file paths to attribute set where
+  # the key is the folder or filename stripped of nix
+  # extension and imported content of the file as value.
+  #
+  pathsToImportedAttrs = paths:
+    let
+      paths' = lib.filter
+        (path: lib.hasSuffix ".nix" path
+          || lib.pathExists "${path}/default.nix")
+        paths;
+    in
+    genAttrs' paths' (path: {
+      name = lib.removeSuffix ".nix"
+        # Safe as long this is just used as a name
+        (builtins.unsafeDiscardStringContext (baseNameOf path));
+      value = import path;
+    });
 
-  # countAttrs :: (name -> value -> bool) attrs
-  countAttrs = pred: attrs:
-    count (attr: pred attr.name attr.value) (attrsToList attrs);
+  importHosts = dir:
+    lib.os.recImport {
+      inherit dir;
+      _import = base: {
+        modules = import "${toString dir}/${base}.nix";
+      };
+    };
+
+  concatAttrs = lib.fold (attr: sum: lib.recursiveUpdate sum attr) { };
+
+  # Filter out packages that support given system and follow flake check requirements
+  filterPackages = system: packages:
+    let
+      # Everything that nix flake check requires for the packages output
+      filter = (n: v: with v; let platforms = meta.hydraPlatforms or meta.platforms or [ ]; in
+      lib.isDerivation v && !meta.broken && builtins.elem system platforms);
+    in
+    lib.filterAttrs filter packages;
+
+  safeReadDir = path:
+    lib.optionalAttrs (builtins.pathExists (toString path)) (builtins.readDir (toString path));
 }

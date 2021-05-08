@@ -1,128 +1,83 @@
-[![Made with Doom Emacs](https://img.shields.io/badge/Made_with-Doom_Emacs-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white)](https://github.com/hlissner/doom-emacs)
-[![NixOS 21.05](https://img.shields.io/badge/NixOS-v21.05-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://nixos.org)
+[![Bors enabled](https://bors.tech/images/badge_small.svg)](https://app.bors.tech/repositories/32678)
+[![MIT License](https://img.shields.io/github/license/divnix/devos)][mit]
+[![NixOS](https://img.shields.io/badge/NixOS-unstable-blue.svg?style=flat&logo=NixOS&logoColor=white)](https://nixos.org)
 
-**Hey,** you. You're finally awake. You were trying to configure your OS declaratively, right? Walked right into that NixOS ambush, same as us, and those dotfiles over there.
+> #### ⚠ Advisory ⚠
+> DevOS requires the [flakes][flakes] feature available via an _experimental_
+> branch of [nix][nix]. Until nix 3.0 is released, this project
+> should be considered unstable, though quite usable as flakes have been
+> maturing _well_ [for a while](https://github.com/divnix/devos/tree/17713c22d07c54525c728c62060a0428b76dee3b).
 
-<img src="/../screenshots/alucard/fakebusy.png" width="100%" />
+# Introduction
+DevOS grants a simple way to use, deploy and manage [NixOS][nixos] systems for
+personal and productive use. A sane repository structure is provided,
+integrating several popular projects like [home-manager][home-manager],
+[devshell][devshell], and [more](./doc/integrations).
 
-<p align="center">
-<span><img src="/../screenshots/alucard/desktop.png" height="178" /></span>
-<span><img src="/../screenshots/alucard/rofi.png" height="178" /></span>
-<span><img src="/../screenshots/alucard/tiling.png" height="178" /></span>
-</p>
+Striving for ___nix first™___ solutions with unobstrusive implementations,
+a [flake centric][flake-doc] approach is taken for useful conveniences such as
+[automatic source updates](./pkgs#automatic-source-updates).
 
-------
+Skip the indeterminate nature of other systems, _and_ the perceived
+tedium of bootstrapping Nix. It's easier than you think!
 
-| | |
-|-|-|
-| **Shell:** | zsh + zgen |
-| **DM:** | lightdm + lightdm-mini-greeter |
-| **WM:** | bspwm + polybar |
-| **Editor:** | [Doom Emacs][doom-emacs] (and occasionally [vim]) |
-| **Terminal:** | st |
-| **Launcher:** | rofi |
-| **Browser:** | firefox |
-| **GTK Theme:** | [Ant Dracula](https://github.com/EliverLara/Ant-Dracula) |
+### Status: Alpha
+A lot of the implementation is less than perfect, and huge
+[redesigns](https://github.com/divnix/devos/issues/152) _will_ happen. There
+are unstable versions (0._x_._x_) to help users keep track of changes and
+progress.
 
------
+## Getting Started
+Check out the [guide](https://devos.divnix.com/start) to get up and running.
 
-## Quick start
+## In the Wild
+The author maintains his own branch, so you can take inspiration, direction, or
+make critical comments about the [code][please]. 😜
 
-1. Yoink the latest build of [NixOS 21.05][nixos].
-2. Boot into the installer.
-3. Do your partitions and mount your root to `/mnt` ([for example](hosts/kuro/README.org))
-4. Install these dotfiles:
-5. `nix-shell -p git nixFlakes`
-6. `git clone https://github.com/hlissner/dotfiles /mnt/etc/nixos`
-7. Install NixOS: `nixos-install --root /mnt --flake /mnt/etc/nixos#XYZ`, where
-   `XYZ` is [the host you want to install](hosts/).  Use `#generic` for a
-   simple, universal config, or create a sub-directory in `hosts/` for your device. See [host/kuro] for an example.
-8. Reboot!
-9. Change your `root` and `$USER` passwords!
+## Motivation
+NixOS provides an amazing abstraction to manage our environment, but that new
+power can sometimes bring feelings of overwhelm and confusion. Having a turing
+complete system can easily lead to unlimited complexity if we do it wrong.
+Instead, we should have a community consensus on how to manage a NixOS system
+and its satellite projects, from which best practices can evolve.
 
-## Management
+___The future is declarative! 🎉___
 
-And I say, `bin/hey`. [What's going on?](http://hemansings.com/)
+## Upstream
+I'd love to see this in the nix-community should anyone believe its reached a
+point of maturity to be generally useful, but I'm all for waiting until
+1.0[#121](https://github.com/divnix/devos/issues/121) to save the cache work,
+too.
 
-```
-Usage: hey [global-options] [command] [sub-options]
+## Community Profiles
+There are two branches from which to choose: [core][core] and
+[community][community]. The community branch builds on core and includes
+several ready-made profiles for discretionary use.
 
-Available Commands:
-  check                  Run 'nix flake check' on your dotfiles
-  gc                     Garbage collect & optimize nix store
-  generations            Explore, manage, diff across generations
-  help [SUBCOMMAND]      Show usage information for this script or a subcommand
-  rebuild                Rebuild the current system's flake
-  repl                   Open a nix-repl with nixpkgs and dotfiles preloaded
-  rollback               Roll back to last generation
-  search                 Search nixpkgs for a package
-  show                   [ARGS...]
-  ssh HOST [COMMAND]     Run a bin/hey command on a remote NixOS system
-  swap PATH [PATH...]    Recursively swap nix-store symlinks with copies (or back).
-  test                   Quickly rebuild, for quick iteration
-  theme THEME_NAME       Quickly swap to another theme module
-  update [INPUT...]      Update specific flakes or all of them
-  upgrade                Update all flakes and rebuild system
+Every package and NixOS profile declared in community is uploaded to
+[cachix](./integrations/cachix.md), so everything provided is available
+without building anything. This is especially useful for the packages that are
+[overridden](./concepts/overrides.md) from master, as without the cache,
+rebuilds are quite frequent.
 
-Options:
-    -d, --dryrun                     Don't change anything; preform dry run
-    -D, --debug                      Show trace on nix errors
-    -f, --flake URI                  Change target flake to URI
-    -h, --help                       Display this help, or help for a specific command
-    -i, -A, -q, -e, -p               Forward to nix-env
-```
+## Inspiration & Art
+- [hlissner/dotfiles][dotfiles]
+- [nix-user-chroot](https://github.com/nix-community/nix-user-chroot)
+- [Nickel](https://github.com/tweag/nickel)
+- [Awesome Nix](https://github.com/nix-community/awesome-nix)
+- [devshell](https://github.com/numtide/devshell)
 
-## Frequently asked questions
+# License
+DevOS is licensed under the [MIT License][mit].
 
-+ **Why NixOS?**
-
-  Because declarative, generational, and immutable configuration is a godsend
-  when you have a fleet of computers to manage.
-  
-+ **How do you manage secrets?**
-
-  With [agenix].
-  
-+ **How do I change the default username?**
-
-  1. Set the `USER` environment variable the first time you run `nixos-install`:
-     `USER=myusername nixos-install --root /mnt --flake /path/to/dotfiles#XYZ`
-  2. Or change `"hlissner"` in modules/options.nix.
-  
-+ **Why did you write bin/hey?**
-
-  I envy Guix's CLI and want similar for NixOS, but its toolchain is spread
-  across many commands, none of which are as intuitive: `nix`,
-  `nix-collect-garbage`, `nixos-rebuild`, `nix-env`, `nix-shell`.
-  
-  I don't claim `hey` is the answer, but everybody likes their own brew.
- 
-+ **How 2 flakes?**
-
-  Would it be the NixOS experience if I gave you all the answers in one,
-  convenient place?
-  
-  No. Suffer my pain:
-  
-  + [A three-part tweag article that everyone's read.](https://www.tweag.io/blog/2020-05-25-flakes/)
-  + [An overengineered config to scare off beginners.](https://github.com/nrdxp/nixflk)
-  + [A minimalistic config for scared beginners.](https://github.com/colemickens/nixos-flake-example)
-  + [A nixos wiki page that spells out the format of flake.nix.](https://nixos.wiki/wiki/Flakes)
-  + [Official documentation that nobody reads.](https://nixos.org/learn.html)
-  + [Some great videos on general nixOS tooling and hackery.](https://www.youtube.com/channel/UC-cY3DcYladGdFQWIKL90SQ)
-  + A couple flake configs that I 
-    [may](https://github.com/LEXUGE/nixos) 
-    [have](https://github.com/bqv/nixrc)
-    [shamelessly](https://git.sr.ht/~dunklecat/nixos-config/tree)
-    [rummaged](https://github.com/utdemir/dotfiles)
-    [through](https://github.com/purcell/dotfiles).
-  + [Some notes about using Nix](https://github.com/justinwoo/nix-shorts)
-  + [What helped me figure out generators (for npm, yarn, python and haskell)](https://myme.no/posts/2020-01-26-nixos-for-development.html)
-  + [What y'all will need when Nix drives you to drink.](https://www.youtube.com/watch?v=Eni9PPPPBpg)
-
-
-[doom-emacs]: https://github.com/hlissner/doom-emacs
-[vim]: https://github.com/hlissner/.vim
-[nixos]: https://releases.nixos.org/?prefix=nixos/unstable/
-[host/kuro]: https://github.com/hlissner/dotfiles/tree/master/hosts/kuro
-[agenix]: https://github.com/ryantm/agenix
+[nix]: https://nixos.org/manual/nix/stable
+[mit]: https://mit-license.org
+[nixos]: https://nixos.org/manual/nixos/stable
+[home-manager]: https://nix-community.github.io/home-manager
+[flakes]: https://nixos.wiki/wiki/Flakes
+[flake-doc]: https://github.com/NixOS/nix/blob/master/src/nix/flake.md
+[core]: https://github.com/divnix/devos
+[community]: https://github.com/divnix/devos/tree/community
+[dotfiles]: https://github.com/hlissner/dotfiles
+[devshell]: https://github.com/numtide/devshell
+[please]: https://github.com/nrdxp/devos/tree/nrd
