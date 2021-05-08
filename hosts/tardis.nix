@@ -40,7 +40,6 @@
       "quiet"
 
       "add_efi_memmap"
-      colors
     ];
 
     # Refuse ICMP echo requests on my desktop/laptop; nobody has any business
