@@ -1,5 +1,10 @@
 { lib, modulesPath, pkgs, suites, hardware, profiles, ... }:
+let
+  inherit (builtins) toFile readFile;
+  inherit (lib) fileContents mkForce;
 
+  name = "The Doctor";
+in
 {
   ### root password is empty by default ###
   #imports = profiles.laptop;
