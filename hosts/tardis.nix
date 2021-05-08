@@ -137,4 +137,11 @@
   swapDevices = [ ];
 
   nix.maxJobs = lib.mkDefault 8;
+  users.users.doc = {
+    uid = 1000;
+    description = name;
+    isNormalUser = true;
+    hashedPassword = fileContents ../../secrets/doc;
+    extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" ];
+  };
 }
