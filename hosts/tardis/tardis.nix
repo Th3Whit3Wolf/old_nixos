@@ -8,7 +8,7 @@ in
 {
   imports = [
     ./users
-  ];
+  ] ++ suites.mobile;
 
   ### root password is empty by default ###
   #imports = profiles.laptop;
