@@ -65,7 +65,12 @@
           ];
         };
         hosts = nixos.lib.mkMerge [
-          (devlib.lib.importHosts ./hosts)
+          /*
+            * TODO: Figure out how to run
+            * devlib.lib.importHosts for all directories
+            * in ./hosts
+          */
+          (devlib.lib.importHosts ./hosts/tardis)
           { /* set host specific properties here */ }
         ];
         profiles = [ ./profiles ./users ];
