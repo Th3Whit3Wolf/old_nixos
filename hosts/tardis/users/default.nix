@@ -1,0 +1,5 @@
+{
+  import = [
+    ./doc.nix
+  ];
+}

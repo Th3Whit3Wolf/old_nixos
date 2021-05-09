@@ -6,6 +6,10 @@ let
   name = "Just the doctor";
 in
 {
+  import = [
+    ./users
+  ];
+
   ### root password is empty by default ###
   #imports = profiles.laptop;
 
@@ -148,13 +152,5 @@ in
     adjtime.source = "/persist/etc/adjtime";
     NIXOS.source = "/persist/etc/NIXOS";
     machine-id.source = "/persist/etc/machine-id";
-  };
-
-  users.users.doc = {
-    uid = 1000;
-    description = name;
-    isNormalUser = true;
-    initialHashedPassword = fileContents ../secrets/doc;
-    extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" ];
   };
 }
