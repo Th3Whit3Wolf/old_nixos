@@ -3,7 +3,7 @@ let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
 
-  name = "The Doctor";
+  name = "Just the doctor";
 in
 {
   ### root password is empty by default ###
@@ -14,18 +14,18 @@ in
   boot = {
     initrd = {
       availableKernelModules = [
-	"aesni_intel"
-	"cryptd"
-	"nvme"
-	"xhci_pci"
-	"ahci"
-	"usb_storage"
-	"sd_mod"
-	"rtsx_pci_sdmmc"
+        "aesni_intel"
+        "cryptd"
+        "nvme"
+        "xhci_pci"
+        "ahci"
+        "usb_storage"
+        "sd_mod"
+        "rtsx_pci_sdmmc"
       ];
       kernelModules = [ ];
       luks.devices."crypt".device =
-	"/dev/disk/by-uuid/57d2784d-0fcb-471b-838f-cbcca73fda93";
+        "/dev/disk/by-uuid/57d2784d-0fcb-471b-838f-cbcca73fda93";
     };
     extraModulePackages = [ ];
     loader = {
@@ -63,15 +63,15 @@ in
       device = "/dev/disk/by-uuid/55e7ba18-7d5d-41b5-9c11-3de4cfda1b7a";
       fsType = "btrfs";
       options = [
-	"subvol=@nix"
-	"ssd"
-	"compress=zstd"
-	"space_cache=v2"
-	"discard=async"
-	"autodefrag"
-	"noatime"
-	"nodev"
-	"nosuid"
+        "subvol=@nix"
+        "ssd"
+        "compress=zstd"
+        "space_cache=v2"
+        "discard=async"
+        "autodefrag"
+        "noatime"
+        "nodev"
+        "nosuid"
       ];
     };
 
@@ -79,15 +79,15 @@ in
       device = "/dev/disk/by-uuid/55e7ba18-7d5d-41b5-9c11-3de4cfda1b7a";
       fsType = "btrfs";
       options = [
-	"subvol=@persist"
-	"ssd"
-	"compress=zstd"
-	"space_cache=v2"
-	"discard=async"
-	"autodefrag"
-	"noatime"
-	"nodev"
-	"nosuid"
+        "subvol=@persist"
+        "ssd"
+        "compress=zstd"
+        "space_cache=v2"
+        "discard=async"
+        "autodefrag"
+        "noatime"
+        "nodev"
+        "nosuid"
       ];
       neededForBoot = true;
     };
@@ -96,16 +96,16 @@ in
       device = "/dev/disk/by-uuid/55e7ba18-7d5d-41b5-9c11-3de4cfda1b7a";
       fsType = "btrfs";
       options = [
-	"subvol=@log"
-	"ssd"
-	"compress=zstd"
-	"space_cache=v2"
-	"discard=async"
-	"autodefrag"
-	"noatime"
-	"nodev"
-	"nosuid"
-	"noexec"
+        "subvol=@log"
+        "ssd"
+        "compress=zstd"
+        "space_cache=v2"
+        "discard=async"
+        "autodefrag"
+        "noatime"
+        "nodev"
+        "nosuid"
+        "noexec"
       ];
       neededForBoot = true;
     };
@@ -114,16 +114,16 @@ in
       device = "/dev/disk/by-uuid/55e7ba18-7d5d-41b5-9c11-3de4cfda1b7a";
       fsType = "btrfs";
       options = [
-	"subvol=@snapshots"
-	"ssd"
-	"compress=zstd"
-	"space_cache=v2"
-	"discard=async"
-	"autodefrag"
-	"noatime"
-	"nodev"
-	"nosuid"
-	"noexec"
+        "subvol=@snapshots"
+        "ssd"
+        "compress=zstd"
+        "space_cache=v2"
+        "discard=async"
+        "autodefrag"
+        "noatime"
+        "nodev"
+        "nosuid"
+        "noexec"
       ];
     };
 
@@ -142,11 +142,19 @@ in
   swapDevices = [ ];
 
   nix.maxJobs = lib.mkDefault 8;
+  environment.etc = {
+    nixos.source = "/persist/etc/nixos";
+    "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections";
+    adjtime.source = "/persist/etc/adjtime";
+    NIXOS.source = "/persist/etc/NIXOS";
+    machine-id.source = "/persist/etc/machine-id";
+  };
+
   users.users.doc = {
     uid = 1000;
     description = name;
     isNormalUser = true;
-    hashedPassword = fileContents ../../secrets/doc;
+    initialHashedPassword = fileContents ../secrets/doc;
     extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" ];
   };
 }
