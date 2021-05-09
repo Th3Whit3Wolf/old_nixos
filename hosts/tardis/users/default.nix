@@ -10,5 +10,10 @@ in
   ];
 
   users.users.root.initialHashedPassword = fileContents ../secrets/root;
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
+
 
 }
