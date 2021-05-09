@@ -6,7 +6,7 @@ let
   name = "Just the doctor";
 in
 {
-  import = [
+  imports = [
     ./users
   ];
 
