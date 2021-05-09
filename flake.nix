@@ -75,7 +75,8 @@
         ];
         profiles = [ ./profiles ./users ];
         suites = { profiles, users, ... }: with profiles; {
-          base = [ cachix core users.nixos users.root ];
+          base = [ cachix core ];
+          mobile = [ laptop ];
         };
       };
 
