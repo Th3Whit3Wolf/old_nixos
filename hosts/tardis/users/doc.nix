@@ -10,7 +10,7 @@ in
     uid = 1000;
     description = name;
     isNormalUser = true;
-    initialHashedPassword = fileContents ../../../secrets/doc;
+    initialHashedPassword = fileContents ../secrets/doc;
     extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" ];
   };
 
