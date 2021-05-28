@@ -1,4 +1,4 @@
-{ lib, fetchFromGitLab, rustPlatform }:
+{ lib, fetchFromGitHub, rustPlatform }:
 
 rustPlatform.buildRustPackage rec {
   pname = "persway";
@@ -11,9 +11,13 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-97qJd3o8nJt8IX5tyGWtAmJsIv5Gcw1xoBFwxAqk7I8=";
   };
 
+  # Upstream has Cargo.lock gitignored
+  cargoPatches = [ ./update-Cargo-lock.diff ];
+
   cargoSha256 = "sha256-c/30fqLOw1WvDRNgH+Su0i0kNzWPZ+qZJ6tHGS+UWjM=";
+  
   meta = {
-    license = pkgs.stdenv.lib.licenses.mit;
+    license = lib.licenses.mit;
     maintainers = [
       {
         email = "john@insane.se";
