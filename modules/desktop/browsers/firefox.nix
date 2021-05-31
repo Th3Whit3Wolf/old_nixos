@@ -1359,7 +1359,6 @@ in {
     home-manager.users.${config.user.name}.programs.firefox = {
       enable = true;
       extensions = with pkgs.nur.repos; [
-	ijohanne.firefoxPlugins.enhancer-for-youtube
 	ijohanne.firefoxPlugins.lastpass-password-manager
 	rycee.firefox-addons.auto-tab-discard
 	rycee.firefox-addons.bitwarden
