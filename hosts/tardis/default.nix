@@ -8,7 +8,7 @@
       bar.way.enable = true;
       apps = {
         #discord.enable = true;
-        rofi.enable = true;
+        # rofi.enable = true;
         # godot.enable = true;
         #signal.enable = true;
       };
@@ -24,18 +24,18 @@
         # emulators.psx.enable = true;
       };
       media = {
-        daw.enable = true;
+        # daw.enable = true;
         documents.enable = true;
-        graphics.enable = true;
+        # graphics.enable = true;
         mpv.enable = true;
-        recording.enable = true;
+        # recording.enable = true;
         # spotify.enable = true;
       };
       term = {
-        default = "xst";
+        default = "alacritty";
         alacritty.enable = true;
       };
-      vm = { qemu.enable = false; };
+      #vm = { qemu.enable = false; };
     };
     dev = {
       lang = {
@@ -57,10 +57,10 @@
       vscode.enable = true;
     };
     shell = {
-      adl.enable = true;
-      bitwarden.enable = true;
+      #adl.enable = true;
+      #bitwarden.enable = true;
       gnupg.enable = true;
-      tmux.enable = true;
+      #tmux.enable = true;
       zsh.enable = true;
     };
     services = {
