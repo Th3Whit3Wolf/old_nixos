@@ -129,7 +129,7 @@ in {
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/D217-5F2C";
+    device = "/dev/disk/by-uuid/1A6A-41C8";
     fsType = "vfat";
     options = [ "nodev" "noexec" "nosuid" "nodev" "nosuid" "noexec" ];
   };
