@@ -23,10 +23,6 @@ in {
     programs.sway.enable = true;
     user.extraGroups = [ "video" ];
     user.packages = with pkgs; [
-      my.eww
-      my.kile
-      my.river
-      #unstable.river
       sway
       unstable.greetd.greetd
       unstable.greetd.gtkgreet
@@ -271,10 +267,10 @@ riverctl map normal $mod E exit
               # Notification deamon:
               command = "${pkgs.mako}/bin/mako >/tmp/mako.log 2>&1";
             }
-	    {
-	      command =
-	        "${pkgs.persway}/bin/persway -w -a -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1'";
-	    }
+	    #{
+	    #  command =
+	    #    "${pkgs.my.persway}/bin/persway -w -a -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1'";
+	    #}
             { command = "${pkgs.kanshi}/bin/kanshi >/tmp/kanshi.log 2>&1"; }
 	    { command = "systemd-notify --ready"; }
 	    { command =
