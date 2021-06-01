@@ -1,10 +1,5 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-let
-  # themeAct = config.modules.theme.active;
-  # themeVt = config.modules.theme.vt;
-  # colors = if (themeAct != null) then "vt.default_red=${themeVt.red} vt.default_grn=${themeVt.grn} vt.default_blu=${themeVt.blu}" else "";
-in
 {
   imports = [ "${modulesPath}/installer/scan/not-detected.nix" ];
 
@@ -45,8 +40,6 @@ in
   };
 
   # CPU
-  nix.maxJobs = lib.mkDefault 8;
-  powerManagement.cpuFreqGovernor = "powersave";
   hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems = {
