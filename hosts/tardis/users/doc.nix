@@ -1,18 +1,28 @@
-{ lib, modulesPath, pkgs, suites, hardware, profiles, ... }:
+{ self
+, lib
+, modulesPath
+, pkgs
+, suites
+, hardware
+, profiles
+, ...
+}:
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
 in
 {
   imports = [
-
     (lib.mkAliasOptionModule [ "doc" ] [ "home-manager" "users" "doc" ])
+    ./git_aliases.nix
   ];
 
-  age.secrets = {
-    doc.file = "${self}/secrets/doc.age";
-    #github.file = ../secrets/github.age;
-    #github.owner = "doc";
+  age = {
+    secrets = {
+      doc.file = ../secrets/doc.age;
+      #github.file = ../secrets/github.age;
+      #github.owner = "doc";
+    };
   };
 
   doc = { lib, ... }: {
@@ -70,7 +80,6 @@ in
           };
         };
       };
-      aliases = ./git_aliases.nix;
     };
 
     programs.ssh = {
@@ -85,13 +94,17 @@ in
       #    };
       #  };
     };
+    programs.zsh = {
+      enable = true;
+    };
   };
 
   users.users.doc = {
     uid = 1000;
     description = "Just the doctor";
     isNormalUser = true;
-    initialHashedPassword = "/run/secrets/doc";
+    passwordFile = "/run/secrets/doc";
     extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" "adbusers" ];
   };
+  services.openssh.enable = true;
 }
