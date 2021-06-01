@@ -10,35 +10,89 @@ in
 
     systemPackages = with pkgs; [
       binutils
+      cached-nix-shell
+      compsize
       coreutils
       curl
       direnv
       dnsutils
       dosfstools
-      fd
-      git
-      gotop
-      gptfdisk
+      gnumake
       iputils
       jq
       manix
       moreutils
       nix-index
       nmap
+      openssl
+      usbutils
+      utillinux
+      wget
+      whois
+
+      # Compression
+      commonsCompress
+      lhasa
+      lrzip
+      lzop
+      p7zip
+      pbzip2
+      pigz
+      unrar
+      unzip
+
+      # Codecs
+      a52dec
+      faac
+      faad2
+      flac
+      gst_all_1.gst-libav
+      gst_all_1.gst-plugins-bad
+      gst_all_1.gst-plugins-base
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-ugly
+      gst_all_1.gst-vaapi
+      gst_all_1.gstreamer
+      lame
+      libde265
+      libdv
+      libmad
+      libmpeg2
+      libtheora
+      libvorbis
+      wavpack
+      xvidcore
+
+      # Rust Tools
+      bat
+      bat-extras.prettybat
+      bat-extras.batman
+      bat-extras.batgrep
+      bat-extras.batdiff
+      bat-extras.batwatch
+      bingrep
+      unstable.bottom
+      diskonaut
+      du-dust
+      exa
+      fd
+      hexyl
+      hyperfine
+      just
+      nushell
+      procs
       ripgrep
       skim
       tealdeer
-      usbutils
-      utillinux
-      whois
-    ];
+      tokei
+      xsv
+      xxv
+      zoxide
 
-    shellInit = ''
-      export STARSHIP_CONFIG=${
-        pkgs.writeText "starship.toml"
-        (fileContents ./starship.toml)
-      }
-    '';
+      # Miscellaneous
+      kibi
+      micro
+    ];
 
     shellAliases =
       let ifSudo = lib.mkIf config.security.sudo.enable;
@@ -84,7 +138,7 @@ in
         se = ifSudo "sudoedit";
 
         # top
-        top = "gotop";
+        top = "btm";
 
         # systemd
         ctl = "systemctl";
@@ -132,15 +186,6 @@ in
       fallback = true
     '';
 
-  };
-
-  programs.bash = {
-    promptInit = ''
-      eval "$(${pkgs.starship}/bin/starship init bash)"
-    '';
-    interactiveShellInit = ''
-      eval "$(${pkgs.direnv}/bin/direnv hook bash)"
-    '';
   };
 
   services.earlyoom.enable = true;
