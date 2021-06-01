@@ -14,4 +14,7 @@ in
     enable = true;
     wheelNeedsPassword = false;
   };
+
+  # Immutable users due to tmpfs
+  users.mutableUsers = false;
 }
