@@ -14,6 +14,4 @@ in
     enable = true;
     wheelNeedsPassword = false;
   };
-
-
 }
