@@ -27,6 +27,7 @@
       url = "github:nix-community/impermanence";
       flake = false;
     };
+    agenix.url = "github:ryantm/agenix";
     wayland = {
       url = "github:colemickens/nixpkgs-wayland";
       inputs.master.follows = "master";
@@ -101,8 +102,19 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, naersk, rust
-    , persway, wayland, neovim-nightly, nur, ... }:
+  outputs =
+    inputs@{ self
+    , nixpkgs
+    , nixpkgs-unstable
+    , naersk
+    , rust
+    , persway
+    , wayland
+    , neovim-nightly
+    , nur
+    , agenix
+    , ...
+    }:
     let
       inherit (lib.my) mapModules mapModulesRec mapHosts;
 
@@ -122,6 +134,7 @@
         nur.overlay
         rust.overlay
         wayland.overlay
+        agenix.overlay
       ];
       pkgs' = mkPkgs nixpkgs-unstable [ ];
 
@@ -131,7 +144,8 @@
           lib = self;
         };
       });
-    in {
+    in
+    {
       lib = lib.my;
 
       overlay = final: prev: {
