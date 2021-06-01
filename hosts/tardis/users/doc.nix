@@ -2,20 +2,17 @@
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
-
-  docDesc = "Just the doctor";
 in
 {
   imports = [
 
-    # foo bar
     (lib.mkAliasOptionModule [ "doc" ] [ "home-manager" "users" "doc" ])
   ];
 
   age.secrets = {
-    doc.file = ../secrets/doc.age;
-    github.file = "${self}/secrets/github.age";
-    github.owner = "doc";
+    doc.file = "${self}/secrets/doc.age";
+    #github.file = ../secrets/github.age;
+    #github.owner = "doc";
   };
 
   doc = { lib, ... }: {
@@ -32,7 +29,7 @@ in
       extraConfig = {
         core = {
           quotepath = "off";
-          editor = "${config.modules.editor.default}";
+          editor = "neovim";
           excludesfile = "~/.config/git/ignore";
           whitespace = "trailing-space,space-before-tab";
         };
@@ -80,24 +77,21 @@ in
       enable = true;
       hashKnownHosts = true;
 
-      matchBlocks = {
-        github = {
-          host = "github.com";
-          identityFile = "/run/secrets/github";
-          extraOptions = { AddKeysToAgent = "yes"; };
-        };
-      };
+      #   matchBlocks = {
+      #    github = {
+      #      host = "github.com";
+      #      #identityFile = "/run/secrets/github";
+      #      extraOptions = { AddKeysToAgent = "yes"; };
+      #    };
+      #  };
     };
   };
 
-
-
   users.users.doc = {
     uid = 1000;
-    description = docDesc;
+    description = "Just the doctor";
     isNormalUser = true;
     initialHashedPassword = "/run/secrets/doc";
     extraGroups = [ "wheel" "input" "networkmanager" "libvirtd" "adbusers" ];
   };
-
 }

@@ -25,6 +25,7 @@
         url = "github:nix-community/home-manager";
         inputs.nixpkgs.follows = "nixos";
       };
+
       impermanence = {
         url = "github:nix-community/impermanence";
         flake = false;
@@ -53,21 +54,19 @@
       };
     };
 
+
   outputs =
     { self
     , pkgs
     , digga
     , nixos
     , ci-agent
-    , impermanence
     , home
     , nixos-hardware
     , nur
     , agenix
-    , rust
     , ...
     }@inputs:
-
     digga.lib.mkFlake {
       inherit self inputs;
 
@@ -90,9 +89,12 @@
 
       sharedOverlays = [
         (final: prev: {
-          lib = prev.lib.extend (lfinal: lprev: { our = self.lib; });
+          lib = prev.lib.extend (lfinal: lprev: {
+            our = self.lib;
+          });
         })
       ];
+
 
       nixos = {
         hostDefaults = {
@@ -104,7 +106,6 @@
             ci-agent.nixosModules.agent-profile
             home.nixosModules.home-manager
             agenix.nixosModules.age
-            impermanence.nixosModules.impermanence
             ./modules/customBuilds.nix
           ];
         };
@@ -113,13 +114,16 @@
         hosts = {
           # set host specific properties here
           NixOS = { };
-          tardis.modules = [ ];
+          tardis.modules = [ nixos-hardware.nixosModules.common-cpu-amd ];
         };
-
-        profiles = [ ./profiles ./users ];
-        suites = { profiles, users, ... }: with profiles; rec {
-          base = [ cachix core ];
-          mobile = [ laptop ];
+        importables = rec {
+          profiles = digga.lib.importers.rakeLeaves ./profiles // {
+            users = digga.lib.importers.rakeLeaves ./users;
+          };
+          suites = with profiles; rec {
+            base = [ cachix core ];
+            mobile = [ laptop ];
+          };
         };
       };
 
@@ -127,9 +131,14 @@
         modules = ./users/modules/module-list.nix;
         externalModules = [ ];
         profiles = [ ./users/profiles ];
-        suites = { profiles, ... }: with profiles; rec {
-          base = [ direnv git ];
-        };
+        suites = { profiles, ... }:
+          with profiles; rec {
+            base = [ direnv git ];
+          };
+      };
+
+      devshell.externalModules = { pkgs, ... }: {
+        packages = [ pkgs.agenix ];
       };
 
       homeConfigurations =
@@ -137,9 +146,8 @@
 
       deploy.nodes = digga.lib.mkDeployNodes self.nixosConfigurations { };
 
-      #defaultTemplate = self.templates.flk;
+      defaultTemplate = self.templates.flk;
       templates.flk.path = ./.;
       templates.flk.description = "flk template";
-
     };
 }
