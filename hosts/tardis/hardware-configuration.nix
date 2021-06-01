@@ -1,19 +1,12 @@
-{ lib, modulesPath, pkgs, suites, hardware, profiles, ... }:
-let
-  inherit (builtins) toFile readFile;
-  inherit (lib) fileContents mkForce;
+{ config, lib, pkgs, modulesPath, ... }:
 
-  name = "Just the doctor";
+let
+  # themeAct = config.modules.theme.active;
+  # themeVt = config.modules.theme.vt;
+  # colors = if (themeAct != null) then "vt.default_red=${themeVt.red} vt.default_grn=${themeVt.grn} vt.default_blu=${themeVt.blu}" else "";
 in
 {
-  imports = [
-    ./users
-  ] ++ suites.mobile;
-
-  ### root password is empty by default ###
-  #imports = profiles.laptop;
-
-  time.timeZone = "Europe/London";
+  imports = [ "${modulesPath}/installer/scan/not-detected.nix" ];
 
   boot = {
     initrd = {
@@ -27,18 +20,12 @@ in
         "sd_mod"
         "rtsx_pci_sdmmc"
       ];
-      kernelModules = [ ];
       luks.devices."crypt".device =
         "/dev/disk/by-uuid/57d2784d-0fcb-471b-838f-cbcca73fda93";
+      kernelModules = [ ];
     };
     extraModulePackages = [ ];
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.configurationLimit = 10;
-      systemd-boot.enable = true;
-    };
     kernelModules = [ "kvm-amd" ];
-    kernelPackages = pkgs.linuxPackages_5_10;
     kernelParams = [
       # HACK Disables fixes for spectre, meltdown, L1TF and a number of CPU
       #      vulnerabilities. Don't copy this blindly! And especially not for
@@ -49,12 +36,18 @@ in
       "quiet"
 
       "add_efi_memmap"
+      #colors
     ];
 
     # Refuse ICMP echo requests on my desktop/laptop; nobody has any business
     # pinging them, unlike my servers.
     kernel.sysctl."net.ipv4.icmp_echo_ignore_broadcasts" = 1;
   };
+
+  # CPU
+  nix.maxJobs = lib.mkDefault 8;
+  powerManagement.cpuFreqGovernor = "powersave";
+  hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems = {
     "/" = {
@@ -132,7 +125,7 @@ in
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/D217-5F2C";
+      device = "/dev/disk/by-uuid/1A6A-41C8";
       fsType = "vfat";
       options = [ "nodev" "noexec" "nosuid" "nodev" "nosuid" "noexec" ];
     };
@@ -141,16 +134,5 @@ in
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-  };
-
-  swapDevices = [ ];
-
-  nix.maxJobs = lib.mkDefault 8;
-  environment.etc = {
-    nixos.source = "/persist/etc/nixos";
-    "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections";
-    adjtime.source = "/persist/etc/adjtime";
-    NIXOS.source = "/persist/etc/NIXOS";
-    machine-id.source = "/persist/etc/machine-id";
   };
 }
