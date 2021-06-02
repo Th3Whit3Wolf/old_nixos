@@ -19,6 +19,7 @@ in
     };
   };
 
+  #age.sshKeyPaths = [ "/persist/home/doc/.ssh/id_ed25519" ];
 
   time.timeZone = "Europe/London";
 
