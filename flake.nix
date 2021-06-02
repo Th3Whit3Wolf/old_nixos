@@ -129,7 +129,9 @@
 
       home = {
         modules = ./users/modules/module-list.nix;
-        externalModules = [ ];
+        externalModules = [
+          "${inputs.impermanence}/home-manager.nix"
+        ];
         profiles = [ ./users/profiles ];
         suites = { profiles, ... }:
           with profiles; rec {
