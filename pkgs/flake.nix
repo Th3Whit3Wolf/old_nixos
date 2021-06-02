@@ -1,7 +1,10 @@
 {
   description = "Package Sources";
 
-  inputs = { };
+  inputs = {
+    any-nix-shell.url = "github:haslersn/any-nix-shell";
+    any-nix-shell.flake = false;
+  };
 
   outputs = { self, nixpkgs, ... }: {
     overlay = final: prev: {
