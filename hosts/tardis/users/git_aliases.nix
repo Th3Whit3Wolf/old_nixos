@@ -2,9 +2,6 @@
 , lib
 , modulesPath
 , pkgs
-, suites
-, hardware
-, profiles
 , ...
 }:
 
@@ -87,7 +84,7 @@ let
 
     # let's do code review!
     review = ''
-      "!vim +'set ft=diff bt=nofile|exe "0r !git branch-diff -p --stat"|1|exe "silent file" escape(printf("git diff of the %s branch", systemlist("git branch-name")[0]), " |\\")'"'';
+      "!nvim +'set ft=diff bt=nofile|exe "0r !git branch-diff -p --stat"|1|exe "silent file" escape(printf("git diff of the %s branch", systemlist("git branch-name")[0]), " |\\")'"'';
 
     # show current commit SHA; try also git sha --short and git sha [--short] somebranch
     sha = ''
