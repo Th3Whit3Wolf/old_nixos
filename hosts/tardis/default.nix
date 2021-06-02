@@ -31,4 +31,6 @@ in
     NIXOS.source = "/persist/etc/NIXOS";
     machine-id.source = "/persist/etc/machine-id";
   };
+
+  programs.fuse.userAllowOther = true;
 }
