@@ -36,7 +36,6 @@ in
     extraGroups = [ "users" "wheel" "input" "networkmanager" "libvirtd" "adbusers" ];
   };
 
-
   doc = { lib, ... }: {
     home = {
       sessionVariables = {
@@ -113,7 +112,7 @@ in
         extraConfig = {
           core = {
             quotepath = "off";
-            editor = "neovim";
+            editor = "nvim";
             excludesfile = "~/.config/git/ignore";
             whitespace = "trailing-space,space-before-tab";
           };
@@ -159,15 +158,15 @@ in
       ssh = {
         enable = true;
         hashKnownHosts = true;
-
-        #   matchBlocks = {
-        #    github = {
-        #      host = "github.com";
-        #      #identityFile = "/run/secrets/github";
-        #      extraOptions = { AddKeysToAgent = "yes"; };
-        #    };
-        #  };
+        matchBlocks = {
+          github = {
+            host = "github.com";
+            identityFile = "~/.ssh/id_GitHub";
+            extraOptions = { AddKeysToAgent = "yes"; };
+          };
+        };
       };
+
       zsh = {
         enable = true;
       };
