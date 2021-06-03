@@ -68,7 +68,7 @@ in
       bat-extras.batdiff
       bat-extras.batwatch
       bingrep
-      unstable.bottom
+      bottom
       diskonaut
       du-dust
       exa
@@ -119,6 +119,7 @@ in
 
   environment = {
     etc = {
+      # Automatic log out from virtual consoles
       "profile.d/shell-timeout.sh".text = '' "TMOUT="\$(( 60*30 ))";
       [ -z "\$DISPLAY" ] && export TMOUT;
         case \$( /usr/bin/tty ) in
@@ -126,7 +127,7 @@ in
         esac
     '';
     };
+  };
 
-    services.earlyoom.enable = true;
-
-  }
+  services.earlyoom.enable = true;
+}
