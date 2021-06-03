@@ -67,6 +67,7 @@ in
       wofi
       qt5.qtwayland
       #river
+      firefox-wayland
     ];
   };
 
