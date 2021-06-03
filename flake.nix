@@ -4,6 +4,7 @@
   inputs =
     {
       nixos.url = "nixpkgs/nixos-unstable";
+      nixos-hardware.url = "github:nixos/nixos-hardware";
       latest.url = "nixpkgs";
       digga.url = "github:divnix/digga/develop";
 
@@ -46,8 +47,6 @@
         inputs.nixpkgs.follows = "latest";
       };
 
-      nixos-hardware.url = "github:nixos/nixos-hardware";
-
       pkgs = {
         url = "path:./pkgs";
         inputs.nixpkgs.follows = "nixos";
@@ -58,6 +57,10 @@
       #  inputs.nixpkgs.follows = "latest";
       #};
 
+      nixpkgs-wayland = {
+        url = "github:colemickens/nixpkgs-wayland";
+        inputs.nixpkgs.follows = "nixos";
+      };
     };
 
   outputs =
@@ -70,7 +73,6 @@
     , nixos-hardware
     , nur
     , agenix
-      #, neovim-nightly
     , ...
     }@inputs:
     digga.lib.mkFlake {
@@ -86,7 +88,6 @@
             pkgs.overlay # for `srcs`
             nur.overlay
             agenix.overlay
-            #neovim-nightly.overlay
           ];
         };
         latest = { };

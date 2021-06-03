@@ -20,6 +20,22 @@
         "type": "github"
       }
     },
+    "cachix": {
+      "locked": {
+        "lastModified": 1622559709,
+        "narHash": "sha256-wnZUu3JNQTwu7q301TOsZFGxAcgBV8C3qks/aB8wztQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "cee3ca37c68dad981396365bf4b1d0c807ac4eb4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-20.09",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "ci-agent": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -341,6 +357,27 @@
         "type": "github"
       }
     },
+    "nixpkgs-wayland": {
+      "inputs": {
+        "cachix": "cachix",
+        "nixpkgs": [
+          "nixos"
+        ]
+      },
+      "locked": {
+        "lastModified": 1622706696,
+        "narHash": "sha256-KL+Umw81MtuB+rzC8at13Hc267CONzJ1bkVZ0/2GEMM=",
+        "owner": "colemickens",
+        "repo": "nixpkgs-wayland",
+        "rev": "226aa9c2a6019dce37787b32ed7274c23034ffb0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "colemickens",
+        "repo": "nixpkgs-wayland",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1620962350,
@@ -414,6 +451,7 @@
         "naersk": "naersk_2",
         "nixos": "nixos",
         "nixos-hardware": "nixos-hardware",
+        "nixpkgs-wayland": "nixpkgs-wayland",
         "nur": "nur",
         "pkgs": "pkgs",
         "rust": "rust"
