@@ -39,7 +39,16 @@ in
     description = "Just the doctor";
     isNormalUser = true;
     initialHashedPassword = fileContents ../secrets/doc;
-    extraGroups = [ "users" "wheel" "input" "networkmanager" "libvirtd" "adbusers" "video" ];
+    shell = pkgs.zsh;
+    extraGroups = [
+      "users"
+      "wheel"
+      "input"
+      "networkmanager"
+      "libvirtd"
+      "adbusers"
+      "video"
+    ];
   };
 
   programs.sway.enable = true;
@@ -76,6 +85,7 @@ in
         SCREENRC = "$XDG_CONFIG_HOME/screen/screenrc";
         WEECHAT_HOME = "$XDG_CONFIG_HOME/weechat";
       };
+
       persistence."/persist/home/doc" = {
         directories = [
           ".config/pipewire/media-session.d"
@@ -109,6 +119,7 @@ in
           "Vids"
           "Gits"
         ];
+
         allowOther = true;
       };
     };
@@ -181,15 +192,18 @@ in
           };
         };
       };
+
       mako = {
         enable = true;
         anchor = "top-center";
         defaultTimeout = 5000;
       };
+
       zsh = {
         enable = true;
       };
     };
+
     wayland.windowManager.sway = {
       enable = true;
       xwayland = true;
@@ -401,6 +415,7 @@ in
         workspace number 1
       '';
     };
+
     xdg.configFile = {
       "river/init" = {
         text = ''
