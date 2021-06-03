@@ -52,8 +52,13 @@
         url = "path:./pkgs";
         inputs.nixpkgs.follows = "nixos";
       };
-    };
 
+      #neovim-nightly = {
+      #  url = "github:nix-community/neovim-nightly-overlay";
+      #  inputs.nixpkgs.follows = "latest";
+      #};
+
+    };
 
   outputs =
     { self
@@ -65,6 +70,7 @@
     , nixos-hardware
     , nur
     , agenix
+      #, neovim-nightly
     , ...
     }@inputs:
     digga.lib.mkFlake {
@@ -80,6 +86,7 @@
             pkgs.overlay # for `srcs`
             nur.overlay
             agenix.overlay
+            #neovim-nightly.overlay
           ];
         };
         latest = { };
@@ -94,7 +101,6 @@
           });
         })
       ];
-
 
       nixos = {
         hostDefaults = {
