@@ -117,6 +117,16 @@ in
     '';
   };
 
-  services.earlyoom.enable = true;
+  environment = {
+    etc = {
+      "profile.d/shell-timeout.sh".text = '' "TMOUT="\$(( 60*30 ))";
+      [ -z "\$DISPLAY" ] && export TMOUT;
+        case \$( /usr/bin/tty ) in
+    /dev/tty[0-9]*) export TMOUT;;
+        esac
+    '';
+    };
 
-}
+    services.earlyoom.enable = true;
+
+  }
