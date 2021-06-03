@@ -129,7 +129,7 @@
           };
           suites = with profiles; rec {
             base = [ cachix core ];
-            mobile = [ laptop ];
+            mobile = [ base laptop ];
           };
         };
       };
