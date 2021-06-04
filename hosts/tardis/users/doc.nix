@@ -40,6 +40,8 @@ in
     }: {
       imports = suites.tardis;
 
+      home.theme = "Space Dark";
+
       programs = {
         git = {
           userName = "Th3Whit3Wolf";
