@@ -5,11 +5,13 @@
 , suites
 , hardware
 , profiles
+, config
 , ...
 }:
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
+  theme = config.home-manager.users.doc.home.theme;
 in
 {
   imports = [
@@ -108,4 +110,11 @@ in
         };
       };
     };
+
+  boot.kernelParams = [
+    (if (theme.name != null) then
+      "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
+    else "")
+  ];
+
 }
