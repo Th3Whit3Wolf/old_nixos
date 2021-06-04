@@ -35,7 +35,9 @@ in
       }];
       output = {
         eDP-1 = {
-          bg = "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
+          bg =
+            if (config.home.theme.wallpaper != null) then "${config.home.theme.wallpaper} fill"
+            else "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
         };
       };
       left = "h";
