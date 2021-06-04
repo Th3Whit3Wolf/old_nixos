@@ -129,8 +129,9 @@
           };
           suites = with profiles; rec {
             base = [ cachix core ];
+            firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
-            tardis = [ base laptop eraseYourDarlings sway ];
+            tardis = [ base laptop firefox eraseYourDarlings sway ];
           };
         };
       };
