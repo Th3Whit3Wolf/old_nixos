@@ -24,6 +24,36 @@ in
           The theme wallpaper.
         '';
       };
+      vt = {
+        red = mkOption {
+          type = types.str;
+          default = "";
+          example =
+            "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+          description = ''
+            List of red values to be used for linux console colors.
+          '';
+        };
+        grn = mkOption {
+          type = types.str;
+          default = "";
+          example =
+            "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+          description = ''
+            List of green values to be used for linux console colors.
+          '';
+        };
+        blu = mkOption {
+          type = types.str;
+          default = "";
+          example =
+            "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+          description = ''
+            List of blue values to be used for linux console colors.
+          '';
+        };
+      };
+
     };
   };
 }
