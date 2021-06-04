@@ -3,7 +3,7 @@
 
   inputs =
     {
-      nixos.url = "nixpkgs/nixos-unstable";
+      nixos.url = "nixpkgs/nixos-21.05";
       nixos-hardware.url = "github:nixos/nixos-hardware";
       latest.url = "nixpkgs";
       digga.url = "github:divnix/digga/develop";
@@ -129,7 +129,8 @@
           };
           suites = with profiles; rec {
             base = [ cachix core ];
-            mobile = [ base laptop ];
+            sway = [ desktop.wm.sway ];
+            tardis = [ base laptop eraseYourDarlings sway ];
           };
         };
       };
@@ -139,11 +140,15 @@
         externalModules = [
           "${inputs.impermanence}/home-manager.nix"
         ];
-        profiles = [ ./users/profiles ];
-        suites = { profiles, ... }:
-          with profiles; rec {
-            base = [ direnv git ];
+        importables = rec {
+          profiles = digga.lib.importers.rakeLeaves ./users/profiles;
+          suites = with profiles; rec {
+            base = [ direnv git xdg ssh ];
+            firefox = [ desktop.browser.firefox ];
+            sway = [ desktop.wm.sway ];
+            tardis = [ base firefox sway eraseYourDarlings ];
           };
+        };
       };
 
       devshell.externalModules = { pkgs, ... }: {
