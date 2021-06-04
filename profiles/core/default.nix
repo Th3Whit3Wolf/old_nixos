@@ -5,6 +5,16 @@ in
   imports = [ ../cachix ];
 
   environment = {
+    etc = {
+      # Automatic log out from virtual consoles
+      "profile.d/shell-timeout.sh".text = '' "TMOUT="\$(( 60*30 ))";
+      [ -z "\$DISPLAY" ] && export TMOUT;
+        case \$( /usr/bin/tty ) in
+    /dev/tty[0-9]*) export TMOUT;;
+        esac
+    '';
+    };
+
     systemPackages = with pkgs; [
       binutils
       cached-nix-shell
@@ -93,12 +103,25 @@ in
   };
 
   fonts = {
-    fonts = with pkgs; [ powerline-fonts dejavu_fonts ];
+    fontDir.enable = true;
+    enableGhostscriptFonts = true;
+    fontconfig = {
+      cache32Bit = true;
+      defaultFonts = {
+        monospace = [ "DejaVu Sans Mono for Powerline" ];
+        sansSerif = [ "DejaVu Sans" ];
+      };
 
-    fontconfig.defaultFonts = {
-      monospace = [ "DejaVu Sans Mono for Powerline" ];
-      sansSerif = [ "DejaVu Sans" ];
     };
+    fonts = with pkgs; [
+      ubuntu_font_family
+      dejavu_fonts
+      symbola
+      noto-fonts
+      noto-fonts-cjk
+      font-awesome
+      nerdfonts
+    ];
   };
 
   nix = {
@@ -115,18 +138,6 @@ in
       keep-derivations = true
       fallback = true
     '';
-  };
-
-  environment = {
-    etc = {
-      # Automatic log out from virtual consoles
-      "profile.d/shell-timeout.sh".text = '' "TMOUT="\$(( 60*30 ))";
-      [ -z "\$DISPLAY" ] && export TMOUT;
-        case \$( /usr/bin/tty ) in
-    /dev/tty[0-9]*) export TMOUT;;
-        esac
-    '';
-    };
   };
 
   services.earlyoom.enable = true;
