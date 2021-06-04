@@ -122,8 +122,22 @@ in
             '';
           };
         })
-      (mkIf config.wayland.windowManager.sway.enable
+      (mkIf cfp.waybar.enable
+        {
+          xdg.configFile = {
+            "waybar" = {
+              source = ./config/waybar;
+              recursive = true;
+            };
+            "nwg-launchers" = {
+              source = ./config/nwg-launchers;
+              recursive = true;
+            };
+          };
 
+        })
+
+      (mkIf config.wayland.windowManager.sway.enable
         {
           wayland.windowManager.sway.config.colors = {
             focused = {
