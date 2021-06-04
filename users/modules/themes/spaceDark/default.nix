@@ -10,22 +10,29 @@ in
     (mkMerge [
       {
         home = {
-          theme.wallpaper = ./static/wallpaper.jpg;
-          configFile = {
-            "bottom/bottom.toml" = {
-              source = ./static/config/term/bottom/bottom.toml;
+          theme = {
+            wallpaper = ./static/wallpaper.jpg;
+            vt = {
+              red = "0x29,0xaf,0x00,0xd7,0x87,0x87,0x0d,0xb2,0x29,0xf2,0x23,0xff,0x1a,0xd7,0x14,0xf";
+              grn = "0x2b,0x87,0x99,0xaf,0xaf,0x5f,0xcd,0xb2,0x2b,0x20,0xfd,0xfd,0x8f,0x5f,0xff,0xff";
+              blu = "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
             };
-            "gitui" = {
-              source = ./static/config/term/gitui;
-              recursive = true;
-            };
-            "procs/config.toml" = {
-              source = ./static/config/term/procs/config.toml;
-            };
-            "wofi" = {
-              source = ./static/config/term/wofi;
-              recursive = true;
-            };
+          };
+        };
+        xdg.configFile = {
+          "bottom/bottom.toml" = {
+            source = ./static/config/term/bottom/bottom.toml;
+          };
+          "gitui" = {
+            source = ./static/config/term/gitui;
+            recursive = true;
+          };
+          "procs/config.toml" = {
+            source = ./static/config/term/procs/config.toml;
+          };
+          "wofi" = {
+            source = ./static/config/term/wofi;
+            recursive = true;
           };
         };
       }
@@ -154,7 +161,7 @@ in
             shadowOpacity = 0.22;
             # activeOpacity = "1.00";
             # inactiveOpacity = "0.92";
-            settings = {
+            extraOptions = {
               shadow-radius = 12;
               # blur-background = true;
               # blur-background-frame = true;
