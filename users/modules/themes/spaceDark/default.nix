@@ -3,12 +3,31 @@ with lib;
 
 let
   cfp = config.programs;
+  cfs = config.services;
 in
 {
   config = mkIf (config.home.theme.name == "Space Dark")
     (mkMerge [
       {
-        home.theme.wallpaper = ../../../../static/wallpaper/spaceDark-bg.jpg;
+        home = {
+          theme.wallpaper = ./static/wallpaper.jpg;
+          configFile = {
+            "bottom/bottom.toml" = {
+              source = ./static/config/term/bottom/bottom.toml;
+            };
+            "gitui" = {
+              source = ./static/config/term/gitui;
+              recursive = true;
+            };
+            "procs/config.toml" = {
+              source = ./static/config/term/procs/config.toml;
+            };
+            "wofi" = {
+              source = ./static/config/term/wofi;
+              recursive = true;
+            };
+          };
+        };
       }
       (mkIf cfp.alacritty.enable
         {
@@ -122,8 +141,30 @@ in
               text = "#555555";
             };
           };
-
         })
+
+      (mkIf cfs.picom.enable
+        {
+          services.picom = {
+            fade = true;
+            fadeDelta = 1;
+            fadeSteps = [ 1.0e-2 1.2e-2 ];
+            shadow = true;
+            shadowOffsets = [ (-10) (-10) ];
+            shadowOpacity = 0.22;
+            # activeOpacity = "1.00";
+            # inactiveOpacity = "0.92";
+            settings = {
+              shadow-radius = 12;
+              # blur-background = true;
+              # blur-background-frame = true;
+              # blur-background-fixed = true;
+              blur-kern = "7x7box";
+              blur-strength = 320;
+            };
+          };
+        })
+
 
     ]);
 }
