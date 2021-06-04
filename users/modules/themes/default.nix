@@ -8,6 +8,10 @@ let
 in
 {
   imports = [ ./spaceDark ];
+
+  #   TODO
+  #   Add packages that are required to be installed
+  #   Add fonts that are required to be installed
   options = {
     home.theme = with types; {
       name = mkOption {
