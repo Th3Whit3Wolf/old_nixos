@@ -46,14 +46,13 @@ in
     dbus.packages = [ pkgs.gnome3.dconf ];
     gvfs.enable = true;
 
-    xserver = {
+    greetd = {
       enable = true;
-      layout = "us";
-      displayManager = {
-        #defaultSession = "sway";
-        gdm = {
-          enable = true;
-          wayland = true;
+      restart = false;
+      settings = {
+        default_session = {
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
+          user = "greeter";
         };
       };
     };
