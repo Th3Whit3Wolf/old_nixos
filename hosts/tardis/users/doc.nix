@@ -112,7 +112,7 @@ in
     };
 
   boot.kernelParams = [
-    (if (theme.name != null) then
+    (if (theme.vt.red != null && theme.vt.grn != null && theme.vt.blu != null) then
       "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
     else "")
   ];
