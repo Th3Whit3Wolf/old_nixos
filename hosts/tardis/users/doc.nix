@@ -12,6 +12,7 @@ let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
   theme = config.home-manager.users.doc.home.theme;
+  themePackages = config.home-manager.users.doc.home.theme.requiredPackages;
 in
 {
   imports = [
@@ -117,4 +118,6 @@ in
     else "")
   ];
 
+  environment.systemPackages = [ ] ++ themePackages
+  ;
 }
