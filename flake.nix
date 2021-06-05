@@ -130,7 +130,9 @@
           };
           suites = with profiles; rec {
             base = [ cachix core ];
-            firefox = [ desktop.browser.firefox ];
+            psd = [
+              desktop.browser.psd
+            ];
             sway = [ desktop.wm.sway ];
             tardis = [ base laptop firefox eraseYourDarlings sway ];
           };
@@ -146,7 +148,7 @@
           profiles = digga.lib.importers.rakeLeaves ./users/profiles;
           suites = with profiles; rec {
             base = [ direnv git xdg ssh ];
-            psd = [ desktop.browser.psd ];
+            firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
             tardis = [ base psd sway eraseYourDarlings ];
           };
