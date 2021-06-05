@@ -57,7 +57,14 @@ in
           '';
         };
       };
-
+      requiredPackages = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExample "[ pkgs.firefox pkgs.thunderbird ]";
+        description = ''
+          The set of packages that are required for the theme
+        '';
+      };
     };
   };
 }
