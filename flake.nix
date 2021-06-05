@@ -146,9 +146,9 @@
           profiles = digga.lib.importers.rakeLeaves ./users/profiles;
           suites = with profiles; rec {
             base = [ direnv git xdg ssh ];
-            firefox = [ desktop.browser.firefox ];
+            psd = [ desktop.browser.psd ];
             sway = [ desktop.wm.sway ];
-            tardis = [ base firefox sway eraseYourDarlings ];
+            tardis = [ base psd sway eraseYourDarlings ];
           };
         };
       };
