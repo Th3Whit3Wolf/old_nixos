@@ -31,6 +31,8 @@ in
     '';
   };
 
+  home-manager.useUserPackages = true;
+
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
     gvfs.enable = true;
