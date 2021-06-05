@@ -4,37 +4,36 @@ with lib;
 let
   cfp = config.programs;
   cfs = config.services;
+  cfg = home.theme;
 in
 {
   config = mkIf (config.home.theme.name == "Space Dark")
     (mkMerge [
       {
-        home =
-          {
-            theme = {
-              wallpaper = ./static/wallpaper.jpg;
-              vt = {
-                red = "0x29,0xaf,0x00,0xd7,0x87,0x87,0x0d,0xb2,0x29,0xf2,0x23,0xff,0x1a,0xd7,0x14,0xf";
-                grn = "0x2b,0x87,0x99,0xaf,0xaf,0x5f,0xcd,0xb2,0x2b,0x20,0xfd,0xfd,0x8f,0x5f,0xff,0xff";
-                blu = "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
-              };
-              requiredPackages = [
-                pkgs.spacemacs-theme
-              ];
-              gtk = {
-                theme = "Space-Dark";
-                iconTheme = "Space-Dark";
-                cursor = {
-                  name = "breeze_cursors";
-                  size = 24;
-                };
-                font = {
-                  name = "SFNS Display Regular";
-                  size = 12;
-                };
-              };
+        cfg = {
+          wallpaper = ./static/wallpaper.jpg;
+          vt = {
+            red = "0x29,0xaf,0x00,0xd7,0x87,0x87,0x0d,0xb2,0x29,0xf2,0x23,0xff,0x1a,0xd7,0x14,0xf";
+            grn = "0x2b,0x87,0x99,0xaf,0xaf,0x5f,0xcd,0xb2,0x2b,0x20,0xfd,0xfd,0x8f,0x5f,0xff,0xff";
+            blu = "0x2e,0xd7,0x66,0x5f,0xff,0xaf,0xcd,0xb2,0x2e,0x1f,0x00,0x00,0xff,0xd7,0xff,0xff";
+          };
+          requiredPackages = [
+            pkgs.spacemacs-theme
+            pkgs.breeze-qt5 # For them sweet breeze cursors
+          ];
+          gtk = {
+            theme = "Space-Dark";
+            iconTheme = "Space-Dark";
+            cursor = {
+              name = "breeze_cursors";
+              size = 24;
+            };
+            font = {
+              name = "SFNS Display Regular";
+              size = 12;
             };
           };
+        };
         xdg.configFile = {
           "bottom/bottom.toml" = {
             source = ./static/config/term/bottom/bottom.toml;
@@ -49,6 +48,22 @@ in
           "wofi" = {
             source = ./static/config/term/wofi;
             recursive = true;
+          };
+        };
+        gtk = {
+          enable = true;
+          theme.name = cfg.gtk.theme;
+          iconTheme.name = cfg.gtk.iconTheme;
+          font = {
+            name = cfg.gtk.font.name;
+            size = cfg.gtk.font.size;
+          };
+          gtk3.extraConfig = {
+            gtk-cursor-theme-name = cfg.gtk.cursor.name;
+            gtk-cursor-theme-size = cfg.gtk.cursor.size;
+            gtk-xft-hinting = 1;
+            gtk-xft-hintstyle = "hintfull";
+            gtk-xft-rgba = "none";
           };
         };
       }
@@ -150,7 +165,6 @@ in
               recursive = true;
             };
           };
-
         })
 
       (mkIf config.wayland.windowManager.sway.enable

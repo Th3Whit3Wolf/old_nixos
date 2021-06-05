@@ -15,7 +15,6 @@
       imv
       slurp
       qt5.qtwayland
-      breeze-qt5 # For them sweet breeze cursors
       nwg-launchers
     ];
 }
