@@ -65,6 +65,48 @@ in
           The set of packages that are required for the theme
         '';
       };
+      gtk = {
+        theme = mkOpt str "";
+        iconTheme = mkOpt str "";
+        font = {
+          name = mkOption {
+            type = types.str;
+            default = "";
+            example = "DejaVu Sans";
+            description = ''
+              The family name of the font within the package.
+            '';
+          };
+
+          size = mkOption {
+            type = types.nullOr types.int;
+            default = 12;
+            example = "8";
+            description = ''
+              The size of the font.
+            '';
+          };
+        };
+        cursor = {
+          name = mkOption {
+            type = types.str;
+            default = "";
+            example = "breeze_cursors";
+            description = ''
+              The name of the cursor theme
+            '';
+          };
+
+          size = mkOption {
+            type = types.nullOr types.int;
+            default = 24;
+            example = "8";
+            description = ''
+              The size of the cursor.
+            '';
+          };
+        };
+      };
     };
   };
 }
