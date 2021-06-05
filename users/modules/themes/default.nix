@@ -21,6 +21,7 @@ in
           The theme name.
         '';
       };
+
       wallpaper = mkOption {
         type = with types; nullOr path;
         example = "../Wallpaper/1.jpg";
@@ -28,6 +29,7 @@ in
           The theme wallpaper.
         '';
       };
+
       vt = {
         red = mkOption {
           type = types.str;
@@ -57,6 +59,7 @@ in
           '';
         };
       };
+
       requiredPackages = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -65,9 +68,26 @@ in
           The set of packages that are required for the theme
         '';
       };
+
       gtk = {
-        theme = mkOpt str "";
-        iconTheme = mkOpt str "";
+        theme = mkOption {
+          type = types.str;
+          default = "";
+          example = "Spacemacs Theme";
+          description = ''
+            Name of gtk theme to use for theme.
+          '';
+        };
+
+        iconTheme = mkOption {
+          type = types.str;
+          default = "";
+          example = "Spacemacs Theme";
+          description = ''
+            Name of gtk icon theme to use for theme.
+          '';
+        };
+
         font = {
           name = mkOption {
             type = types.str;
@@ -87,6 +107,7 @@ in
             '';
           };
         };
+
         cursor = {
           name = mkOption {
             type = types.str;
