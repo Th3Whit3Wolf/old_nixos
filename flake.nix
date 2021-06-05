@@ -134,7 +134,13 @@
               desktop.browser.psd
             ];
             sway = [ desktop.wm.sway ];
-            tardis = [ base laptop firefox eraseYourDarlings sway ];
+            tardis = [
+              base
+              laptop
+              psd
+              eraseYourDarlings
+              sway
+            ];
           };
         };
       };
@@ -150,7 +156,12 @@
             base = [ direnv git xdg ssh ];
             firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
-            tardis = [ base psd sway eraseYourDarlings ];
+            tardis = [
+              base
+              firefox
+              sway
+              eraseYourDarlings
+            ];
           };
         };
       };
