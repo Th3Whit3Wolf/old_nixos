@@ -30,7 +30,7 @@ in
     };
     extraSessionCommands = "systemctl --user import-environment";
     config = rec {
-      bars = [{
+      bars = lib.mkIf config.programs.waybar.enable [{
         command = "${pkgs.waybar}/bin/waybar";
       }];
       output = {
