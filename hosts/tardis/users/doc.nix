@@ -11,19 +11,20 @@
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
-  theme = config.home-manager.users.doc.home.theme;
-  themePackages = config.home-manager.users.doc.home.theme.requiredPackages;
+  user = "doc";
+  theme = config.home-manager.users.${user}.home.theme;
+  themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
 in
 {
   imports = [
-    (lib.mkAliasOptionModule [ "doc" ] [ "home-manager" "users" "doc" ])
+    (lib.mkAliasOptionModule [ "${user}" ] [ "home-manager" "users" "${user}" ])
   ];
 
-  users.users.doc = {
+  users.users.${user} = {
     uid = 1000;
     description = "Just the doctor";
     isNormalUser = true;
-    initialHashedPassword = fileContents ../secrets/doc;
+    initialHashedPassword = fileContents (../secrets + "/${user}");
     shell = pkgs.zsh;
     extraGroups = [
       "users"
@@ -56,7 +57,7 @@ in
     ] ++ themePackages;
   };
 
-  doc =
+  ${user} =
     { suites
     , lib
     , ...
@@ -64,6 +65,10 @@ in
       imports = suites.tardis;
 
       home.theme.name = "Space Dark";
+
+      systemd.user.sessionVariables = {
+        ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
+      };
 
       programs = {
         git = {
