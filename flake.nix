@@ -122,7 +122,7 @@
         hosts = {
           # set host specific properties here
           NixOS = { };
-          tardis.modules = [ nixos-hardware.nixosModules.common-cpu-amd ];
+          tardis = { };
         };
         importables = rec {
           profiles = digga.lib.importers.rakeLeaves ./profiles // {
