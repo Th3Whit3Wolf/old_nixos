@@ -8,11 +8,16 @@ channels: final: prev: {
     discord
     element-desktop
     manix
+    nixUnstable
     rage
     nixpkgs-fmt
     qutebrowser
     signal-desktop
-    starship;
+    starship
+    #sway
+    #river
+    #mesa
+    ;
 
   haskellPackages = prev.haskellPackages.override {
     overrides = hfinal: hprev:
