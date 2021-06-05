@@ -32,6 +32,17 @@ in
   };
   environment = {
     systemPackages = with pkgs; [
+      # Git tools
+      git
+      git-crypt
+      git-hub
+      git-lfs
+      git-subrepo
+      delta
+      gitoxide
+      lazygit
+      gitui
+
       gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
       gnome3.nautilus
       gnome3.nautilus-python
@@ -46,15 +57,15 @@ in
     dbus.packages = [ pkgs.gnome3.dconf ];
     gvfs.enable = true;
 
-    greetd = {
-      enable = true;
-      restart = false;
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
-          user = "greeter";
-        };
-      };
-    };
+    #greetd = {
+    #  enable = true;
+    #  restart = false;
+    #  settings = {
+    #    default_session = {
+    #      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
+    #      user = "greeter";
+    #    };
+    #  };
+    #};
   };
 }

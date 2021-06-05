@@ -99,8 +99,6 @@ in
       # Miscellaneous
       kibi
       micro
-      git
-      git-crypt
     ];
   };
 
