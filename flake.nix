@@ -113,6 +113,7 @@
             ci-agent.nixosModules.agent-profile
             home.nixosModules.home-manager
             agenix.nixosModules.age
+            "${inputs.impermanence}/nixos.nix"
             ./modules/customBuilds.nix
           ];
         };
