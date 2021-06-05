@@ -34,6 +34,26 @@ in
       "adbusers"
       "video"
     ];
+    packages = with pkgs; [
+      # Git tools
+      git
+      git-crypt
+      git-hub
+      git-lfs
+      git-subrepo
+      delta
+      gitoxide
+      lazygit
+      gitui
+
+      gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
+      gnome3.nautilus
+      gnome3.nautilus-python
+      gnome3.sushi
+      mesa
+      sway
+      river
+    ] ++ themePackages;
   };
 
   doc =
@@ -117,7 +137,4 @@ in
       "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
     else "")
   ];
-
-  environment.systemPackages = [ ] ++ themePackages
-  ;
 }

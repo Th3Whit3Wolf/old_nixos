@@ -30,28 +30,6 @@ in
       access-tokens = "${accessToken}";
     '';
   };
-  environment = {
-    systemPackages = with pkgs; [
-      # Git tools
-      git
-      git-crypt
-      git-hub
-      git-lfs
-      git-subrepo
-      delta
-      gitoxide
-      lazygit
-      gitui
-
-      gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
-      gnome3.nautilus
-      gnome3.nautilus-python
-      gnome3.sushi
-      mesa
-      sway
-      river
-    ];
-  };
 
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
