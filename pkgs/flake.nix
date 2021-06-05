@@ -2,8 +2,14 @@
   description = "Package Sources";
 
   inputs = {
-    any-nix-shell.url = "github:haslersn/any-nix-shell";
-    any-nix-shell.flake = false;
+    any-nix-shell = {
+      url = "github:haslersn/any-nix-shell";
+      flake = false;
+    };
+    spacemacs-theme = {
+      url = "https://github.com/Th3Whit3Wolf/Space-Theme";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }: {
