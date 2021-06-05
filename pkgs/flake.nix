@@ -7,7 +7,7 @@
       flake = false;
     };
     spacemacs-theme = {
-      url = "https://github.com/Th3Whit3Wolf/Space-Theme";
+      url = "github:Th3Whit3Wolf/Space-Theme";
       flake = false;
     };
   };

@@ -1,10 +1,11 @@
-{ lib, srcs, stdenv, ... }:
-
-let src = srcs.spacemacs-theme; in
-
+{ lib, stdenv, srcs }:
+let src = srcs.spacemacs-theme;
+in
 stdenv.mkDerivation {
-  inherit (src) pname version;
   inherit src;
+  inherit (src) pname version;
+
+  buildPhase = "true";
 
   installPhase = ''
     for theme in $(ls themes); do
@@ -15,11 +16,12 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    inherit version;
     description = "Spacemacs theme for linux";
     homepage = "https://github.com/Th3Whit3Wolf/Space-Theme/";
-    maintainers = [ maintainers.whitewolf ];
+
+    maintainers = [ maintainers.nrdxp ];
+    platforms = platforms.unix;
     license = licenses.mit;
-    platforms = platforms.linux;
+    inherit version;
   };
 }
