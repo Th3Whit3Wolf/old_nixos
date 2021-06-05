@@ -161,7 +161,15 @@ in
           middle_emulation = "enabled";
         };
       };
-      fonts = [ "SFNS Display Regular" "SpaceMono Nerd Font Mono Regular" ];
+      fonts =
+        {
+          names = [
+            "SFNS Display Regular"
+            "SpaceMono Nerd Font Mono Regular"
+          ];
+          style = "Regular";
+          size = 13.0;
+        };
       gaps = {
         inner = 12;
         outer = 5;
