@@ -157,11 +157,11 @@ in
         {
           xdg.configFile = {
             "waybar" = {
-              source = ./config/waybar;
+              source = ./static/config/waybar;
               recursive = true;
             };
             "nwg-launchers" = {
-              source = ./config/nwg-launchers;
+              source = ./static/config/nwg-launchers;
               recursive = true;
             };
           };
