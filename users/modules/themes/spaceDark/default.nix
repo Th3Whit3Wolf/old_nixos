@@ -4,13 +4,13 @@ with lib;
 let
   cfp = config.programs;
   cfs = config.services;
-  cfg = home.theme;
+  cfg = config.home.theme;
 in
 {
-  config = mkIf (config.home.theme.name == "Space Dark")
+  config = mkIf (cfg.name == "Space Dark")
     (mkMerge [
       {
-        cfg = {
+        home.theme = {
           wallpaper = ./static/wallpaper.jpg;
           vt = {
             red = "0x29,0xaf,0x00,0xd7,0x87,0x87,0x0d,0xb2,0x29,0xf2,0x23,0xff,0x1a,0xd7,0x14,0xf";
