@@ -156,10 +156,12 @@
             base = [ direnv git xdg ssh ];
             firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
+            waybar = [ desktop.bar.waybar ];
             tardis = [
               base
               firefox
               sway
+              waybar
               eraseYourDarlings
             ];
           };
