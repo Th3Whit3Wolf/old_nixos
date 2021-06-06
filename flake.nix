@@ -153,7 +153,7 @@
         importables = rec {
           profiles = digga.lib.importers.rakeLeaves ./users/profiles;
           suites = with profiles; rec {
-            base = [ direnv git xdg ssh ];
+            base = [ core direnv git xdg ssh ];
             firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
             waybar = [ desktop.bar.waybar ];
