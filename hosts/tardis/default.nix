@@ -36,18 +36,25 @@ in
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
     gvfs.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+      jack.enable = true;
+    };
 
-    #greetd = {
-    #  enable = true;
-    #  restart = false;
-    #  settings = {
-    #    default_session = {
-    #      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
-    #      user = "greeter";
-    #    };
-    #  };
-    #};
+    greetd = {
+      enable = true;
+      restart = false;
+      settings = {
+        default_session = {
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
+          user = "greeter";
+        };
+      };
+    };
   };
+
   hardware = {
     opengl = {
       enable = true;
@@ -59,4 +66,7 @@ in
       driSupport32Bit = true;
     };
   };
+
+  security.rtkit.enable = true;
+  sound.enable = true;
 }
