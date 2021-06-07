@@ -48,7 +48,7 @@ key[Control-Right]="''${terminfo[kRIT5]}"
         "666" = "chmod -R 666";
         "755" = "chmod -R 755";
         "777" = "chmod -R 777";
-        ali = "| bat --style=numbers,grid -l cpp";
+        ali = "alias | bat --style=numbers,grid -l cpp";
         blame = "systemd-analyze blame";
         boot = "systemd-analyze";
         c = "clear";
