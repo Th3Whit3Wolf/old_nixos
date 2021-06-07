@@ -131,7 +131,7 @@ in
       (mkIf cfp.bat.enable
         {
           programs.bat.config = {
-            themes = "TwoDark";
+            theme = "TwoDark";
           };
         })
       (mkIf cfp.mako.enable
