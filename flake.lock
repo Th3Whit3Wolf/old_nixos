@@ -38,11 +38,11 @@
     },
     "cachix": {
       "locked": {
-        "lastModified": 1622689964,
-        "narHash": "sha256-SDvBKMlTtRoMjNrfOMMO+7VNRW7AomvOt1uZK7gg37o=",
+        "lastModified": 1622969169,
+        "narHash": "sha256-tn+rsNarZD3A1QgqLmsZmPloAAAg/CXki7+1ytf6cwQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "47e580e291ff40bbde191e9fed35128727963b0c",
+        "rev": "b52409e65eb55d4f75ccf1561f4d87c1a43f7b2f",
         "type": "github"
       },
       "original": {
@@ -228,11 +228,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1622753049,
-        "narHash": "sha256-clDbg4Lg4RGHJnGBLi2jp5kV4+01P42dAYB0imNmrhU=",
+        "lastModified": 1623074835,
+        "narHash": "sha256-hSr3YCBE28MoLwW0zcjdZ5KqH3OPmCtcw72k4n4XD14=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "45f9cb06a9152ca367edc3e7eaa5449338885167",
+        "rev": "9424f31f86e2fee2e64834e1430ecd31c88da923",
         "type": "github"
       },
       "original": {
@@ -259,11 +259,12 @@
     },
     "latest": {
       "locked": {
-        "lastModified": 1619464443,
-        "narHash": "sha256-R7WAb8EnkIJxxaF6GTHUPytjonhB4Zm0iatyWoW169A=",
-        "path": "/nix/store/i4c4ph7frbzhfrn4408ghpmayafdmhr3-source",
-        "rev": "8e4fe32876ca15e3d5eb3ecd3ca0b224417f5f17",
-        "type": "path"
+        "lastModified": 1623084146,
+        "narHash": "sha256-oWsOzM4PVW2fsMAKFzR/o0LQ4FqHNMeELjpU/ALda3Y=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "12e7af1cfb3ab5bbbbd1d213a0b17c11ce9d3f2f",
+        "type": "github"
       },
       "original": {
         "id": "nixpkgs",
@@ -328,11 +329,11 @@
     },
     "nixos": {
       "locked": {
-        "lastModified": 1622820998,
-        "narHash": "sha256-1wobInAwYtngN9M4ZqdcIOXWvoyvPt2vDI9TcOvQyKA=",
+        "lastModified": 1622922048,
+        "narHash": "sha256-nTyKxe0n7l/4HSmYaIN+63WQrvHrTJY6drSwP7bMqhU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "aa576357673d609e618d87db43210e49d4bb1789",
+        "rev": "5de44c15758465f8ddf84d541ba300b48e56eda4",
         "type": "github"
       },
       "original": {
@@ -380,11 +381,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1622916439,
-        "narHash": "sha256-CRFTN+t79lAojOVm3Lq951GkKF1DxNeXg4hIhuabFwg=",
+        "lastModified": 1623074807,
+        "narHash": "sha256-OQ12j/LGdPI2V7OKgXtrD4zBSU35ELmKBcTxu94+kDc=",
         "owner": "colemickens",
         "repo": "nixpkgs-wayland",
-        "rev": "e6373acf6998b2b576385f95eeaf74d998dd1d10",
+        "rev": "502ad9f91dd9ab60637e59253569bf7769e7e37f",
         "type": "github"
       },
       "original": {
@@ -427,10 +428,12 @@
         "nixpkgs": [
           "nixos"
         ],
+        "sanFrancisco-font": "sanFrancisco-font",
+        "sanFranciscoMono-font": "sanFranciscoMono-font",
         "spacemacs-theme": "spacemacs-theme"
       },
       "locked": {
-        "narHash": "sha256-NL7h2Mcm4RQ8g1bf4nS4gREXLoZJx6QsX284Pcx7x4Q=",
+        "narHash": "sha256-bakBCLtXVQmfgOA5tynIaFrEEHzqFIMQvDgMCjU6ET4=",
         "path": "./pkgs",
         "type": "path"
       },
@@ -481,16 +484,48 @@
         ]
       },
       "locked": {
-        "lastModified": 1622861295,
-        "narHash": "sha256-36NbwxQjUDmxqpbjft38x2fSX732p1z95H3BHiX5KzM=",
+        "lastModified": 1623034161,
+        "narHash": "sha256-cbw9X+nVFcpIuBga0hkbtzXbW2fyDWBon6oUN/uQmu0=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "6fec958e1ca028e0a1b0edfff613ff9b5bcfe3d0",
+        "rev": "0b952cdfa37f8b0fc70fc75fbd4605227cd0b272",
         "type": "github"
       },
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sanFrancisco-font": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1435213800,
+        "narHash": "sha256-wRhL4bj4u323eoZjePKDJD+AfgJXuE8SMUAmTMqWrDo=",
+        "owner": "supermarin",
+        "repo": "YosemiteSanFranciscoFont",
+        "rev": "bd895dae758c135851805087f68bef655fdc160c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "supermarin",
+        "repo": "YosemiteSanFranciscoFont",
+        "type": "github"
+      }
+    },
+    "sanFranciscoMono-font": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1528395704,
+        "narHash": "sha256-3wG3M4Qep7MYjktzX9u8d0iDWa17FSXYnObSoTG2I/o=",
+        "owner": "supercomputra",
+        "repo": "SF-Mono-Font",
+        "rev": "1409ae79074d204c284507fef9e479248d5367c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "supercomputra",
+        "repo": "SF-Mono-Font",
         "type": "github"
       }
     },
