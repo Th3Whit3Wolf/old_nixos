@@ -127,7 +127,7 @@ in
         "river/init" = {
           text = ''
             #!/bin/sh
-            mod="Mod4"
+            mod="Mod1"
             riverctl map normal $mod Return spawn alacritty
             riverctl map normal $mod W spawn firefox
             # Mod+Q to close the focused view
