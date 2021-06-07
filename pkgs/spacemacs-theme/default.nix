@@ -19,7 +19,7 @@ stdenv.mkDerivation {
     description = "Spacemacs theme for linux";
     homepage = "https://github.com/Th3Whit3Wolf/Space-Theme/";
 
-    maintainers = [ maintainers.nrdxp ];
+    maintainers = [ maintainers.Th3Whit3Wolf ];
     platforms = platforms.unix;
     license = licenses.mit;
     inherit version;

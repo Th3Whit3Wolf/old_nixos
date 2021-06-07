@@ -10,6 +10,14 @@
       url = "github:Th3Whit3Wolf/Space-Theme";
       flake = false;
     };
+    sanFrancisco-font = {
+      url = "supermarin/YosemiteSanFranciscoFont";
+      flake = false;
+    };
+    sanFranciscoMono-font = {
+      url = "github:supercomputra/SF-Mono-Font";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }: {
