@@ -4,6 +4,11 @@ in
 {
   imports = [ ../cachix ];
 
+  env = {
+    ZDOTDIR = "$HOME/.config/zsh";
+    ZSH_CACHE = "$HOME/.cache/zsh";
+  };
+
   environment = {
     etc = {
       # Automatic log out from virtual consoles
@@ -15,13 +20,8 @@ in
     export TMOUT;;
   esac
     '';
-    "zsh/zshenv".text = ''
-# From Arch Wiki XDG_Base_Directory
-ZDOTDIR=$HOME/.config/zsh
-HISTFILE="$XDG_DATA_HOME"/zsh/history
-    '';
     };
-
+    
     systemPackages = with pkgs; [
       binutils
       cached-nix-shell
