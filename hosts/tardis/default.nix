@@ -22,7 +22,25 @@ in
     };
   };
 
-  time.timeZone = "Europe/London";
+  environment.etc."zsh/zshenv".text = ''
+      # From Arch Wiki XDG_Base_Directory
+      ZDOTDIR=$HOME/.config/zsh
+      HISTFILE="$XDG_DATA_HOME"/zsh/history
+  '';
+
+  hardware = {
+    opengl = {
+      enable = true;
+      extraPackages = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
+  
+  home-manager.useUserPackages = true;
 
   nix = {
     maxJobs = 8;
@@ -31,7 +49,7 @@ in
     '';
   };
 
-  home-manager.useUserPackages = true;
+  security.rtkit.enable = true;
 
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
@@ -55,18 +73,6 @@ in
     };
   };
 
-  hardware = {
-    opengl = {
-      enable = true;
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-      ];
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
-
-  security.rtkit.enable = true;
   sound.enable = true;
+  time.timeZone = "Europe/London";
 }

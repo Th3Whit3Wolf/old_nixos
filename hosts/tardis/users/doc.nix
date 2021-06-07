@@ -119,6 +119,9 @@ in
             };
           };
         };
+        ZSH = {
+          enable = true;
+        };
       };
 
       xdg.configFile = {
