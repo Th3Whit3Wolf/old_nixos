@@ -373,27 +373,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-wayland": {
-      "inputs": {
-        "cachix": "cachix",
-        "nixpkgs": [
-          "nixos"
-        ]
-      },
-      "locked": {
-        "lastModified": 1623074807,
-        "narHash": "sha256-OQ12j/LGdPI2V7OKgXtrD4zBSU35ELmKBcTxu94+kDc=",
-        "owner": "colemickens",
-        "repo": "nixpkgs-wayland",
-        "rev": "502ad9f91dd9ab60637e59253569bf7769e7e37f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "colemickens",
-        "repo": "nixpkgs-wayland",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1620962350,
@@ -470,10 +449,10 @@
         "naersk": "naersk_2",
         "nixos": "nixos",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs-wayland": "nixpkgs-wayland",
         "nur": "nur",
         "pkgs": "pkgs",
-        "rust": "rust"
+        "rust": "rust",
+        "wayland": "wayland"
       }
     },
     "rust": {
@@ -576,6 +555,27 @@
         "owner": "gytis-ivaskevicius",
         "ref": "staging",
         "repo": "flake-utils-plus",
+        "type": "github"
+      }
+    },
+    "wayland": {
+      "inputs": {
+        "cachix": "cachix",
+        "nixpkgs": [
+          "nixos"
+        ]
+      },
+      "locked": {
+        "lastModified": 1623099520,
+        "narHash": "sha256-kr/Qb1zzRBSn4UvQ6/YbOLwRyBDL8aQ9JpMueq+WJXU=",
+        "owner": "colemickens",
+        "repo": "nixpkgs-wayland",
+        "rev": "87dbe4f20ed677b2099596faf4bb5e818b7906dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "colemickens",
+        "repo": "nixpkgs-wayland",
         "type": "github"
       }
     }
