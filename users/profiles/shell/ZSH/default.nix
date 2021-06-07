@@ -2,10 +2,6 @@
   programs.ZSH = {
     enable = true;
     enableAutosuggestions = true;
-    initExtraBeforeCompInit = ''
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-    '';
     initExtra = ''
 ################################################
 #                 KEYBINDINGS                  #
@@ -39,15 +35,6 @@ key[Control-Right]="''${terminfo[kRIT5]}"
 [[ -n "''${key[Shift-Tab]}"     ]] && bindkey -- "''${key[Shift-Tab]}"     reverse-menu-complete
 [[ -n "''${key[Control-Left]}"  ]] && bindkey -- "''${key[Control-Left]}"  backward-word
 [[ -n "''${key[Control-Right]}" ]] && bindkey -- "''${key[Control-Right]}" forward-word
-# Finally, make sure the terminal is in application mode, when zle is
-# active. Only then are the values from $terminfo valid.
-if (( ''${+terminfo[smkx]} && ''${+terminfo[rmkx]} )); then
-    autoload -Uz add-zle-hook-widget
-    function zle_application_mode_start { echoti smkx }
-    function zle_application_mode_stop { echoti rmkx }
-    add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
-    add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
-fi
     '';
     integrations = {
       nix-index = true;
