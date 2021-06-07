@@ -8,11 +8,8 @@ stdenv.mkDerivation {
   buildPhase = "true";
 
   installPhase = ''
-    for font in *.ttf; do 
-        mkdir -p $out/share/fonts/
-        name=$(echo $font | sed 's/System //')
-        cp $font $out/share/fonts/$name
-    done
+    mkdir -p $out/share/fonts/san-francisco
+    cp *.ttf $out/share/fonts/san-francisco
   '';
 
   meta = with lib; {
