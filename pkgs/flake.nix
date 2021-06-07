@@ -11,7 +11,7 @@
       flake = false;
     };
     sanFrancisco-font = {
-      url = "supermarin/YosemiteSanFranciscoFont";
+      url = "github:supermarin/YosemiteSanFranciscoFont";
       flake = false;
     };
     sanFranciscoMono-font = {
