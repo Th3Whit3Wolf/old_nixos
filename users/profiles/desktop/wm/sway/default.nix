@@ -7,6 +7,22 @@ let
   lockCommand = "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
 in
 {
+  home.packages = with pkgs;
+    [
+      firefox-wayland
+      alacritty
+      wofi
+      kanshi
+      swaylock-effects
+      swayidle
+      brightnessctl
+      grim
+      sway-contrib.grimshot
+      imv
+      slurp
+      qt5.qtwayland
+      nwg-launchers
+    ];
   systemd.user.sessionVariables = {
     # Wayland Settings
     _JAVA_AWT_WM_NONREPARENTING = "1";

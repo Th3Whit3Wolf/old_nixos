@@ -133,7 +133,6 @@
             psd = [
               desktop.browser.psd
             ];
-            sway = [ desktop.wm.sway ];
             tardis = [
               base
               laptop
