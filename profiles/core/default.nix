@@ -7,11 +7,18 @@ in
   environment = {
     etc = {
       # Automatic log out from virtual consoles
-      "profile.d/shell-timeout.sh".text = '' "TMOUT="\$(( 60*30 ))";
-      [ -z "\$DISPLAY" ] && export TMOUT;
-        case \$( /usr/bin/tty ) in
-    /dev/tty[0-9]*) export TMOUT;;
-        esac
+      "profile.d/shell-timeout.sh".text = '' 
+# Log user out in 30 minutes
+"TMOUT="\$(( 60*30 ))";
+[ -z "\$DISPLAY" ] && export TMOUT;
+  case \$( /usr/bin/tty ) in /dev/tty[0-9]*) 
+    export TMOUT;;
+  esac
+    '';
+    "zsh/zshenv".text = ''
+# From Arch Wiki XDG_Base_Directory
+ZDOTDIR=$HOME/.config/zsh
+HISTFILE="$XDG_DATA_HOME"/zsh/history
     '';
     };
 

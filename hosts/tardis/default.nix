@@ -22,12 +22,6 @@ in
     };
   };
 
-  environment.etc."zsh/zshenv".text = ''
-      # From Arch Wiki XDG_Base_Directory
-      ZDOTDIR=$HOME/.config/zsh
-      HISTFILE="$XDG_DATA_HOME"/zsh/history
-  '';
-
   hardware = {
     opengl = {
       enable = true;
