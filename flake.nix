@@ -138,7 +138,6 @@
               laptop
               psd
               eraseYourDarlings
-              sway
             ];
           };
         };
@@ -153,6 +152,7 @@
           profiles = digga.lib.importers.rakeLeaves ./users/profiles;
           suites = with profiles; rec {
             base = [ core direnv git xdg ssh ];
+            zsh = [shell.ZSH];
             firefox = [ desktop.browser.firefox ];
             sway = [ desktop.wm.sway ];
             waybar = [ desktop.bar.waybar ];
@@ -162,6 +162,7 @@
               sway
               waybar
               eraseYourDarlings
+              zsh
             ];
           };
         };

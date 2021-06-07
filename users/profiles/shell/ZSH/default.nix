@@ -1,0 +1,5 @@
+{
+  programs.ZSH = {
+    enable = true;
+  };
+}

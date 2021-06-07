@@ -7,9 +7,9 @@ let
   cfg = config.programs.ZSH;
   etc = config.environment.etc;
 
-  relToDotDir = "$HOME/.config/zsh";
+  relToDotDir = file: "$HOME/.config/zsh/" + file;
 
-  pluginsDir = "$HOME/.config/zsh/plugins";
+  pluginsDir = relToDotDir "plugins";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
@@ -352,7 +352,7 @@ in
                     zcompile "$zcompdump"
                 fi
                 } &!
-                ${optionalString (cfg.loginExtra) cfg.loginExtra}
+                ${optionalString (cfg.loginExtra != null) cfg.loginExtra}
             '';
 
             "${relToDotDir ".zprofile"}".text = ''
@@ -363,7 +363,7 @@ in
                     zcompile "$zcompdump"
                 fi
                 } &!
-                ${optionalString (cfg.profileExtra) cfg.profileExtra}
+                ${optionalString (cfg.profileExtra != null) cfg.profileExtra}
             '';
         };
     }
