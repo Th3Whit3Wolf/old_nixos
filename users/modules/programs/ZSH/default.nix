@@ -5,11 +5,19 @@ with lib;
 let
 
   cfg = config.programs.ZSH;
-  etc = config.environment.etc;
 
-  relToDotDir = file: "$HOME/.config/zsh/" + file;
+  keychainFlags = config.programs.keychain.extraFlags ++ optional (config.programs.keychain.agents != [ ])
+    "--agents ${concatStringsSep "," config.programs.keychain.agents}"
+    ++ optional (config.programs.keychain.inheritType != null) "--inherit ${config.programs.keychain.inheritType}";
 
-  pluginsDir = relToDotDir "plugins";
+  keychainShellCommand =
+    "${pkgs.keychain}/bin/keychain --eval ${concatStringsSep " " keychainFlags} ${
+      concatStringsSep " " config.programs.keychain.keys
+    }";
+
+  relToDotDir = file: "${config.xdg.configHome}/zsh/" + file;
+
+  pluginsDir = "${xdg.dataHome}/zsh/plugins";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
@@ -108,6 +116,86 @@ let
         type = types.bool;
         default = true;
         description = "Share command history between zsh sessions.";
+      };
+    };
+  });
+
+  integrationsModule = types.submodule ({ config, ... }: {
+    options = {
+      autojump = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable autojump integration.";
+      };
+      broot = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable broot integration.";
+      };
+      dircolors = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable dircolors integration.";
+      };
+      direnv = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable direnv integration.";
+      };
+      fzf = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable fzf integration.";
+      };
+      keychain = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable keychain integration.";
+      };
+      mcfly = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable mcfly integration.";
+      };
+      nix-index = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable nix-index integration.";
+      };
+      opam = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable opam integration.";
+      };
+      pazi = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable pazi integration.";
+      };
+      scmpuff = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable scmpuff integration.";
+      };
+      skim = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable skim integration.";
+      };
+      starship = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable startship integration.";
+      };
+      z-lua = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable z-lua integration.";
+      };
+      zoxide = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable zoxide integration.";
       };
     };
   });
@@ -244,6 +332,12 @@ in
         description = "Options related to commands history configuration.";
       };
 
+      integrations = mkOption {
+        type = integrationsModule;
+        default = {};
+        description = "Options related to integrations configuration.";
+      };
+
       defaultKeymap = mkOption {
         type = types.nullOr (types.enum (attrNames bindkeyCommands));
         default = null;
@@ -377,92 +471,215 @@ in
 
     {
       home.packages = with pkgs; [ zsh ]
-        ++ optional cfg.enableCompletion nix-zsh-completions;
+        ++ optional cfg.enableCompletion nix-zsh-completions
+        ++ optional cfg.integrations.autojump autojump
+        ++ optional cfg.integrations.broot broot
+        ++ optional cfg.integrations.direnv direnv
+        ++ optional cfg.integrations.fzf fzf
+        ++ optional cfg.integrations.keychain keychain
+        ++ optional cfg.integrations.mcfly mcfly
+        ++ optional cfg.integrations.nix-index nix-index
+        ++ optional cfg.integrations.opam opam
+        ++ optional cfg.integrations.pazi pazi
+        ++ optional cfg.integrations.scmpuff scmpuff
+        ++ optional cfg.integrations.skim skim
+        ++ optional cfg.integrations.starship starship
+        ++ optional cfg.integrations.z-lua z-lua
+        ++ optional cfg.integrations.zoxide zoxide;
 
-      home.file."${relToDotDir ".zshrc"}".text = ''
-        
-        ${cfg.initExtraFirst}
+      home.file."${relToDotDir ".zshrc"}".text = ''        
+${cfg.initExtraFirst}
 
-        typeset -U path cdpath fpath manpath
+typeset -U path cdpath fpath manpath
 
-        ${optionalString (cfg.cdpath != []) ''
-          cdpath+=(${concatStringsSep " " cfg.cdpath})
-        ''}
+${optionalString (cfg.cdpath != []) ''
+  cdpath+=(${concatStringsSep " " cfg.cdpath})
+''}
 
-        for profile in ''${(z)NIX_PROFILES}; do
-          fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
-        done
+for profile in ''${(z)NIX_PROFILES}; do
+  fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+done
 
-        HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+reset_broken_terminal () {
+    printf '%b' '\e[0m\e(B\e)0\017\e[?5l\e7\e[0;0r\e8'
+}
+HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
-        for dump in $XDG_CACHE_HOME/zsh/(N.mh+24); do
-            compinit -d $dump
-        done
-        ${optionalString (cfg.defaultKeymap != null) ''
-          # Use ${cfg.defaultKeymap} keymap as the default.
-          ${getAttr cfg.defaultKeymap bindkeyCommands}
-        ''}
+${optionalString (cfg.defaultKeymap != null) ''
+  # Use ${cfg.defaultKeymap} keymap as the default.
+  ${getAttr cfg.defaultKeymap bindkeyCommands}
+''}
 
-        ${localVarsStr}
+${localVarsStr}
 
-        ${cfg.initExtraBeforeCompInit}
+${cfg.initExtraBeforeCompInit}
 
-        ${concatStrings (map (plugin: ''
-          path+="$HOME/${pluginsDir}/${plugin.name}"
-          fpath+="$HOME/${pluginsDir}/${plugin.name}"
-        '') cfg.plugins)}
+${concatStrings (map (plugin: ''
+  path+="$HOME/${pluginsDir}/${plugin.name}"
+  fpath+="$HOME/${pluginsDir}/${plugin.name}"
+'') cfg.plugins)}
 
-        # Oh-My-Zsh/Prezto calls compinit during initialization,
-        # calling it twice causes slight start up slowdown
-        # as all $fpath entries will be traversed again.
-        ${optionalString (cfg.enableCompletion)
-          "autoload -U compinit && compinit"
-        }
+for dump in $XDG_CACHE_HOME/zsh/(N.mh+24); do
+    compinit -d $dump
+done
 
-        ${optionalString cfg.enableAutosuggestions
-          "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-        }
+${optionalString (cfg.enableAutosuggestions) "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"}
+${optionalString (cfg.integrations.autojump)"eval $(${pkgs.autojump}/share/autojump/autojump.zsh)"}
+${optionalString (cfg.integrations.broot)''
+# This script was automatically generated by the broot function
+# More information can be found in https://github.com/Canop/broot
+# This function starts broot and executes the command
+# it produces, if any.
+# It's needed because some shell commands, like `cd`,
+# have no useful effect if executed in a subshell.
+function br {
+    f=$(mktemp)
+    (
+        set +e
+        broot --outcmd "$f" "$@"
+        code=$?
+        if [ "$code" != 0 ]; then
+            rm -f "$f"
+            exit "$code"
+        fi
+    )
+    code=$?
+    if [ "$code" != 0 ]; then
+        return "$code"
+    fi
+    d=$(cat "$f")
+    rm -f "$f"
+    eval "$d"
+}''
+}
+${optionalString (cfg.integrations.dircolors)"eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors))"}
+${optionalString (cfg.integrations.direnv)"eval $(${pkgs.direnv}/bin/direnv hook zsh)"}
+${optionalString (cfg.integrations.fzf)''
+if [[ $options[zle] = on ]]; then
+  . ${pkgs.fzf}/share/fzf/completion.zsh
+  . ${pkgs.fzf}/share/fzf/key-bindings.zsh
+fi
+''}
+${optionalString (cfg.integrations.keychain)"eval $(${keychainShellCommand})"}
+${optionalString (cfg.integrations.mcfly)"source ${pkgs.mcfly}/share/mcfly/mcfly.zsh"}
+${optionalString (cfg.integrations.nix-index)"source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh"}
+${optionalString (cfg.integrations.opam)"eval $(${pkgs.opam}/bin/opam env --shell=zsh)"}
+${optionalString (cfg.integrations.pazi)"eval $(${pkgs.pazi}/bin/pazi init zsh)"}
+${optionalString (cfg.integrations.scmpuff)"eval $(${pkgs.scmpuff}/bin/scmpuff init -s)"}
+${optionalString (cfg.integrations.skim)''
+if [[ $options[zle] = on ]]; then
+    . ${pkgs.skim}/share/skim/completion.zsh
+    . ${pkgs.skim}/share/skim/key-bindings.zsh
+fi
+''}
+${optionalString (cfg.integrations.starship)''
+if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
+        eval "$(${pkgs.starship}/bin/starship init zsh)"
+fi
+''}
+${optionalString (cfg.integrations.z-lua )"eval $(${pkgs.z-lua}/bin/z --init zsh)"}
+${optionalString (cfg.integrations.zoxide)"eval $(${pkgs.zoxide}/bin/zoxide init zsh)"}
 
-        # Environment variables
-        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
-        ${envVarsStr}
+# Environment variables
+. "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+${envVarsStr}
 
-        ${concatStrings (map (plugin: ''
-          if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
-            source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
-          fi
-        '') cfg.plugins)}
+${concatStrings (map (plugin: ''
+  if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
+    source "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}"
+  fi
+'') cfg.plugins)}
 
-        # History options should be set in .zshrc and after oh-my-zsh sourcing.
-        # See https://github.com/nix-community/home-manager/issues/177.
-        HISTSIZE="${toString cfg.history.size}"
-        SAVEHIST="${toString cfg.history.save}"
-        ${optionalString (cfg.history.ignorePatterns != []) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
-        ${if versionAtLeast config.home.stateVersion "20.03"
-          then ''HISTFILE="${cfg.history.path}"''
-          else ''HISTFILE="$HOME/${cfg.history.path}"''}
-        mkdir -p "$(dirname "$HISTFILE")"
+# History options should be set in .zshrc and after oh-my-zsh sourcing.
+# See https://github.com/nix-community/home-manager/issues/177.
+HISTSIZE="${toString cfg.history.size}"
+SAVEHIST="${toString cfg.history.save}"
+${optionalString (cfg.history.ignorePatterns != []) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
+${if versionAtLeast config.home.stateVersion "20.03"
+  then ''HISTFILE="${cfg.history.path}"''
+  else ''HISTFILE="$HOME/${cfg.history.path}"''}
+mkdir -p "$(dirname "$HISTFILE")"
 
-        setopt HIST_FCNTL_LOCK
-        ${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
-        ${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
-        ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
-        ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
-        ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
-        ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
+setopt HIST_FCNTL_LOCK
+${if cfg.history.ignoreDups then "setopt" else "unsetopt"} HIST_IGNORE_DUPS
+${if cfg.history.ignoreSpace then "setopt" else "unsetopt"} HIST_IGNORE_SPACE
+${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIRE_DUPS_FIRST
+${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
+${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
+${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
+zstyle ':completion:*' cache-path $XDG_CACHE_HOME/zsh/zcompcache
+${cfg.initExtra}
 
-        ${cfg.initExtra}
+# Aliases
+${aliasesStr}
 
-        # Aliases
-        ${aliasesStr}
+# Global Aliases
+${globalAliasesStr}
 
-        # Global Aliases
-        ${globalAliasesStr}
-
-        # Named Directory Hashes
-        ${dirHashesStr}
+# Named Directory Hashes
+${dirHashesStr}
       '';
     }
+
+    (mkIf (cfg.integrations.autojump == true) {
+      programs.autojump.enable = true;
+    })
+    
+    (mkIf (cfg.integrations.broot == true) {
+      programs.broot.enable = true;
+    })
+
+    (mkIf (cfg.integrations.dircolors == true) {
+      programs.dircolors.enable = true;
+    })
+
+    (mkIf (cfg.integrations.direnv == true) {
+      programs.direnv.enable = true;
+    })
+
+    (mkIf (cfg.integrations.fzf == true) {
+      programs.fzf.enable = true;
+    })
+
+    (mkIf (cfg.integrations.keychain == true) {
+      programs.keychain.enable = true;
+    })
+
+    (mkIf (cfg.integrations.mcfly == true) {
+      programs.mcfly.enable = true;
+    })
+
+    (mkIf (cfg.integrations.nix-index == true) {
+      programs.nix-index.enable = true;
+    })
+
+    (mkIf (cfg.integrations.opam == true) {
+      programs.opam.enable = true;
+    })
+
+    (mkIf (cfg.integrations.pazi == true) {
+      programs.pazi.enable = true;
+    })
+
+    (mkIf (cfg.integrations.scmpuff == true) {
+      programs.scmpuff.enable = true;
+    })
+
+    (mkIf (cfg.integrations.skim == true) {
+      programs.skim.enable = true;
+    })
+
+    (mkIf (cfg.integrations.starship == true) {
+      programs.starship.enable = true;
+    })
+
+    (mkIf (cfg.integrations.z-lua == true) {
+      programs.z-lua.enable = true;
+    })
+
+    (mkIf (cfg.integrations.zoxide == true) {
+      programs.zoxide.enable = true;
+    })
 
     (mkIf (cfg.plugins != []) {
       # Many plugins require compinit to be called
