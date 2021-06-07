@@ -9,13 +9,11 @@ in
 {
   home.packages = with pkgs;
     [
-      firefox-wayland
       alacritty
       wofi
       kanshi
       swaylock-effects
       swayidle
-      brightnessctl
       grim
       sway-contrib.grimshot
       imv

@@ -54,6 +54,8 @@ in
       mesa
       sway
       river
+      firefox-wayland
+      brightnessctl
     ] ++ themePackages;
   };
 
@@ -118,9 +120,6 @@ in
               extraOptions = { AddKeysToAgent = "yes"; };
             };
           };
-        };
-        ZSH = {
-          enable = true;
         };
       };
 
