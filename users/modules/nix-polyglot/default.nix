@@ -7,7 +7,18 @@ let
     inherit (lib) mkDefault mkIf mkOption mkOpt
     types;
 
-    languages = [ "c" "c++" "rust" ];
+    listDirectorye = dir: lib.flatten (lib.mapAttrsToList (name: type:
+    if type == "directory" then
+      dir
+    else
+      
+  ) (builtins.readDir dir));
+
+
+
+    languagesDir = listDirectorye (./lang);
+
+    languages = languagesDir;
 
     editorModule = types.submodule ({ config, ... }: {
         options = {
