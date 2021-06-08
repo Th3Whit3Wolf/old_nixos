@@ -1,1 +1,1 @@
-[ ./themes ./programs ]
+[ ./themes ./programs ./nix-polyglot ]

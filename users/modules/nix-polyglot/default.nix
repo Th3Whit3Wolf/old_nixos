@@ -1,24 +1,19 @@
 { config, lib, pkgs, ... }:
 
 with lib;
+with builtins;
 
 let
-
     inherit (lib) mkDefault mkIf mkOption mkOpt
     types;
 
-    listDirectorye = dir: lib.flatten (lib.mapAttrsToList (name: type:
-    if type == "directory" then
-      dir
-    else
-      
-  ) (builtins.readDir dir));
+    cfg = config.nix-polyglot;
 
-
-
-    languagesDir = listDirectorye (./lang);
-
-    languages = languagesDir;
+    languages = flatten (mapAttrsToList (name: type: 
+        if type == "directory" then 
+            "${name}" 
+        else ""  
+    ) (readDir (./lang)));
 
     editorModule = types.submodule ({ config, ... }: {
         options = {
@@ -51,19 +46,18 @@ let
             };
         };
     });
-
 in
 
 {
   options.nix-polyglot = {
-        enable = mkEnableOption "Enable nix-polglot";
+        enable = mkEnableOption "Enable nix-polyglot";
         editors = mkOption {
             type = editorModule;
             default = {};
             description = "Options related to commands editors configuration.";
         };
         langs = mkOption {
-            type = types.listOf (types.enum languages);
+            type = with types; nullOr listOf (enum languages);
             default = [];
             description = "List of languages to use.";
         };
