@@ -5,6 +5,37 @@ with lib;
 let
 
   cfg = config.programs.ZSH;
+  polyglot = config.nix-polyglot;
+
+  neovimAliases = if polyglot.enableZshIntegration then ''
+# Open lazygit commit window inside neovim
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+  alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+  alias vim="nvim"
+  alias vi="nvim"
+  alias v="nvim"
+fi
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+    export EDITOR="nvim"
+fi
+'' else ''
+# Open lazygit commit window inside neovim
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+  alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+fi
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+    export EDITOR="nvim"
+fi
+'';
+
 
   keychainFlags = config.programs.keychain.extraFlags ++ optional (config.programs.keychain.agents != [ ])
     "--agents ${concatStringsSep "," config.programs.keychain.agents}"
@@ -543,20 +574,20 @@ function br {
     eval "$d"
 }''
 }
-${optionalString (cfg.integrations.dircolors)"eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)"}
-${optionalString (cfg.integrations.direnv)"eval $(${pkgs.direnv}/bin/direnv hook zsh)"}
+${optionalString (cfg.integrations.dircolors)''eval (${pkgs.coreutils}/bin/dircolors -c ~/.dir_colors)''}
+${optionalString (cfg.integrations.direnv)''eval $(${pkgs.direnv}/bin/direnv hook zsh)''}
 ${optionalString (cfg.integrations.fzf)''
 if [[ $options[zle] = on ]]; then
   . ${pkgs.fzf}/share/fzf/completion.zsh
   . ${pkgs.fzf}/share/fzf/key-bindings.zsh
 fi
 ''}
-${optionalString (cfg.integrations.keychain)"eval $(${keychainShellCommand})"}
+${optionalString (cfg.integrations.keychain)''eval $(${keychainShellCommand})''}
 ${optionalString (cfg.integrations.mcfly)"source ${pkgs.mcfly}/share/mcfly/mcfly.zsh"}
 ${optionalString (cfg.integrations.nix-index)"source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh"}
-${optionalString (cfg.integrations.opam)"eval $(${pkgs.opam}/bin/opam env --shell=zsh)"}
-${optionalString (cfg.integrations.pazi)"eval $(${pkgs.pazi}/bin/pazi init zsh)"}
-${optionalString (cfg.integrations.scmpuff)"eval $(${pkgs.scmpuff}/bin/scmpuff init -s)"}
+${optionalString (cfg.integrations.opam)''eval $(${pkgs.opam}/bin/opam env --shell=zsh)''}
+${optionalString (cfg.integrations.pazi)''eval $(${pkgs.pazi}/bin/pazi init zsh)''}
+${optionalString (cfg.integrations.scmpuff)''eval $(${pkgs.scmpuff}/bin/scmpuff init -s)''}
 ${optionalString (cfg.integrations.skim)''
 if [[ $options[zle] = on ]]; then
     . ${pkgs.skim}/share/skim/completion.zsh
@@ -568,8 +599,8 @@ if [[ $TERM != "dumb" && (-z $INSIDE_EMACS || $INSIDE_EMACS == "vterm") ]]; then
         eval "$(${pkgs.starship}/bin/starship init zsh)"
 fi
 ''}
-${optionalString (cfg.integrations.z-lua )"eval $(${pkgs.z-lua}/bin/z --init zsh)"}
-${optionalString (cfg.integrations.zoxide)"eval $(${pkgs.zoxide}/bin/zoxide init zsh)"}
+${optionalString (cfg.integrations.z-lua )''eval $(${pkgs.z-lua}/bin/z --init zsh)''}
+${optionalString (cfg.integrations.zoxide)''eval $(${pkgs.zoxide}/bin/zoxide init zsh)''}
 
 # Environment variables
 . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
@@ -612,6 +643,7 @@ if (( ''${+terminfo[smkx]} && ''${+terminfo[rmkx]} )); then
     add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
 
+${optionalString (polyglot.neovim.enable) neovimAliases}
 # Aliases
 ${aliasesStr}
 
