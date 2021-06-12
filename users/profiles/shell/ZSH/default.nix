@@ -75,6 +75,7 @@ key[Control-Right]="''${terminfo[kRIT5]}"
         mountedinfo = "df -hT";
         ngr = "sudo nginx -s reload";
         nrfb = "sudo nixos-rebuild --flake \"/persist/etc/nixos#tardis\" boot";
+        nrfs = "sudo nixos-rebuild --flake \"/persist/etc/nixos#tardis\" switch";
         openports = "netstat -nape --inet";
         p = "ps aux | grep ";
         play = "mpv --hwdec=auto";
