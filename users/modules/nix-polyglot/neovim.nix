@@ -70,6 +70,25 @@ in {
             defaultText = literalExample "pkgs.neovim-unwrapped";
             description = "The package to use for the neovim binary.";
         };
+        plugins = mkOption {
+            type = with types; listOf (either package pluginWithConfigType);
+            default = [ ];
+            example = literalExample ''
+                with pkgs.vimPlugins; [
+                    yankring
+                    vim-nix
+                    { plugin = vim-startify;
+                    config = "let g:startify_change_to_vcs_root = 0";
+                    }
+                ]
+            '';
+            description = ''
+                List of vim plugins to install optionally associated with
+                configuration to be placed in init.vim.
+                </para><para>
+                This option is mutually exclusive with <varname>configure</varname>.
+            '';
+        };
     };
 
     config = mkIf cfg.enable (mkMerge [ 
