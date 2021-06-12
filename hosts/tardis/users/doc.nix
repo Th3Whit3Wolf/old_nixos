@@ -68,6 +68,12 @@ in
 
       home.theme.name = "Space Dark";
 
+      nix-polyglot = {
+        langs = [ "rust"];
+        neovim.enable = true;
+        vscode.enable = true;
+      };
+
       systemd.user.sessionVariables = {
         ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
       };
