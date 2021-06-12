@@ -71,14 +71,8 @@ in {
             '';
         };
         userSettings = mkOption {
-            type = jsonFormat.type;
-            default = { };
-            example = literalExample ''
-            {
-                "update.channel" = "none";
-                "[nix]"."editor.tabSize" = 2;
-            }
-            '';
+            type = types.attrsOf types.attrs;
+            default = {};
             description = ''
             Configuration written to Visual Studio Code's
             <filename>settings.json</filename>.
@@ -92,7 +86,7 @@ in {
                 vscode = {
                     enable = true;
                     package = (cfg.package);
-                    userSettings = (cfg.userSettings);
+                    userSettings = (builtins.toJSON cfg.userSettings);
                     extensions = defaultExt;
                 };
                 zsh.shellAliases = mkIf polyglot.enableZshIntegration aliases;
