@@ -67,7 +67,10 @@ in
     }: {
       imports = suites.tardis;
 
-      home.theme.name = "Space Dark";
+      home = {
+        stateVersion = "21.05";
+        theme.name = "Space Dark";
+      };
 
       nix-polyglot = {
         langs = [ "rust"];
@@ -149,6 +152,8 @@ in
             '';
           };
         };
+        enable = true;
+        cacheHome = "${homey}/.cache";
         userDirs = {
           enable = true;
           desktop = "${homey}/Desk";
