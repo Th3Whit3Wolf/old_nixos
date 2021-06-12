@@ -73,6 +73,7 @@
     , nixos-hardware
     , nur
     , agenix
+    , rust
     , ...
     }@inputs:
     digga.lib.mkFlake {
@@ -88,6 +89,7 @@
             pkgs.overlay # for `srcs`
             nur.overlay
             agenix.overlay
+            rust.overlay
           ];
         };
         latest = { };
