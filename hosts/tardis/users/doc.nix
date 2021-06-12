@@ -70,6 +70,7 @@ in
 
       nix-polyglot = {
         langs = [ "rust"];
+        enableZshIntegration = true;
         neovim.enable = true;
         vscode = {
           enable = true;
