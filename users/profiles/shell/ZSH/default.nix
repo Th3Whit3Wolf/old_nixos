@@ -41,6 +41,9 @@ key[Control-Right]="''${terminfo[kRIT5]}"
       starship = true;
       zoxide = true;
     };
+    history = {
+      path = "$XDG_CACHE_HOME/zsh/zsh_history";
+    };
     shellAliases = {
        ".." = "cd ..";
         "000" = "chmod -R 000";
