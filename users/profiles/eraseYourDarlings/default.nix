@@ -11,6 +11,7 @@ in
       ".cache/starship"
       ".cache/gstreamer-1.0"
       ".cache/lollypop"
+      ".cache/nix-index"
       ".cache/zsh/"
       ".config/VSCodium/"
       ".local/share/cargo"
