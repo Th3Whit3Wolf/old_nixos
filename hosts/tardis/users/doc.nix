@@ -71,7 +71,10 @@ in
       nix-polyglot = {
         langs = [ "rust"];
         neovim.enable = true;
-        vscode.enable = true;
+        vscode = {
+          enable = true;
+          package = pkgs.vscodium;
+        };
       };
 
       systemd.user.sessionVariables = {
