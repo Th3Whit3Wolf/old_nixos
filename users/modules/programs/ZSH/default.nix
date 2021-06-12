@@ -471,21 +471,7 @@ in
 
     {
       home.packages = with pkgs; [ zsh ]
-        ++ optional cfg.enableCompletion nix-zsh-completions
-        ++ optional cfg.integrations.autojump autojump
-        ++ optional cfg.integrations.broot broot
-        ++ optional cfg.integrations.direnv direnv
-        ++ optional cfg.integrations.fzf fzf
-        ++ optional cfg.integrations.keychain keychain
-        ++ optional cfg.integrations.mcfly mcfly
-        ++ optional cfg.integrations.nix-index nix-index
-        ++ optional cfg.integrations.opam opam
-        ++ optional cfg.integrations.pazi pazi
-        ++ optional cfg.integrations.scmpuff scmpuff
-        ++ optional cfg.integrations.skim skim
-        ++ optional cfg.integrations.starship starship
-        ++ optional cfg.integrations.z-lua z-lua
-        ++ optional cfg.integrations.zoxide zoxide;
+        ++ optional cfg.enableCompletion nix-zsh-completions;
 
       home.file."${relToDotDir ".zshrc"}".text = ''        
 ${cfg.initExtraFirst}
