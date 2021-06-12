@@ -6,7 +6,6 @@ in
 
   env = {
     ZDOTDIR = "$HOME/.config/zsh";
-    ZSH_CACHE = "$HOME/.cache/zsh";
   };
 
   environment = {
