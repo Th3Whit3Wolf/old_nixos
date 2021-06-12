@@ -14,6 +14,7 @@ let
   user = "doc";
   theme = config.home-manager.users.${user}.home.theme;
   themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
+  homey = config.home-manager.users.${user}.home.homeDirectory;
 in
 {
   imports = [
@@ -133,18 +134,34 @@ in
         };
       };
 
-      xdg.configFile = {
-        "river/init" = {
-          text = ''
-            #!/bin/sh
-            mod="Mod1"
-            riverctl map normal $mod Return spawn alacritty
-            riverctl map normal $mod W spawn firefox
-            # Mod+Q to close the focused view
-            riverctl map normal $mod Q close
-            # Mod+E to exit river
-            riverctl map normal $mod E exit
-          '';
+      xdg = {
+        configFile = {
+          "river/init" = {
+            text = ''
+              #!/bin/sh
+              mod="Mod1"
+              riverctl map normal $mod Return spawn alacritty
+              riverctl map normal $mod W spawn firefox
+              # Mod+Q to close the focused view
+              riverctl map normal $mod Q close
+              # Mod+E to exit river
+              riverctl map normal $mod E exit
+            '';
+          };
+        };
+        userDirs = {
+          enable = true;
+          desktop = "${homey}/Desk";
+          documents = "${homey}/Docs";
+          download = "${homey}/Downs";
+          music = "${homey}/Tunes";
+          pictures = "${homey}/Pics";
+          videos = "${homey}/Vids";
+          extraConfig = {
+            XDG_CODE_HOME = "${homey}/Code";
+            XDG_GIT_HOME = "${homey}/Gits";
+            XDG_BIN_HOME = "${homey}/.local/bin";
+          };
         };
       };
     };
@@ -154,4 +171,6 @@ in
       "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
     else "")
   ];
+
+  env.PATH = [ "$XDG_BIN_HOME" "$PATH" ];
 }
