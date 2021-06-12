@@ -17,6 +17,7 @@ let
     polyglotPackages = with pkgs; [
         git-ignore
         licensor
+        just
     ];
 in
 
