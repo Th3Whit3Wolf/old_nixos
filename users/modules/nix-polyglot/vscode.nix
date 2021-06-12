@@ -5,7 +5,10 @@ with builtins;
 
 let
     cfg = config.nix-polyglot.vscode;
+    polyglot = config.nix-polyglot;
+
     jsonFormat = pkgs.formats.json { };
+    aliases = if  (cfg.package.pname == "vscodium") then {code = "codium";} else {};
     defaultExt = with pkgs.vscode-extensions; [
     #pkief.material-icon-theme
     #ms-azuretools.vscode-docker
@@ -85,12 +88,17 @@ in {
 
     config = mkIf cfg.enable (mkMerge [ 
         {
-            programs.vscode = {
-                enable = true;
-                package = (cfg.package);
-                userSettings = (cfg.userSettings);
-                extensions = defaultExt;
+            programs = {
+                vscode = {
+                    enable = true;
+                    package = (cfg.package);
+                    userSettings = (cfg.userSettings);
+                    extensions = defaultExt;
+                };
+                zsh.shellAliases = mkIf polyglot.enableZshIntegration aliases;
             };
         }
+
+
     ]);
 }
