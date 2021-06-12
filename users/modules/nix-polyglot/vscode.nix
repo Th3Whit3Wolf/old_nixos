@@ -98,7 +98,5 @@ in {
                 zsh.shellAliases = mkIf polyglot.enableZshIntegration aliases;
             };
         }
-
-
     ]);
 }
