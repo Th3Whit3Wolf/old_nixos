@@ -13,6 +13,11 @@ let
             "${name}" 
         else ""  
     ) (readDir (./lang)));
+
+    polyglotPackages = with pkgs; [
+        git-ignore
+        licensor
+    ];
 in
 
 {
@@ -29,8 +34,19 @@ in
             default = true;
             type = types.bool;
             description = ''
-                Whether to enable Zsh integration.
+            Whether to enable Zsh integration.
             '';
         };
+        packages = mkOption {
+            type = types.listOf types.package;
+            default = polyglotPackages;
+            example = literalExample "[ pkgs.git-ignore pkgs.licensor ]";
+            description = ''
+            List of generic packages to install for development.
+            '';
+        };
+    };
+    config = mkIf cfg.enable {
+        home.packages = nix-polyglot.packages;
     };
 }
