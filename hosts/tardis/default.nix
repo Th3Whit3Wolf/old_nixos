@@ -3,7 +3,7 @@ let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
 
-  accessToken = fileContents ./secrets/access_token;
+  accessToken = "github.com=" + (fileContents ./secrets/access_token);
 in
 {
   imports = [
