@@ -5,6 +5,7 @@ with builtins;
 
 let
     cfg = config.nix-polyglot.neovim;
+    polyglot = config.nix-polyglot;
 
     pluginWithConfigType = types.submodule {
         options = {
