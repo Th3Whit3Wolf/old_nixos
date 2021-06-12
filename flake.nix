@@ -52,15 +52,15 @@
         inputs.nixpkgs.follows = "nixos";
       };
 
-      #neovim-nightly = {
+      #neovim-overlay = {
       #  url = "github:nix-community/neovim-nightly-overlay";
       #  inputs.nixpkgs.follows = "latest";
       #};
 
-      nixpkgs-wayland = {
-        url = "github:colemickens/nixpkgs-wayland";
-        inputs.nixpkgs.follows = "nixos";
-      };
+      #wayland-overlay = {
+      #  url = "github:colemickens/nixpkgs-wayland";
+      #  inputs.nixpkgs.follows = "nixos";
+      #};
     };
 
   outputs =

@@ -36,22 +36,6 @@
         "type": "github"
       }
     },
-    "cachix": {
-      "locked": {
-        "lastModified": 1622969169,
-        "narHash": "sha256-tn+rsNarZD3A1QgqLmsZmPloAAAg/CXki7+1ytf6cwQ=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "b52409e65eb55d4f75ccf1561f4d87c1a43f7b2f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-20.09",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "ci-agent": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -451,8 +435,7 @@
         "nixos-hardware": "nixos-hardware",
         "nur": "nur",
         "pkgs": "pkgs",
-        "rust": "rust",
-        "wayland": "wayland"
+        "rust": "rust"
       }
     },
     "rust": {
@@ -555,27 +538,6 @@
         "owner": "gytis-ivaskevicius",
         "ref": "staging",
         "repo": "flake-utils-plus",
-        "type": "github"
-      }
-    },
-    "wayland": {
-      "inputs": {
-        "cachix": "cachix",
-        "nixpkgs": [
-          "nixos"
-        ]
-      },
-      "locked": {
-        "lastModified": 1623099520,
-        "narHash": "sha256-kr/Qb1zzRBSn4UvQ6/YbOLwRyBDL8aQ9JpMueq+WJXU=",
-        "owner": "colemickens",
-        "repo": "nixpkgs-wayland",
-        "rev": "87dbe4f20ed677b2099596faf4bb5e818b7906dc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "colemickens",
-        "repo": "nixpkgs-wayland",
         "type": "github"
       }
     }
