@@ -21,7 +21,7 @@ in
   options.nix-polyglot = {
         enable = mkEnableOption "Enable nix-polyglot";
         langs = mkOption {
-            type = with types; nullOr listOf (enum languages);
+            type = with types; nullOr (listOf (enum languages));
             default = [];
             description = "List of languages to use.";
         };
