@@ -8,7 +8,8 @@ let
     polyglot = config.nix-polyglot;
 
     jsonFormat = pkgs.formats.json { };
-    aliases = if  (cfg.package.pname == "vscodium") then {code = "codium";} else {};
+    vscodePname = cfg.package.pname;
+    aliases = if  (vscodePname == "vscodium") then {code = "codium";} else {};
     defaultExt = with pkgs.vscode-extensions; [
     #pkief.material-icon-theme
     #ms-azuretools.vscode-docker
@@ -89,7 +90,7 @@ in {
                     userSettings = (builtins.toJSON cfg.userSettings);
                     extensions = defaultExt;
                 };
-                zsh.shellAliases = mkIf polyglot.enableZshIntegration aliases;
+                ZSH.shellAliases = aliases;
             };
         }
     ]);

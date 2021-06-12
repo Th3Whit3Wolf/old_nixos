@@ -108,8 +108,8 @@ in {
             };
         }
 
-        (mkIf config.nix-polyglot.enableZshIntegration {
-            programs.zsh.shellAliases = aliases;  
+        (mkIf polyglot.enableZshIntegration {
+            programs.ZSH.shellAliases = aliases;  
         })
     ]);
 }
