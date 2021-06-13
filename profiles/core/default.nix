@@ -20,6 +20,7 @@ in
   esac
     '';
     };
+    pathsToLink = [ "/share/zsh" ];
     
     systemPackages = with pkgs; [
       binutils
