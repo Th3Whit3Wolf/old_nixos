@@ -18,6 +18,7 @@ let
         git-ignore
         licensor
         just
+        dotenv-linter
     ];
 in
 
@@ -41,7 +42,7 @@ in
         packages = mkOption {
             type = types.listOf types.package;
             default = polyglotPackages;
-            example = literalExample "with pkgs; [ git-ignore licensor just ]";
+            example = literalExample "with pkgs; [ git-ignore licensor just dotenv-linter ]";
             description = ''
             List of generic packages to install for development.
             '';
