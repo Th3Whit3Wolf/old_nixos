@@ -671,63 +671,63 @@ ${dirHashesStr}
       '';
     }
 
-    (mkIf (cfg.integrations.autojump == true) {
+    (mkIf cfg.integrations.autojump {
       programs.autojump.enable = true;
     })
     
-    (mkIf (cfg.integrations.broot == true) {
+    (mkIf cfg.integrations.broot {
       programs.broot.enable = true;
     })
 
-    (mkIf (cfg.integrations.dircolors == true) {
+    (mkIf cfg.integrations.dircolors {
       programs.dircolors.enable = true;
     })
 
-    (mkIf (cfg.integrations.direnv == true) {
+    (mkIf cfg.integrations.direnv {
       programs.direnv.enable = true;
     })
 
-    (mkIf (cfg.integrations.fzf == true) {
+    (mkIf cfg.integrations.fzf {
       programs.fzf.enable = true;
     })
 
-    (mkIf (cfg.integrations.keychain == true) {
+    (mkIf cfg.integrations.keychain {
       programs.keychain.enable = true;
     })
 
-    (mkIf (cfg.integrations.mcfly == true) {
+    (mkIf cfg.integrations.mcfly {
       programs.mcfly.enable = true;
     })
 
-    (mkIf (cfg.integrations.nix-index == true) {
+    (mkIf cfg.integrations.nix-index {
       programs.nix-index.enable = true;
     })
 
-    (mkIf (cfg.integrations.opam == true) {
+    (mkIf cfg.integrations.opam {
       programs.opam.enable = true;
     })
 
-    (mkIf (cfg.integrations.pazi == true) {
+    (mkIf cfg.integrations.pazi {
       programs.pazi.enable = true;
     })
 
-    (mkIf (cfg.integrations.scmpuff == true) {
+    (mkIf cfg.integrations.scmpuff {
       programs.scmpuff.enable = true;
     })
 
-    (mkIf (cfg.integrations.skim == true) {
+    (mkIf cfg.integrations.skim {
       programs.skim.enable = true;
     })
 
-    (mkIf (cfg.integrations.starship == true) {
+    (mkIf cfg.integrations.starship {
       programs.starship.enable = true;
     })
 
-    (mkIf (cfg.integrations.z-lua == true) {
+    (mkIf cfg.integrations.z-lua {
       programs.z-lua.enable = true;
     })
 
-    (mkIf (cfg.integrations.zoxide == true) {
+    (mkIf cfg.integrations.zoxide {
       programs.zoxide.enable = true;
     })
 
