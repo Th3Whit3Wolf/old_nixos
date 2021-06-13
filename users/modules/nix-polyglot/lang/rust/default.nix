@@ -5,7 +5,7 @@ with builtins;
 
 let
     currLang = baseNameOf (builtins.toString ./.);
-    enabled = elem currLang config.nix-polyglot.langs;
+    enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
     polyglot = config.nix-polyglot;
     cfg = polyglot.lang.rust;
 

@@ -72,16 +72,6 @@ in
         theme.name = "Space Dark";
       };
 
-      nix-polyglot = {
-        langs = [ "rust"];
-        enableZshIntegration = true;
-        neovim.enable = true;
-        vscode = {
-          enable = true;
-          package = pkgs.vscodium;
-        };
-      };
-
       systemd.user.sessionVariables = {
         ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
       };
@@ -135,6 +125,7 @@ in
             };
           };
         };
+        ZSH.pathVar = ["$XDG_BIN_HOME"];
       };
 
       xdg = {
@@ -176,6 +167,4 @@ in
       "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
     else "")
   ];
-
-  env.PATH = [ "$XDG_BIN_HOME" "$PATH" ];
 }

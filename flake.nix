@@ -160,6 +160,7 @@
             waybar = [ desktop.bar.waybar ];
             tardis = [
               base
+              dev
               firefox
               sway
               waybar

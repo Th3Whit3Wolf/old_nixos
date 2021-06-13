@@ -12,7 +12,7 @@ let
         if type == "directory" then 
             "${name}" 
         else ""  
-    ) (readDir (./lang)));
+    ) (readDir (./lang))) ++ ["all"];
 
     polyglotPackages = with pkgs; [
         git-ignore
@@ -41,7 +41,7 @@ in
         packages = mkOption {
             type = types.listOf types.package;
             default = polyglotPackages;
-            example = literalExample "[ pkgs.git-ignore pkgs.licensor ]";
+            example = literalExample "with pkgs; [ git-ignore licensor just ]";
             description = ''
             List of generic packages to install for development.
             '';
