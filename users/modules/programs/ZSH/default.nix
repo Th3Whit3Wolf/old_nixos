@@ -45,6 +45,7 @@ fi
 '';
 
 
+
   keychainFlags = config.programs.keychain.extraFlags ++ optional (config.programs.keychain.agents != [ ])
     "--agents ${concatStringsSep "," config.programs.keychain.agents}"
     ++ optional (config.programs.keychain.inheritType != null) "--inherit ${config.programs.keychain.inheritType}";
@@ -56,7 +57,8 @@ fi
 
   relToDotDir = file: "${config.xdg.configHome}/zsh/" + file;
 
-  pluginsDir = "${xdg.dataHome}/zsh/plugins";
+  pluginsDir = relToDotDir "plugins";
+  siteFunctionDir = relToDotDir "site-functions";
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
@@ -235,6 +237,24 @@ fi
         type = types.bool;
         default = false;
         description = "Whether to enable zoxide integration.";
+      };
+    };
+  });
+
+  sitefunctionModule = types.submodule ({ config, ... }: {
+    options = {
+      src = mkOption {
+        type = types.path;
+        description = ''
+          Path to the completion file.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        description = ''
+          The name of the completion.
+        '';
       };
     };
   });
@@ -441,6 +461,14 @@ in
         description = "Extra commands that should be added to <filename>.zlogout</filename>.";
       };
 
+      sitefunctions = mkOption {
+        type = types.listOf sitefunctionModule;
+        default = {};
+        description = ''
+          Attribute set of files to link into the user's $ZDOTDIR/site-function/
+        '';
+      };
+
       plugins = mkOption {
         type = types.listOf pluginModule;
         default = [];
@@ -560,6 +588,8 @@ ${concatStrings (map (plugin: ''
   path+="$HOME/${pluginsDir}/${plugin.name}"
   fpath+="$HOME/${pluginsDir}/${plugin.name}"
 '') cfg.plugins)}
+
+${optionalString (cfg.sitefunctions != []) "fpath+=${siteFunctionDir}"}
 
 for dump in $XDG_CACHE_HOME/zsh/(N.mh+24); do
     compinit -d $dump
@@ -740,6 +770,13 @@ ${dirHashesStr}
         foldl' (a: b: a // b) {}
         (map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; })
         cfg.plugins);
+    })
+
+    (mkIf (cfg.sitefunctions  != []) {
+      home.file =
+      foldl' (a: b: a // b) {}
+      (map (sitefunctions: { "${siteFunctionDir}/_${sitefunctions.name}".source = sitefunctions.src; })
+        cfg.sitefunctions);
     })
   ]);
 }
