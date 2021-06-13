@@ -2,6 +2,7 @@
   programs.ZSH = {
     enable = true;
     enableAutosuggestions = true;
+    enableCompletion = true;
     initExtra = ''
 ################################################
 #                 KEYBINDINGS                  #
