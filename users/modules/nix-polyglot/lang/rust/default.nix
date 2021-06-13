@@ -98,7 +98,7 @@ let
         a5huynh.vscode-ron
         serayuzgur.crates
         matklad.rust-analyzer
-        # belfz.search-crates-io
+        belfz.search-crates-io
     ];
 
     vscodeSettings = {
