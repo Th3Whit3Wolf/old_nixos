@@ -142,6 +142,13 @@ final: prev:
         sha256 =
           "6793efe58c0fa8658675daa0a5847cf2b6211bafb69f3dbe0f716851234272c1";
       };
+      formulahendry.code-runner = extensionFromVscodeMarketplace {
+        name = "code-runner";
+        publisher = "formulahendry";
+        version = "0.11.3";
+        sha256 =
+          "8a79f61425d5a07c492537eee39b7d0524cf8135219e99fdd276b6675ac2fcec";
+      };
       donjayamanne.githistory = extensionFromVscodeMarketplace {
         name = "githistory";
         publisher = "donjayamanne";
