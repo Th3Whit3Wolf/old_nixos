@@ -8,8 +8,8 @@ let
   PATH = if (cfg.pathVar != []) then ''
 typeset -U PATH path
 
-path=(${concatMapStrings (x: "\n\t\"" + x + "\"") cfg.pathVar }
-  "$path[@]"
+path=(${concatMapStrings (x: "\n    \"" + x + "\"") cfg.pathVar }
+    "$path[@]"
 )
 
 export PATH
@@ -389,7 +389,7 @@ in
       };
 
       enableAutosuggestions = mkOption {
-        default = false;
+        default = true;
         description = "Enable zsh autosuggestions";
       };
 

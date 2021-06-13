@@ -130,14 +130,16 @@ in
         home = {
             sessionVariables = {
                 RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/library/";
-                RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
-                CARGO_HOME = "$XDG_DATA_HOME/cargo";
             };
             packages = cfg.packages;
         };
         programs.ZSH = {
             shellAliases = mkIf polyglot.enableZshIntegration shellAliases;
             pathVar = ["$CARGO_HOME/bin"];
+            sessionVariables = {
+                RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
+                CARGO_HOME = "$XDG_DATA_HOME/cargo";
+            };
             sitefunctions = [
                 {
                 name = "cargo";
