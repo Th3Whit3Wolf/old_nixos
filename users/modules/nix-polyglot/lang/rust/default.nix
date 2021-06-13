@@ -130,11 +130,13 @@ in
             sessionVariables = {
                 RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
                 CARGO_HOME = "$XDG_DATA_HOME/cargo";
-                #PATH = [ "$PATH" "$CARGO_HOME/bin" ];
             };
             packages = cfg.packages;
         };
-        programs.ZSH.shellAliases = mkIf polyglot.enableZshIntegration shellAliases;
+        programs.ZSH = {
+            shellAliases = mkIf polyglot.enableZshIntegration shellAliases;
+            pathVar = ["$CARGO_HOME/bin"];
+        };
         nix-polyglot = {
             neovim = {
                 plugins = neovimPlugins;

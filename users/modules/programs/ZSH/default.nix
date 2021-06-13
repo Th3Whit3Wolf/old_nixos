@@ -3,9 +3,17 @@
 with lib;
 
 let
-
   cfg = config.programs.ZSH;
   polyglot = config.nix-polyglot;
+  PATH = if (cfg.pathVar != []) then ''
+typeset -U PATH path
+
+path=(${concatMapStrings (x: "\n\t\"" + x + "\"") cfg.pathVar }
+  "$path[@]"
+)
+
+export PATH
+'' else '''';
 
   neovimAliases = if polyglot.enableZshIntegration then ''
 # Open lazygit commit window inside neovim
@@ -310,6 +318,14 @@ in
         type = types.attrsOf types.str;
       };
 
+      pathVar = mkOption {
+        default = [];
+        description = ''
+          List of paths added to PATH variable.
+        '';
+        type = types.listOf types.str;
+      };
+
       shellGlobalAliases = mkOption {
         default = {};
         example = literalExample ''
@@ -490,11 +506,15 @@ in
                 } &!
                 ${optionalString (cfg.profileExtra != null) cfg.profileExtra}
             '';
+            "${relToDotDir ".zshenv"}".text = ''
+              # Environment variables
+              . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+              ${envVarsStr}
+              ${cfg.envExtra}
+              ${PATH}
+              '';
         };
     }
-    (mkIf (cfg.envExtra != "") {
-      home.file."${relToDotDir ".zshenv"}".text = cfg.envExtra;
-    })
 
     (mkIf (cfg.logoutExtra != "") {
       home.file."${relToDotDir ".zlogout"}".text = cfg.logoutExtra;
@@ -601,10 +621,6 @@ fi
 ''}
 ${optionalString (cfg.integrations.z-lua )''eval "$(${pkgs.z-lua}/bin/z --init zsh)"''}
 ${optionalString (cfg.integrations.zoxide)''eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"''}
-
-# Environment variables
-. "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
-${envVarsStr}
 
 ${concatStrings (map (plugin: ''
   if [ -f "$HOME/${pluginsDir}/${plugin.name}/${plugin.file}" ]; then
