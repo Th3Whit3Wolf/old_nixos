@@ -345,7 +345,7 @@ in
         # dropdown, or using keyword search shortcuts you configure in options (e.g. 'd' for DuckDuckGo)
         # [SETUP-CHROME] If you don't, or rarely, type URLs, or you use a default search
         # engine that respects privacy, then you probably don't need this
-        "keyword.enabled" = false;
+        "keyword.enabled" = true;
         # 0802: disable location bar domain guessing
         # domain guessing intercepts DNS "hostname not found errors" and resends a
         # request (e.g. by adding www or .com). This is inconsistent use (e.g. FQDNs), does not work
@@ -353,7 +353,7 @@ in
         # as the 411 for DNS errors?), privacy issues (why connect to sites you didn't
         # intend to), can leak sensitive data (e.g. query strings: e.g. Princeton attack),
         #and is a security risk (e.g. common typos & malicious sites set up to exploit this)
-        "browser.fixup.alternate.enabled" = false;
+        "browser.fixup.alternate.enabled" = true;
         # 0803: display all parts of the url in the location bar
         "browser.urlbar.trimURLs" = false;
         # 0805: disable coloring of visited links - CSS history leak
