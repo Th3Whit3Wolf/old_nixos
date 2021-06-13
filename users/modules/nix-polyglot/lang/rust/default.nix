@@ -88,6 +88,7 @@ let
       default = [  
         { plugin = pkgs.vimPlugins.rust-vim;  optional = true;} 
         { plugin = pkgs.vimPlugins.vim-crates; optional = true;} 
+        { plugin = pkgs.vimPlugins.vim-cargo-make; optional = true;}
 	# "nastevens/vim-cargo-make"
 	# nastevens/vim-duckscrip
 	# "ron-rs/ron.vim",
