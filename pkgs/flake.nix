@@ -18,6 +18,10 @@
       url = "github:supercomputra/SF-Mono-Font";
       flake = false;
     };
+    zsh-cargo-completion = {
+      url = "github:MenkeTechnologies/zsh-cargo-completion";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }: {
