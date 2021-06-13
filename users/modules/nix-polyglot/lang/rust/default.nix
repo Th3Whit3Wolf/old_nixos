@@ -13,19 +13,19 @@ let
 
     rust-stable = pkgs.rust-bin.stable.latest.default.override {
         extensions = [ 
-        "cargo"
-        "clippy"
-        "rust-docs"
-        "rust-src"
-        "rust-std"
-        "rustc"
-        "rustfmt"
+            "cargo"
+            "clippy"
+            "rust-docs"
+            "rust-src"
+            "rust-std"
+            "rustc"
+            "rustfmt"
         ];
         targets = [ 
-        "x86_64-unknown-linux-gnu"
-        "x86_64-unknown-linux-musl"
-        "wasm32-unknown-unknown"
-        "wasm32-wasi"
+            "x86_64-unknown-linux-gnu"
+            "x86_64-unknown-linux-musl"
+            "wasm32-unknown-unknown"
+            "wasm32-wasi"
         ];
     };
 
@@ -54,6 +54,7 @@ let
         cargo-update
         cargo-whatfeatures
         cargo-wipe
+        gcc # rust unable to find cc linker if this is not installed
         microserver
         rust-analyzer
         rust-stable
@@ -128,6 +129,7 @@ in
     config = mkIf enabled {
         home = {
             sessionVariables = {
+                RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/library/";
                 RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
                 CARGO_HOME = "$XDG_DATA_HOME/cargo";
             };
@@ -136,6 +138,12 @@ in
         programs.ZSH = {
             shellAliases = mkIf polyglot.enableZshIntegration shellAliases;
             pathVar = ["$CARGO_HOME/bin"];
+            sitefunctions = [
+                {
+                name = "cargo";
+                src = ./zsh/cargo;
+                }
+            ];
         };
         nix-polyglot = {
             neovim = {
