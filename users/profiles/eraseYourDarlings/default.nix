@@ -1,11 +1,19 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 let
   inherit (config.home) homeDirectory username;
 
   npg = config.nix-polyglot;
   xdg = config.xdg;
-  relToHome = xdgDir: builtins.substring  (builtins.stringLength homeDirectory)  (builtins.stringLength xdgDir) xdgDir;
+  zsh = config.programs.ZSH;
+
+  startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME/" then true else false;
+  relToHome = xdgDir: if (startWithHome xdgDir) then 
+    (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir) 
+    else 
+    (builtins.substring (builtins.stringLength homeDirectory) (builtins.stringLength xdgDir) xdgDir);
 
   conf = if xdg.enable then  (relToHome xdg.configHome) else ".config";
   cache = if xdg.enable then  (relToHome xdg.cacheHome) else ".cache";
@@ -18,7 +26,7 @@ let
   publicShare = if xdg.userDirs.enable then  (relToHome xdg.userDirs.publicShare) else "Public";
   templates = if xdg.userDirs.enable then  (relToHome xdg.userDirs.templates) else "Templates";
   videos = if xdg.userDirs.enable then  (relToHome xdg.userDirs.videos) else "Videos";
-  extraUserDirs = if xdg.userDirs.enable then (lib.attrsets.mapAttrsToList (name: value: relToHome "${value}") xdg.userDirs.extraConfig) else [];
+  extraUserDirs = if xdg.userDirs.enable then (attrsets.mapAttrsToList (name: value: relToHome "${value}") xdg.userDirs.extraConfig) else [];
 
   vscodePname = npg.vscode.package.pname;
   vscodeConfigDir = {
@@ -35,6 +43,7 @@ let
 in
 {
   home.persistence."/persist/${homeDirectory}" = {
+    allowOther = true;
     directories = [
       "${cache}/gstreamer-1.0"
       "${cache}/lollypop"
@@ -57,42 +66,28 @@ in
       "${templates}"
       "${videos}"
       ".ssh"
+      ".mozilla/firefox"
+      #(optionalString (config.programs.firefox.enable) ''firefox'')
     ] 
     ++ extraUserDirs
-    ++ lib.optionals (npg.vscode.enable) [
+    ++ optionals (npg.vscode.enable) [
       "${conf}/pipewire/media-session.d"
-      "${conf}/${vscodeConfigDir}/Service Worker"
-      "${conf}/.pki"
+      "${conf}/${vscodeConfigDir}"
+      ".pki"
       "${vscodeExtensionDir}"
     ]
-    ++ lib.optionals (npg.neovim.enable) [
+    ++ optionals (npg.neovim.enable) [
       "${data}/nvim"
     ]
-    ++ lib.optionals (npg.lang.rust.enable) [
+    ++ optionals (npg.lang.rust.enable) [
       "${data}/cargo"
       "${data}/rustup"
     ]
-    ++ lib.optionals (config.programs.firefox.enable) [
-      ".mozilla/firefox"
-    ]
-    ++ lib.optionals (config.programs.ZSH.enable) [
+    ++ optionals (zsh.enable) [
       "${cache}/zsh/"
       "${data}/zsh"
-    ]
-    ++ lib.optionals (config.programs.ZSH.integrations.zoxide.enable) [
-      "${data}/zoxide"
-    ]
-    ++ lib.optionals (config.programs.ZSH.integrations.starship.enable) [
-      "${cache}/starship"
+      (optionalString (zsh.integrations.zoxide)"${data}/zoxide")
+      (optionalString (zsh.integrations.starship)"${cache}/starship")
     ];
-
-
-    files = [] ++ lib.optionals (npg.vscode.enable) [
-      "${conf}/${vscodeConfigDir}/QuotaManager"
-      "${conf}/${vscodeConfigDir}/QuotaManager-journal"
-    ];
-
-    allowOther = true;
   };
-
 }
