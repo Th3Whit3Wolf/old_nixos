@@ -9,7 +9,7 @@ in
     enable = true;
     extensions = with pkgs.nur.repos; [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
-      ijohanne.firefoxPlugins.lastpass-password-manager
+      #ijohanne.firefoxPlugins.lastpass-password-manager
       rycee.firefox-addons.auto-tab-discard
       rycee.firefox-addons.bitwarden
       rycee.firefox-addons.canvasblocker
