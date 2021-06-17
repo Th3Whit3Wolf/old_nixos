@@ -156,11 +156,15 @@
             base = [ core direnv git xdg ssh ];
             zsh = [shell.ZSH];
             firefox = [ desktop.browser.firefox ];
+            psd = [
+              desktop.browser.psd
+            ];
             sway = [ desktop.wm.sway ];
             waybar = [ desktop.bar.waybar ];
             tardis = [
               base
               dev
+              psd
               firefox
               sway
               waybar
