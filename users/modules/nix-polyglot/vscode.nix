@@ -38,7 +38,8 @@ let
     wwm.better-align
     rubymaniac.vscode-paste-and-indent
     tyriar.sort-lines
-    softwaredotcom.swdc-vscode
+    # TODO: Test softwaredotcom.swdc-vscode on vscode
+    # It may rely on proprietary code
     ryu1kn.edit-with-shell
     spikespaz.vscode-smoothtype
     stkb.rewrap
