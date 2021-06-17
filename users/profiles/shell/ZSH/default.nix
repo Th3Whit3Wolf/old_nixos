@@ -1,3 +1,5 @@
+{ config, lib, pkgs, ... }:
+
 {
   programs.ZSH = {
     enable = true;
@@ -46,7 +48,7 @@ key[Control-Right]="''${terminfo[kRIT5]}"
       path = "$XDG_CACHE_HOME/zsh/zsh_history";
     };
     shellAliases = {
-       ".." = "cd ..";
+        ".." = "cd ..";
         "000" = "chmod -R 000";
         "644" = "chmod -R 644";
         "666" = "chmod -R 666";
@@ -105,5 +107,96 @@ key[Control-Right]="''${terminfo[kRIT5]}"
         xo = "xdg-open &>/dev/null";
         wget = "wget --hsts-file=\"$XDG_CACHE_HOME/wget-hsts\"";
     };
+    scripts = [
+      {
+        name = "cd";
+        text = ''
+          if [[ -f $VIRTUAL_ENV/.project && -n "$(< $VIRTUAL_ENV/.project 2>/dev/null)" && -z "$@" ]]; then
+              builtin cd $(< $VIRTUAL_ENV/.project) && ${pkgs.exa}/bin/exa
+          elif [[ -n "$(git rev-parse --show-toplevel 2>/dev/null)" && "$(pwd)" == "$(git rev-parse --show-toplevel 2>/dev/null)" && -z "$@" ]]; then
+              builtin cd ~/ && ${pkgs.exa}/bin/exa
+          elif [[ -n "$(git rev-parse --show-toplevel 2>/dev/null)" && -z "$@" ]]; then
+              builtin cd $(git rev-parse --show-toplevel) && ${pkgs.exa}/bin/exa
+          else
+              builtin cd $@ && ${pkgs.exa}/bin/exa
+          fi
+        '';
+      }
+      {
+        name = "compress";
+        text = ''
+        if [[ -n "$1" ]]; then
+          FILE=$1
+          case $FILE in
+            *.tar ) shift && tar cf $FILE $* ;;
+            *.tar.bz2 ) shift && tar cjf $FILE $* ;;
+            *.tar.gz ) shift && tar czf $FILE $* ;;
+            *.tgz ) shift && tar czf $FILE $* ;;
+            *.zip ) shift && zip $FILE $* ;;
+            *.rar ) shift && rar $FILE $* ;;
+          esac
+        else
+          echo "usage: compress <foo.tar.gz> ./foo ./bar"
+        fi
+      '';
+      }
+      {
+        name = "cp";
+        text = ''
+          if [[ -z $2 ]]; then
+            command cp -rv $1 ./
+          else
+            command cp -rv $@
+          fi
+        '';
+      }
+      {
+        name = "gz";
+        text = ''
+          local origsize=$(wc -c <"$1")
+          local gzipsize=$(${pkgs.pigz}/bin/pigz -c "$1" | wc -c)
+          local ratio=$(echo "$gzipsize * 100/ $origsize" | ${pkgs.bc} -l)
+          printf "orig: %d bytes\n" "$origsize"
+          printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
+        '';
+      }
+      {
+        name = "httpcompression";
+        text = ''
+            local encoding="$(${pkgs.curl}/bin/curl -LIs -H 'User-Agent: Mozilla/5 Gecko' -H 'Accept-Encoding: gzip,deflate,compress,sdch' "$1" | grep '^Content-Encoding:')" && echo "$1 is encoded using $\{encoding#* }" || echo "$1 is not using any encoding"
+        '';
+      }
+      {
+        name = "mkd";
+        text = ''
+          mkdir -p "$@" && cd "$@"
+        '';
+      }
+      {
+        name = "mv";
+        text = ''
+        if [[ -z $2 ]]; then
+          command mv -v $1 ./
+        else
+          command mv -v $@
+        fi
+        '';
+      }
+      {
+        name = "up";
+        text = ''
+        local d=""
+        limit=$1
+        for ((i=1 ; i <= limit ; i++)); do
+          d=$d/..
+				done
+				d=$(echo $d | sed 's/^\///')
+				if [[ -z "$d" ]]; then
+					d=..
+				fi
+				cd $d
+        '';
+      }
+    ];
   };
 }
