@@ -44,8 +44,6 @@ else
 fi
 '';
 
-
-
   keychainFlags = config.programs.keychain.extraFlags ++ optional (config.programs.keychain.agents != [ ])
     "--agents ${concatStringsSep "," config.programs.keychain.agents}"
     ++ optional (config.programs.keychain.inheritType != null) "--inherit ${config.programs.keychain.inheritType}";
@@ -59,6 +57,8 @@ fi
 
   pluginsDir = relToDotDir "plugins";
   siteFunctionDir = relToDotDir "site-functions";
+  scriptsDir = relToDotDir "scripts";
+
 
   envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables;
   localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
@@ -254,6 +254,24 @@ fi
         type = types.str;
         description = ''
           The name of the completion.
+        '';
+      };
+    };
+  });
+
+  scriptsModule = types.submodule ({ config, ... }: {
+    options = {
+      name = mkOption {
+        type = types.str;
+        description = ''
+          Name of script.
+        '';
+      };
+
+      text = mkOption {
+        type = types.str;
+        description = ''
+          Text inside function.
         '';
       };
     };
@@ -463,9 +481,17 @@ in
 
       sitefunctions = mkOption {
         type = types.listOf sitefunctionModule;
-        default = {};
+        default = [];
         description = ''
           Attribute set of files to link into the user's $ZDOTDIR/site-function/
+        '';
+      };
+      
+      scripts = mkOption {
+        type = types.listOf scriptsModule;
+        default = [];
+        description = ''
+          Attribute set of files to link into the user's $ZDOTDIR/scripts/
         '';
       };
 
@@ -561,7 +587,19 @@ ${optionalString (cfg.cdpath != []) ''
   cdpath+=(${concatStringsSep " " cfg.cdpath})
 ''}
 
-autoload -Uz $fpath[1]/*(.:t) compinit up-line-or-beginning-search down-line-or-beginning-search add-zsh-hook
+${concatStrings (map (plugin: ''
+  path+="$HOME/${pluginsDir}/${plugin.name}"
+  fpath+="$HOME/${pluginsDir}/${plugin.name}"
+'') cfg.plugins)}
+
+${optionalString (cfg.sitefunctions != []) ''
+fpath=(${siteFunctionDir} $fpath)
+autoload ${siteFunctionDir}/* ''}
+${optionalString (cfg.scripts != []) ''
+fpath=(${scriptsDir} $fpath)
+autoload ${scriptsDir}/* ''}
+
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search add-zsh-hook
 
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -571,7 +609,7 @@ for profile in ''${(z)NIX_PROFILES}; do
 done
 
 reset_broken_terminal () {
-    printf '%b' '\e[0m\e(B\e)0\017\e[?5l\e7\e[0;0r\e8'
+  printf '%b' '\e[0m\e(B\e)0\017\e[?5l\e7\e[0;0r\e8'
 }
 HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
@@ -584,16 +622,20 @@ ${localVarsStr}
 
 ${cfg.initExtraBeforeCompInit}
 
-${concatStrings (map (plugin: ''
-  path+="$HOME/${pluginsDir}/${plugin.name}"
-  fpath+="$HOME/${pluginsDir}/${plugin.name}"
-'') cfg.plugins)}
-
-${optionalString (cfg.sitefunctions != []) "fpath+=${siteFunctionDir}"}
-
-for dump in $XDG_CACHE_HOME/zsh/(N.mh+24); do
-    compinit -d $dump
-done
+# Set zsh options for general runtime.
+#
+# Load the prompt system and completion system and initilize them
+autoload -Uz compinit
+# Load and initialize the completion system ignoring insecure directories with a
+# cache time of 20 hours, so it should almost always regenerate the first time a
+# shell is opened each day
+_comp_files=($XDG_CACHE_HOME/zsh/zcompcache(Nm-20))
+if (( $#_comp_files )); then
+  compinit -i -C -d "$XDG_CACHE_HOME/zsh/zcompcache"
+else
+  compinit -i -d "$XDG_CACHE_HOME/zsh/zcompcache"
+fi
+unset _comp_files
 
 ${optionalString (cfg.enableAutosuggestions) "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"}
 ${optionalString (cfg.integrations.autojump)". ${pkgs.autojump}/share/autojump/autojump.zsh"}
@@ -658,6 +700,29 @@ ${concatStrings (map (plugin: ''
   fi
 '') cfg.plugins)}
 
+
+# zstyle
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
+zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*' group-name '\'
+zstyle ':completion:*' verbose yes
+zstyle ':completion::complete:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
+zstyle ':completion:*' rehash true
+zmodload zsh/complist
+
 # History options should be set in .zshrc and after oh-my-zsh sourcing.
 # See https://github.com/nix-community/home-manager/issues/177.
 HISTSIZE="${toString cfg.history.size}"
@@ -675,7 +740,6 @@ ${if cfg.history.expireDuplicatesFirst then "setopt" else "unsetopt"} HIST_EXPIR
 ${if cfg.history.share then "setopt" else "unsetopt"} SHARE_HISTORY
 ${if cfg.history.extended then "setopt" else "unsetopt"} EXTENDED_HISTORY
 ${if cfg.autocd != null then "${if cfg.autocd then "setopt" else "unsetopt"} autocd" else ""}
-zstyle ':completion:*' cache-path $XDG_CACHE_HOME/zsh/zcompcache
 
 ${cfg.initExtra}
 
@@ -777,6 +841,16 @@ ${dirHashesStr}
       foldl' (a: b: a // b) {}
       (map (sitefunctions: { "${siteFunctionDir}/_${sitefunctions.name}".source = sitefunctions.src; })
         cfg.sitefunctions);
+    })
+    (mkIf (cfg.scripts  != []) {
+      home.file =
+      foldl' (a: b: a // b) {}
+      (map (scripts: { "${scriptsDir}/${scripts.name}".text = ''
+${scripts.name}() {
+  ${scripts.text}
+}
+      '';})
+        cfg.scripts);
     })
   ]);
 }
