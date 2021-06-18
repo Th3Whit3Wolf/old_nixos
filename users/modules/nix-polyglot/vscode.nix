@@ -16,6 +16,7 @@ let
     ms-vscode-remote.remote-ssh
     ms-vscode-remote.remote-ssh-edit
     redhat.vscode-yaml
+    a5huynh.vscode-ron
     coenraads.bracket-pair-colorizer-2
     oderwat.indent-rainbow
     mechatroner.rainbow-csv
