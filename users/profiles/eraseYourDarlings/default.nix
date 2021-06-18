@@ -48,11 +48,8 @@ in
       "${cache}/fontconfig"
       "${cache}/gstreamer-1.0"
       "${cache}/lollypop"
-      "${cache}/nix-index"
-      "${cache}/mesa_shader_cache"
       "${conf}/pipewire/media-session.d"
       ".gnupg"
-      "${data}/direnv"
       "${data}/gnupg"
       "${data}/icons"
       "${data}/keyrings"
@@ -68,9 +65,12 @@ in
       "${templates}"
       "${videos}"
       ".ssh"
-      "${conf}/${vscodeConfigDir}"
-      ".pki"
-      "${vscodeExtensionDir}"
+
+      # Vscode
+      (optionalString (vscodePname != null)"${conf}/${vscodeConfigDir}")
+      (optionalString (vscodePname != null)"${cache}/mesa_shader_cache")
+      (optionalString (vscodePname != null)".pki")
+      (optionalString (vscodePname != null)"${vscodeExtensionDir}")
     ] 
     ++ extraUserDirs;
   };

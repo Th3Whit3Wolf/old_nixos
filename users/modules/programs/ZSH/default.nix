@@ -583,8 +583,9 @@ in
       home.persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
         "${cache}/zsh/"
         "${data}/zsh"
-        (optionalString (cfg.integrations.zoxide)"${data}/zoxide")
+        (optionalString (cfg.integrations.nix-index)"${cache}/nix-index")
         (optionalString (cfg.integrations.starship)"${cache}/starship")
+        (optionalString (cfg.integrations.zoxide)"${data}/zoxide")
       ];
     }
 
