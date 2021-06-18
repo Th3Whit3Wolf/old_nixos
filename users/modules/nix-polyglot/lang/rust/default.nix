@@ -9,7 +9,14 @@ let
     polyglot = config.nix-polyglot;
     cfg = polyglot.lang.rust;
 
-    ## Need to get https://github.com/MenkeTechnologies/zsh-cargo-completion
+    # For persistence
+    inherit (config.home) homeDirectory username;
+    startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME" then true else false;
+    relToHome = xdgDir: if (startWithHome xdgDir) then 
+            (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir) 
+        else 
+            (builtins.substring (builtins.stringLength homeDirectory) (builtins.stringLength xdgDir) xdgDir);
+    data = if config.xdg.enable then  (relToHome config.xdg.dataHome) else ".local/share";
 
     rust-stable = pkgs.rust-bin.stable.latest.default.override {
         extensions = [ 
@@ -84,19 +91,28 @@ let
     };
 
     neovimPlugins  = mkOption {
-      type = with types; listOf (either package pluginWithConfigType);
-      default = [  
-        { plugin = pkgs.vimPlugins.rust-vim;  optional = true;} 
-        { plugin = pkgs.vimPlugins.vim-crates; optional = true;} 
-        { plugin = pkgs.vimPlugins.vim-cargo-make; optional = true;}
-	# "nastevens/vim-cargo-make"
-	# nastevens/vim-duckscrip
-	# "ron-rs/ron.vim",
-      ];
+        type = with types; listOf (either package pluginWithConfigType);
+        default = with pkgs.vimPlugins;[  
+            { 
+                plugin = rust-vim;
+                optional = true;
+            } 
+            { 
+                plugin = vim-crates; 
+                optional = true;
+            } 
+            { 
+                plugin = vim-cargo-make; 
+                optional = true;
+            }
+            { 
+                plugin = vim-duckscript; 
+                optional = true;
+            }
+        ];
     };
 
     vscodeExtensions = with pkgs.vscode-extensions; [
-        a5huynh.vscode-ron
         serayuzgur.crates
         matklad.rust-analyzer
         belfz.search-crates-io
@@ -133,6 +149,10 @@ in
                 RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/library/";
             };
             packages = cfg.packages;
+            persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
+                "${data}/cargo"
+                "${data}/rustup"
+            ];
         };
         programs.ZSH = {
             shellAliases = mkIf polyglot.enableZshIntegration shellAliases;

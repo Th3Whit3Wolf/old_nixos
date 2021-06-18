@@ -5,6 +5,9 @@ let
   inherit (config.home) homeDirectory username;
 in
 {
+  home.persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
+    ".mozilla/firefox"
+  ];
   programs.firefox = {
     enable = true;
     extensions = with pkgs.nur.repos; [

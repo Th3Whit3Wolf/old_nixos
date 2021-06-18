@@ -8,45 +8,56 @@ let
     polyglot = config.nix-polyglot;
 
     vscodePname = cfg.package.pname;
+    configDir = {
+        "vscode" = "Code";
+        "vscode-insiders" = "Code - Insiders";
+        "vscodium" = "VSCodium";
+    }.${vscodePname};
+    extensionDir = {
+        "vscode" = ".vscode";
+        "vscode-insiders" = ".vscode-insiders";
+        "vscodium" = ".vscode-oss";
+    }.${vscodePname};
     aliases = if  (vscodePname == "vscodium") then {code = "codium";} else {};
+
     defaultExt = with pkgs.vscode-extensions; [
-    pkief.material-icon-theme
-    #ms-azuretools.vscode-docker
-    #ms-kubernetes-tools.vscode-kubernetes-tools
-    ms-vscode-remote.remote-ssh
-    ms-vscode-remote.remote-ssh-edit
-    redhat.vscode-yaml
-    a5huynh.vscode-ron
-    coenraads.bracket-pair-colorizer-2
-    oderwat.indent-rainbow
-    mechatroner.rainbow-csv
-    mikestead.dotenv
-    roscop.activefileinstatusbar
-    yzhang.markdown-all-in-one
-    shd101wyy.markdown-preview-enhanced
-    adpyke.codesnap
-    pflannery.vscode-versionlens
-    dendron.dendron
-    tamasfe.even-better-toml
-    christian-kohler.path-intellisense
-    aaron-bond.better-comments
-    KnisterPeter.vscode-github
-    hardikmodha.create-tests
-    formulahendry.code-runner
-    kruemelkatze.vscode-dashboard
-    alefragnani.project-manager
-    gruntfuggly.todo-tree
-    wwm.better-align
-    rubymaniac.vscode-paste-and-indent
-    tyriar.sort-lines
-    # TODO: Test softwaredotcom.swdc-vscode on vscode
-    # It may rely on proprietary code
-    ryu1kn.edit-with-shell
-    spikespaz.vscode-smoothtype
-    stkb.rewrap
-    zxh404.vscode-proto3
-    skellock.just
-  ];
+        pkief.material-icon-theme
+        #ms-azuretools.vscode-docker
+        #ms-kubernetes-tools.vscode-kubernetes-tools
+        ms-vscode-remote.remote-ssh
+        ms-vscode-remote.remote-ssh-edit
+        redhat.vscode-yaml
+        a5huynh.vscode-ron
+        coenraads.bracket-pair-colorizer-2
+        oderwat.indent-rainbow
+        mechatroner.rainbow-csv
+        mikestead.dotenv
+        roscop.activefileinstatusbar
+        yzhang.markdown-all-in-one
+        shd101wyy.markdown-preview-enhanced
+        adpyke.codesnap
+        pflannery.vscode-versionlens
+        dendron.dendron
+        tamasfe.even-better-toml
+        christian-kohler.path-intellisense
+        aaron-bond.better-comments
+        KnisterPeter.vscode-github
+        hardikmodha.create-tests
+        formulahendry.code-runner
+        kruemelkatze.vscode-dashboard
+        alefragnani.project-manager
+        gruntfuggly.todo-tree
+        wwm.better-align
+        rubymaniac.vscode-paste-and-indent
+        tyriar.sort-lines
+        # TODO: Test softwaredotcom.swdc-vscode on vscode
+        # It may rely on proprietary code
+        ryu1kn.edit-with-shell
+        spikespaz.vscode-smoothtype
+        stkb.rewrap
+        zxh404.vscode-proto3
+        skellock.just
+    ];
     
 in {
     options.nix-polyglot.vscode = {

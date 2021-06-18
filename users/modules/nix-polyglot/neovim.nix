@@ -7,6 +7,15 @@ let
     cfg = config.nix-polyglot.neovim;
     polyglot = config.nix-polyglot;
 
+    # For persistence
+    inherit (config.home) homeDirectory username;
+    startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME" then true else false;
+    relToHome = xdgDir: if (startWithHome xdgDir) then 
+            (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir) 
+        else 
+            (builtins.substring (builtins.stringLength homeDirectory) (builtins.stringLength xdgDir) xdgDir);
+    data = if config.xdg.enable then  (relToHome config.xdg.dataHome) else ".local/share";
+
     pluginWithConfigType = types.submodule {
         options = {
             config = mkOption {
@@ -33,11 +42,6 @@ let
         suv = "sudo -E nvim"; 
     };
 
-    ## Helpful for creating vim plugin overlay
-    # https://nixos.wiki/wiki/Vim
-    # https://github.com/NixOS/nixpkgs/blob/98686d3b7f9bf156331b88c2a543da224a63e0e2/pkgs/misc/vim-plugins/overrides.nix
-    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vim-plugins/generated.nix
-    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/misc/vim-plugins/overrides.nix
     defaultPlugins = with pkgs.vimPlugins; [
     { plugin = vim-easy-align; }
     { plugin = vim-which-key; }
@@ -53,6 +57,10 @@ let
         plugin = nvim-treesitter;
         optional = true;
     }
+    #{ 
+    #    plugin = ron-vim; 
+    #    optional = true;
+    #}
     {
         plugin = vim-yaml;
         optional = true;
@@ -94,11 +102,16 @@ in {
 
     config = mkIf cfg.enable (mkMerge [ 
         {
-            home.packages = with pkgs; [
-                (cfg.package)
-                neovim-remote
-                tree-sitter
-            ];
+            home = {
+                packages = with pkgs; [
+                    (cfg.package)
+                    neovim-remote
+                    tree-sitter
+                ];
+                persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
+                    "${data}/nvim"
+                ];
+            };
 
             programs.neovim = {
                 enable = true;

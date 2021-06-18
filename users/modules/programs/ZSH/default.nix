@@ -3,8 +3,20 @@
 with lib;
 
 let
+  inherit (config.home) homeDirectory username;
+
   cfg = config.programs.ZSH;
   polyglot = config.nix-polyglot;
+
+  # For persistence
+  startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME" then true else false;
+  relToHome = xdgDir: if (startWithHome xdgDir) then 
+    (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir) 
+    else 
+    (builtins.substring (builtins.stringLength homeDirectory) (builtins.stringLength xdgDir) xdgDir);
+  cache = if config.xdg.enable then  (relToHome config.xdg.cacheHome) else ".cache";
+  data = if config.xdg.enable then  (relToHome config.xdg.dataHome) else ".local/share";
+
   PATH = if (cfg.pathVar != []) then ''
 typeset -U PATH path
 
@@ -538,36 +550,42 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-        home.file = {
-            "${relToDotDir ".zlogin"}".text = ''
-                {
-                # Compile zcompdump, if modified, to increase startup speed.
-                zcompdump="''$XDG_CACHE_HOME/zsh/zcompdump"
-                if [[ -s "$zcompdump" && (! -s "''${zcompdump}.zwc" || "$zcompdump" -nt "''${zcompdump}.zwc") ]]; then
-                    zcompile "$zcompdump"
-                fi
-                } &!
-                ${optionalString (cfg.loginExtra != null) cfg.loginExtra}
-            '';
+      home.file = {
+          "${relToDotDir ".zlogin"}".text = ''
+              {
+              # Compile zcompdump, if modified, to increase startup speed.
+              zcompdump="''$XDG_CACHE_HOME/zsh/zcompdump"
+              if [[ -s "$zcompdump" && (! -s "''${zcompdump}.zwc" || "$zcompdump" -nt "''${zcompdump}.zwc") ]]; then
+                  zcompile "$zcompdump"
+              fi
+              } &!
+              ${optionalString (cfg.loginExtra != null) cfg.loginExtra}
+          '';
 
-            "${relToDotDir ".zprofile"}".text = ''
-                {
-                # Compile zcompdump, if modified, to increase startup speed.
-                zcompdump="''$XDG_CACHE_HOME/zsh/zcompdump"
-                if [[ -s "$zcompdump" && (! -s "''${zcompdump}.zwc" || "$zcompdump" -nt "''${zcompdump}.zwc") ]]; then
-                    zcompile "$zcompdump"
-                fi
-                } &!
-                ${optionalString (cfg.profileExtra != null) cfg.profileExtra}
+          "${relToDotDir ".zprofile"}".text = ''
+              {
+              # Compile zcompdump, if modified, to increase startup speed.
+              zcompdump="''$XDG_CACHE_HOME/zsh/zcompdump"
+              if [[ -s "$zcompdump" && (! -s "''${zcompdump}.zwc" || "$zcompdump" -nt "''${zcompdump}.zwc") ]]; then
+                  zcompile "$zcompdump"
+              fi
+              } &!
+              ${optionalString (cfg.profileExtra != null) cfg.profileExtra}
+          '';
+          "${relToDotDir ".zshenv"}".text = ''
+            # Environment variables
+            . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+            ${envVarsStr}
+            ${cfg.envExtra}
+            ${PATH}
             '';
-            "${relToDotDir ".zshenv"}".text = ''
-              # Environment variables
-              . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
-              ${envVarsStr}
-              ${cfg.envExtra}
-              ${PATH}
-              '';
-        };
+      };
+      home.persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
+        "${cache}/zsh/"
+        "${data}/zsh"
+        (optionalString (cfg.integrations.zoxide)"${data}/zoxide")
+        (optionalString (cfg.integrations.starship)"${cache}/starship")
+      ];
     }
 
     (mkIf (cfg.logoutExtra != "") {

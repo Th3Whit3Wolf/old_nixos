@@ -9,7 +9,7 @@ let
   xdg = config.xdg;
   zsh = config.programs.ZSH;
 
-  startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME/" then true else false;
+  startWithHome = xdgDir: if (builtins.substring 0 5 xdgDir) == "$HOME" then true else false;
   relToHome = xdgDir: if (startWithHome xdgDir) then 
     (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir) 
     else 
@@ -45,9 +45,11 @@ in
   home.persistence."/persist/${homeDirectory}" = {
     allowOther = true;
     directories = [
+      "${cache}/fontconfig"
       "${cache}/gstreamer-1.0"
       "${cache}/lollypop"
       "${cache}/nix-index"
+      "${cache}/mesa_shader_cache"
       "${conf}/pipewire/media-session.d"
       ".gnupg"
       "${data}/direnv"
@@ -66,28 +68,10 @@ in
       "${templates}"
       "${videos}"
       ".ssh"
-      ".mozilla/firefox"
-      #(optionalString (config.programs.firefox.enable) ''firefox'')
-    ] 
-    ++ extraUserDirs
-    ++ optionals (npg.vscode.enable) [
-      "${conf}/pipewire/media-session.d"
       "${conf}/${vscodeConfigDir}"
       ".pki"
       "${vscodeExtensionDir}"
-    ]
-    ++ optionals (npg.neovim.enable) [
-      "${data}/nvim"
-    ]
-    ++ optionals (npg.lang.rust.enable) [
-      "${data}/cargo"
-      "${data}/rustup"
-    ]
-    ++ optionals (zsh.enable) [
-      "${cache}/zsh/"
-      "${data}/zsh"
-      (optionalString (zsh.integrations.zoxide)"${data}/zoxide")
-      (optionalString (zsh.integrations.starship)"${cache}/starship")
-    ];
+    ] 
+    ++ extraUserDirs;
   };
 }
