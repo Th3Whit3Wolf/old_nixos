@@ -246,7 +246,8 @@ in
           command =
             "${pkgs.swayidle}/bin/sway/idle -w -d timeout 300 '${lockCommand}' timeout 600 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${lockCommand}'";
         }
-        #{ command = "zsh -i -c exit"; } # Build .zcompdump on startup
+        # Build .zcompdump on startup
+        { command = "{pkgs.zsh}/bin/zsh -i -c exit"; }
       ];
     };
     extraConfig = ''
