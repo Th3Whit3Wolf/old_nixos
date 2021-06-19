@@ -104,6 +104,7 @@ in {
                 };
                 ZSH.shellAliases = aliases;
             };
+            home.packages = [pkgs.nerdfonts];
         }
     ]);
 }
