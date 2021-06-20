@@ -3,6 +3,11 @@
 {
   imports = [ "${modulesPath}/installer/scan/not-detected.nix" ];
 
+  # Use the latest kernel
+  boot = {
+    
+  };
+
   boot = {
     initrd = {
       availableKernelModules = [
@@ -31,11 +36,20 @@
       "quiet"
 
       "add_efi_memmap"
+      "acpi_backlight=native"
     ];
 
     # Refuse ICMP echo requests on my desktop/laptop; nobody has any business
     # pinging them, unlike my servers.
     kernel.sysctl."net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        configurationLimit = 10;
+        enable = true;
+      };
+    };
   };
 
   # CPU

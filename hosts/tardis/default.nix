@@ -11,17 +11,6 @@ in
     ./hardware-configuration.nix
   ] ++ suites.tardis;
 
-  # Use the latest kernel
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        configurationLimit = 10;
-        enable = true;
-      };
-    };
-  };
-
   hardware = {
     opengl = {
       enable = true;
