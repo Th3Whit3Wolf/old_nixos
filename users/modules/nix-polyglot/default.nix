@@ -23,7 +23,7 @@ let
 in
 
 {
-  imports = [ ./neovim.nix  ./vscode.nix ./lang ];
+  imports = [ ./neovim.nix  ./vscode ./lang ];
 
   options.nix-polyglot = {
         enable = mkEnableOption "Enable nix-polyglot";
