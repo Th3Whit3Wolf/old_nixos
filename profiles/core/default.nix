@@ -1,27 +1,24 @@
 { config, lib, pkgs, ... }:
 let inherit (lib) fileContents;
-in
-{
+in {
   imports = [ ../cachix ];
 
-  env = {
-    ZDOTDIR = "$HOME/.config/zsh";
-  };
+  env = { ZDOTDIR = "$HOME/.config/zsh"; };
 
   environment = {
     etc = {
       # Automatic log out from virtual consoles
-      "profile.d/shell-timeout.sh".text = '' 
-# Log user out in 30 minutes
-"TMOUT="\$(( 60*30 ))";
-[ -z "\$DISPLAY" ] && export TMOUT;
-  case \$( /usr/bin/tty ) in /dev/tty[0-9]*) 
-    export TMOUT;;
-  esac
-    '';
+      "profile.d/shell-timeout.sh".text = ''
+        # Log user out in 30 minutes
+        "TMOUT="\$(( 60*30 ))";
+        [ -z "\$DISPLAY" ] && export TMOUT;
+          case \$( /usr/bin/tty ) in /dev/tty[0-9]*) 
+            export TMOUT;;
+          esac
+            '';
     };
     pathsToLink = [ "/share/zsh" ];
-    
+
     systemPackages = with pkgs; [
       binutils
       cached-nix-shell

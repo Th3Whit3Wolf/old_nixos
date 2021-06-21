@@ -4,23 +4,22 @@ let
   inherit (config.home) homeDirectory username;
   pactl = "${pkgs.pulseaudioFull}/bin/pactl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-  lockCommand = "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
-in
-{
-  home.packages = with pkgs;
-    [
-      alacritty
-      wofi
-      kanshi
-      swaylock-effects
-      swayidle
-      grim
-      sway-contrib.grimshot
-      imv
-      slurp
-      qt5.qtwayland
-      nwg-launchers
-    ];
+  lockCommand =
+    "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
+in {
+  home.packages = with pkgs; [
+    alacritty
+    wofi
+    kanshi
+    swaylock-effects
+    swayidle
+    grim
+    sway-contrib.grimshot
+    imv
+    slurp
+    qt5.qtwayland
+    nwg-launchers
+  ];
   systemd.user.sessionVariables = {
     # Wayland Settings
     _JAVA_AWT_WM_NONREPARENTING = "1";
@@ -39,9 +38,7 @@ in
   wayland.windowManager.sway = {
     enable = true;
     xwayland = true;
-    wrapperFeatures = {
-      gtk = true;
-    };
+    wrapperFeatures = { gtk = true; };
     extraSessionCommands = "systemctl --user import-environment";
     config = rec {
       bars = lib.mkIf config.programs.waybar.enable [{
@@ -49,9 +46,10 @@ in
       }];
       output = {
         eDP-1 = {
-          bg =
-            if (config.home.theme.wallpaper != null) then "${config.home.theme.wallpaper} fill"
-            else "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
+          bg = if (config.home.theme.wallpaper != null) then
+            "${config.home.theme.wallpaper} fill"
+          else
+            "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
         };
       };
       left = "h";
@@ -64,8 +62,7 @@ in
         "${modifier}+w" = "exec firefox";
         "${modifier}+Return" = "exec ${terminal}";
         "${modifier}+q" = "kill";
-        "${modifier}+space" =
-          "exec ${menu} -s $XDG_CONFIG_HOME/wofi/style.css";
+        "${modifier}+space" = "exec ${menu} -s $XDG_CONFIG_HOME/wofi/style.css";
         "${modifier}+Shift+q" =
           "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'";
         "${modifier}+Alt+l" = "exec ${lockCommand}";
@@ -150,8 +147,7 @@ in
         # Multimedia Keys
         "--locked XF86MonBrightnessDown" = "exec ${brightnessctl} set 5%-";
         "--locked XF86MonBrightnessUp" = "exec ${brightnessctl} set +5%";
-        "XF86AudioMute" =
-          "exec ${pactl} set-sink-mute @DEFAULT_SINK@ toggle";
+        "XF86AudioMute" = "exec ${pactl} set-sink-mute @DEFAULT_SINK@ toggle";
         "XF86AudioMicMute" =
           "exec ${pactl} set-source-mute @DEFAULT_SOURCE@ toggle";
         "XF86AudioRaiseVolume" =
@@ -175,15 +171,11 @@ in
           middle_emulation = "enabled";
         };
       };
-      fonts =
-        {
-          names = [
-            "SFNS Display Regular"
-            "SpaceMono Nerd Font Mono Regular"
-          ];
-          style = "Regular";
-          size = 13.0;
-        };
+      fonts = {
+        names = [ "SFNS Display Regular" "SpaceMono Nerd Font Mono Regular" ];
+        style = "Regular";
+        size = 13.0;
+      };
       gaps = {
         inner = 12;
         outer = 5;

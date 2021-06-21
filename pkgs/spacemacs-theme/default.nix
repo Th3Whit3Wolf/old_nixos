@@ -1,7 +1,6 @@
 { lib, stdenv, srcs }:
 let src = srcs.spacemacs-theme;
-in
-stdenv.mkDerivation {
+in stdenv.mkDerivation {
   inherit src;
   inherit (src) pname version;
 

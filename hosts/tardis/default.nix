@@ -4,25 +4,18 @@ let
   inherit (lib) fileContents mkForce;
 
   accessToken = "github.com=" + (fileContents ./secrets/access_token);
-in
-{
-  imports = [
-    ./users
-    ./hardware-configuration.nix
-  ] ++ suites.tardis;
+in {
+  imports = [ ./users ./hardware-configuration.nix ] ++ suites.tardis;
 
   hardware = {
     opengl = {
       enable = true;
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-      ];
+      extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
       driSupport = true;
       driSupport32Bit = true;
     };
   };
-  
+
   home-manager.useUserPackages = true;
 
   nix = {

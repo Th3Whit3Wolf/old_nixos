@@ -1,13 +1,11 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-let
-  inherit (config.home) homeDirectory username;
-in
-{
-  home.persistence."/persist/${homeDirectory}".directories = mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
-    ".mozilla/firefox"
-  ];
+let inherit (config.home) homeDirectory username;
+in {
+  home.persistence."/persist/${homeDirectory}".directories =
+    mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
+    [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
     extensions = with pkgs.nur.repos; [
@@ -76,9 +74,11 @@ in
         "browser.newtabpage.activity-stream.feeds.snippets" = false;
         # 0105c: disable Activity Stream Top Stories, Pocket-based and/or sponsored content
         "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
-        "browser.newtabpage.activity-stream.section.highlights.includePocket" = false;
+        "browser.newtabpage.activity-stream.section.highlights.includePocket" =
+          false;
         "browser.newtabpage.activity-stream.showSponsored" = false;
-        "browser.newtabpage.activity-stream.feeds.discoverystreamfeed" = false; # [FF66+]
+        "browser.newtabpage.activity-stream.feeds.discoverystreamfeed" =
+          false; # [FF66+]
         # 0105e: clear default topsites
         # [NOTE] This does not block you from adding your own
         "browser.newtabpage.activity-stream.default.sites" = "";
@@ -95,7 +95,8 @@ in
         # SETTING] to manage site exceptions: Options>Privacy & Security>Permissions>Location>Settings
         # 203: use Mozilla geolocation service instead of Google when geolocation is enabled [FF74+]
         # Optionally enable logging to the console (defaults to false)
-        "geo.provider.network.url" = "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%";
+        "geo.provider.network.url" =
+          "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%";
         # 0204: disable using the OS's geolocation service
         "geo.provider.ms-windows-location" = false; # [WINDOWS]
         "geo.provider.use_corelocation" = false; # [MAC]
@@ -161,7 +162,8 @@ in
         "toolkit.telemetry.newProfilePing.enabled" = false; # [FF55+]
         "toolkit.telemetry.shutdownPingSender.enabled" = false; # [FF55+]
         "toolkit.telemetry.updatePing.enabled" = false; # [FF56+]
-        "toolkit.telemetry.bhrPing.enabled" = false; # [FF57+] Background Hang Reporter
+        "toolkit.telemetry.bhrPing.enabled" =
+          false; # [FF57+] Background Hang Reporter
         "toolkit.telemetry.firstShutdownPing.enabled" = false; # [FF57+]
         # 0331: disable Telemetry Coverage
         # [1] https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
@@ -186,10 +188,12 @@ in
         # 0350: disable Crash Reports
         "breakpad.reportURL" = "";
         "browser.tabs.crashReporting.sendReport" = false; # [FF44+]
-        "browser.crashReports.unsubmittedCheck.enabled" = false; # [FF51+] [DEFAULT: false]
+        "browser.crashReports.unsubmittedCheck.enabled" =
+          false; # [FF51+] [DEFAULT: false]
         # 0351: enforce no submission of backlogged Crash Reports [FF58+]
         # [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send backlogged crash reports
-        "browser.crashReports.unsubmittedCheck.autoSubmit2" = false; # [DEFAULT: false]
+        "browser.crashReports.unsubmittedCheck.autoSubmit2" =
+          false; # [DEFAULT: false]
         # 0390: disable Captive Portal detection
         # [1] https://www.eff.org/deeplinks/2017/08/how-captive-portals-interfere-wireless-security-and-privacy
         # [2] https://wiki.mozilla.org/Necko/CaptivePortal
@@ -734,7 +738,8 @@ in
         "media.peerconnection.ice.no_host" = true; # [FF51+]
         "media.peerconnection.ice.proxy_only_if_behind_proxy" = true; # [FF70+]
         # limit WebGL
-        "webgl.disable-fail-if-major-performance-caveat" = true; # [DEFAULT: true FF86+]
+        "webgl.disable-fail-if-major-performance-caveat" =
+          true; # [DEFAULT: true FF86+]
         # 2031: disable autoplay of HTML5 media if you interacted with the site [FF78+]
         # 0=sticky (default), 1=transient, 2=user
         # Firefox's Autoplay Policy Documentation [PDF] is linked below via SUMO
@@ -750,7 +755,8 @@ in
         # You can still right-click a link and open in a new window.
         # [TEST] https://arkenfox.github.io/TZP/tzp.html#screen
         # [1] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/9881
-        "browser.link.open_newwindow" = 3; # 1=most recent window or tab 2=new window, 3=new tab
+        "browser.link.open_newwindow" =
+          3; # 1=most recent window or tab 2=new window, 3=new tab
         "browser.link.open_newwindow.restriction" = 0;
         # 2210: block popup windows
         # [SETTING] Privacy & Security>Permissions>Block pop-up windows ***/
@@ -940,7 +946,8 @@ in
         "privacy.trackingprotection.enabled" = true;
         # 2711: enable various ETP lists
         "privacy.trackingprotection.socialtracking.enabled" = true;
-        "privacy.trackingprotection.cryptomining.enabled" = true; # [DEFAULT: true]
+        "privacy.trackingprotection.cryptomining.enabled" =
+          true; # [DEFAULT: true]
         # "privacy.trackingprotection.fingerprinting.enabled" = true; # [DEFAULT: true]
         # 2720: disable DOM (Document Object Model) Storage
         # [WARNING] This will break a LOT of sites' functionality AND extensions!
@@ -949,7 +956,8 @@ in
         # 2730: enforce no offline cache storage (appCache)
         # The API is easily fingerprinted, use the "storage" pref instead
         # "browser.cache.offline.enable" = false;
-        "browser.cache.offline.storage.enable" = false; # [FF71+] [DEFAULT: false FF84+]
+        "browser.cache.offline.storage.enable" =
+          false; # [FF71+] [DEFAULT: false FF84+]
         # 2740: disable service worker cache and cache storage
         # [NOTE] We clear service worker cache on exiting Firefox (see 2803)
         # [1] https://w3c.github.io/ServiceWorker/#privacy ###/
@@ -1136,7 +1144,8 @@ in
         # 4503: disable mozAddonManager Web API [FF57+]
         # [NOTE] To allow extensions to work on AMO, you also need 2662
         # [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1384330,1406795,1415644,1453988 ***/
-        "privacy.resistFingerprinting.block_mozAddonManager" = true; # [HIDDEN PREF]
+        "privacy.resistFingerprinting.block_mozAddonManager" =
+          true; # [HIDDEN PREF]
         # 4504: enable RFP letterboxing [FF67+]
         # Dynamically resizes the inner window by applying margins in stepped ranges [2]
         # If you use the dimension pref, then it will only apply those resolutions. The format is
@@ -1290,21 +1299,26 @@ in
         # "browser.backspace_action" = 2; # 0=previous page, 1=scroll up, 2=do nothing
         # "browser.quitShortcut.disabled" = true; # disable Ctrl-Q quit shortcut [LINUX] [MAC] [FF87+]
         "browser.tabs.closeWindowWithLastTab" = false;
-        "browser.tabs.loadBookmarksInTabs" = true; # open bookmarks in a new tab [FF57+]
+        "browser.tabs.loadBookmarksInTabs" =
+          true; # open bookmarks in a new tab [FF57+]
         # "browser.urlbar.decodeURLsOnCopy" = true; # see bugzilla 1320061 [FF53+]
         # "general.autoScroll" = false; # middle-click enabling auto-scrolling [DEFAULT: false on Linux]
         # "ui.key.menuAccessKey" = 0; # disable alt key toggling the menu bar [RESTART]
         # "view_source.tab" = false; # view "page/selection source" in a new window [FF68+, FF59 and under]
         # UX FEATURES: disable and hide the icons and menus
-        "browser.messaging-system.whatsNewPanel.enabled" = false; # What's New toolbar icon [FF69+]
+        "browser.messaging-system.whatsNewPanel.enabled" =
+          false; # What's New toolbar icon [FF69+]
         "extensions.pocket.enabled" = false; # Pocket Account [FF46+]
-        "identity.fxaccounts.enabled" = false; # Firefox Accounts & Sync [FF60+] [RESTART]
+        "identity.fxaccounts.enabled" =
+          false; # Firefox Accounts & Sync [FF60+] [RESTART]
         #"reader.parse-on-load.enabled" = false; # Reader View
 
         # "browser.bookmarks.max_backups" = 2;
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false; # disable CFR [FF67+]
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" =
+          false; # disable CFR [FF67+]
         # [SETTING] General>Browsing>Recommend extensions as you browse
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false; # disable CFR [FF67+]
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" =
+          false; # disable CFR [FF67+]
         # [SETTING] General>Browsing>Recommend features as you browse
         # "network.manage-offline-status" = false; # see bugzilla 620472
         # "xpinstall.signatures.required" = false; # enforced extension signing (Nightly/ESR)

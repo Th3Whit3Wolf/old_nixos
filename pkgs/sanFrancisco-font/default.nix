@@ -1,7 +1,6 @@
 { lib, stdenv, srcs }:
 let src = srcs.sanFrancisco-font;
-in
-stdenv.mkDerivation {
+in stdenv.mkDerivation {
   inherit src;
   inherit (src) pname version;
 

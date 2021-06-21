@@ -1,13 +1,4 @@
-{ self
-, lib
-, modulesPath
-, pkgs
-, suites
-, hardware
-, profiles
-, config
-, ...
-}:
+{ self, lib, modulesPath, pkgs, suites, hardware, profiles, config, ... }:
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
@@ -15,8 +6,7 @@ let
   theme = config.home-manager.users.${user}.home.theme;
   themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
   homey = config.home-manager.users.${user}.home.homeDirectory;
-in
-{
+in {
   imports = [
     (lib.mkAliasOptionModule [ "${user}" ] [ "home-manager" "users" "${user}" ])
   ];
@@ -36,135 +26,134 @@ in
       "adbusers"
       "video"
     ];
-    packages = with pkgs; [
-      # Git tools
-      git
-      git-crypt
-      git-hub
-      git-lfs
-      git-subrepo
-      delta
-      gitoxide
-      lazygit
-      gitui
+    packages = with pkgs;
+      [
+        # Git tools
+        git
+        git-crypt
+        git-hub
+        git-lfs
+        git-subrepo
+        delta
+        gitoxide
+        lazygit
+        gitui
 
-      gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
-      gnome3.nautilus
-      gnome3.nautilus-python
-      gnome3.sushi
-      mesa
-      sway
-      river
-      firefox-wayland
-      brightnessctl
-    ] ++ themePackages;
+        gnome3.adwaita-icon-theme # Icons for gnome packages that sometimes use them but don't depend on them
+        gnome3.nautilus
+        gnome3.nautilus-python
+        gnome3.sushi
+        mesa
+        sway
+        river
+        firefox-wayland
+        brightnessctl
+      ] ++ themePackages;
   };
 
-  ${user} =
-    { suites
-    , lib
-    , ...
-    }: {
-      imports = suites.tardis;
+  ${user} = { suites, lib, ... }: {
+    imports = suites.tardis;
 
-      home = {
-        stateVersion = "21.05";
-        theme.name = "Space Dark";
-      };
+    home = {
+      stateVersion = "21.05";
+      theme.name = "Space Dark";
+    };
 
-      systemd.user.sessionVariables = {
-        ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
-      };
+    systemd.user.sessionVariables = {
+      ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
+    };
 
-      programs = {
-        git = {
-          userName = "Th3Whit3Wolf";
-          userEmail = "the.white.wolf.is.1337@gmail.com";
-          signing = {
-            key = "";
-            signByDefault = false;
+    programs = {
+      git = {
+        userName = "Th3Whit3Wolf";
+        userEmail = "the.white.wolf.is.1337@gmail.com";
+        signing = {
+          key = "";
+          signByDefault = false;
+        };
+        ignores = [ "*.swp" ".direnv" "Session.vim" ];
+        extraConfig = {
+          core.editor = "nvim";
+          commit.verbose = true;
+          credentil.helper = "${pkgs.git}/git-credential-libsecret";
+          pull.ff = "only";
+          fetch = {
+            recurseSubmodules = "on-demand";
+            prune = true;
           };
-          ignores = [ "*.swp" ".direnv" "Session.vim" ];
-          extraConfig = {
-            core.editor = "nvim";
-            commit.verbose = true;
-            credentil.helper = "${pkgs.git}/git-credential-libsecret";
-            pull.ff = "only";
-            fetch = {
-              recurseSubmodules = "on-demand";
-              prune = true;
-            };
-            rebase = {
-              autosquash = true;
-              autostash = true;
-            };
-            recieve.fsckobjects = true;
-            status.submoduleSummary = true;
-            tag.gpgSign = true;
-            transfer.fsckobjects = true;
-            trim.bases = "master,gh-pages";
+          rebase = {
+            autosquash = true;
+            autostash = true;
           };
-          delta = {
-            options = {
-              theme = "OneHalfDark";
-              decorations = {
-                commit-decoration-style = "bold yellow box ul";
-                file-style = "bold yellow ul";
-                file-decoration-style = "none";
-              };
+          recieve.fsckobjects = true;
+          status.submoduleSummary = true;
+          tag.gpgSign = true;
+          transfer.fsckobjects = true;
+          trim.bases = "master,gh-pages";
+        };
+        delta = {
+          options = {
+            theme = "OneHalfDark";
+            decorations = {
+              commit-decoration-style = "bold yellow box ul";
+              file-style = "bold yellow ul";
+              file-decoration-style = "none";
             };
           };
         };
-
-        ssh = {
-          matchBlocks = {
-            github = {
-              host = "github.com";
-              identityFile = "~/.ssh/id_GitHub";
-              extraOptions = { AddKeysToAgent = "yes"; };
-            };
-          };
-        };
-        ZSH.pathVar = ["$XDG_BIN_HOME"];
       };
 
-      xdg = {
-        configFile = {
-          "river/init" = {
-            text = ''
-              #!/bin/sh
-              mod="Mod1"
-              riverctl map normal $mod Return spawn alacritty
-              riverctl map normal $mod W spawn firefox
-              # Mod+Q to close the focused view
-              riverctl map normal $mod Q close
-              # Mod+E to exit river
-              riverctl map normal $mod E exit
-            '';
+      ssh = {
+        matchBlocks = {
+          github = {
+            host = "github.com";
+            identityFile = "~/.ssh/id_GitHub";
+            extraOptions = { AddKeysToAgent = "yes"; };
           };
         };
+      };
+      ZSH.pathVar = [ "$XDG_BIN_HOME" ];
+    };
+
+    xdg = {
+      configFile = {
+        "river/init" = {
+          text = ''
+            #!/bin/sh
+            mod="Mod1"
+            riverctl map normal $mod Return spawn alacritty
+            riverctl map normal $mod W spawn firefox
+            # Mod+Q to close the focused view
+            riverctl map normal $mod Q close
+            # Mod+E to exit river
+            riverctl map normal $mod E exit
+          '';
+        };
+      };
+      enable = true;
+      cacheHome = "${homey}/.cache";
+      userDirs = {
         enable = true;
-        cacheHome = "${homey}/.cache";
-        userDirs = {
-          enable = true;
-          desktop = "${homey}/Desk";
-          documents = "${homey}/Docs";
-          download = "${homey}/Downs";
-          music = "${homey}/Tunes";
-          pictures = "${homey}/Pics";
-          videos = "${homey}/Vids";
-          extraConfig = {
-            XDG_CODE_HOME = "${homey}/Code";
-            XDG_GIT_HOME = "${homey}/Gits";
-            XDG_BIN_HOME = "${homey}/.local/bin";
-          };
+        desktop = "${homey}/Desk";
+        documents = "${homey}/Docs";
+        download = "${homey}/Downs";
+        music = "${homey}/Tunes";
+        pictures = "${homey}/Pics";
+        videos = "${homey}/Vids";
+        extraConfig = {
+          XDG_CODE_HOME = "${homey}/Code";
+          XDG_GIT_HOME = "${homey}/Gits";
+          XDG_BIN_HOME = "${homey}/.local/bin";
         };
       };
     };
+  };
 
   boot.kernelParams = [
-    (if (theme.vt.red != null && theme.vt.grn != null && theme.vt.blu != null) then
+    (if (theme.vt.red != null && theme.vt.grn != null && theme.vt.blu
+      != null) then
       "vt.default_red=${theme.vt.red} vt.default_grn=${theme.vt.grn} vt.default_blu=${theme.vt.blu}"
-    else "")
+    else
+      "")
   ];
 }

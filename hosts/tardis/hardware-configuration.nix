@@ -5,7 +5,7 @@
 
   # Use the latest kernel
   boot = {
-    
+
   };
 
   boot = {

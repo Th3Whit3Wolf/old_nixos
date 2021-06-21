@@ -1,1 +1,1 @@
-[ ./env.nix]
+[ ./env.nix ]

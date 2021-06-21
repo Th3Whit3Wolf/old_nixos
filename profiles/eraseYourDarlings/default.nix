@@ -16,11 +16,7 @@
           "/var/lib/systemd/coredump"
         ];
 
-        files = [
-          "/etc/adjtime"
-          "/etc/machine-id"
-          "/etc/NIXOS"
-        ];
+        files = [ "/etc/adjtime" "/etc/machine-id" "/etc/NIXOS" ];
       };
     };
   };

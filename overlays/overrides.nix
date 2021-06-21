@@ -3,27 +3,17 @@ channels: final: prev: {
   __dontExport = true; # overrides clutter up actual creations
 
   inherit (channels.latest)
-    cachix
-    dhall
-    discord
-    element-desktop
-    manix
-    nixUnstable
-    rage
-    nixpkgs-fmt
-    qutebrowser
-    signal-desktop
-    starship
+    cachix dhall discord element-desktop manix nixUnstable rage nixpkgs-fmt
+    qutebrowser signal-desktop starship
     #sway
     #river
     #mesa
-    ;
+  ;
 
   haskellPackages = prev.haskellPackages.override {
     overrides = hfinal: hprev:
       let version = prev.lib.replaceChars [ "." ] [ "" ] prev.ghc.version;
-      in
-      {
+      in {
         # same for haskell packages, matching ghc versions
         inherit (channels.latest.haskell.packages."ghc${version}")
           haskell-language-server;

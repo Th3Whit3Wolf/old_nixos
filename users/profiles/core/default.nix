@@ -1,10 +1,6 @@
 {
   programs = {
-    alacritty = {
-      enable = true;
-    };
-    bat = {
-      enable = true;
-    };
+    alacritty = { enable = true; };
+    bat = { enable = true; };
   };
 }

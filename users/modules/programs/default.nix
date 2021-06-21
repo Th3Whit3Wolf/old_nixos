@@ -1,3 +1,1 @@
-{ 
-  imports = [ ./ZSH ];
-}
+{ imports = [ ./ZSH ]; }

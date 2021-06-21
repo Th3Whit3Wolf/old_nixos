@@ -2,10 +2,8 @@
 
 with lib;
 
-let
-  firefox = config.programs.firefox.enable;
-in
-{
+let firefox = config.programs.firefox.enable;
+in {
   xdg.configFile."psd/psd.conf".text = ''
     # $XDG_CONFIG_HOME/psd/psd.conf
     #
@@ -60,7 +58,7 @@ in
     #  surf
     #  vivaldi
     #  vivaldi-snapshot
-    BROWSERS=(${optionalString (firefox) ''firefox''})
+    BROWSERS=(${optionalString (firefox) "firefox"})
 
     # Uncomment and set to "no" to completely disable the crash recovery feature.
     #

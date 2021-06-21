@@ -4,51 +4,41 @@ with lib;
 with builtins;
 
 let
-    inherit (lib) mkDefault mkIf mkOption mkOpt
-    types;
+  inherit (lib) mkDefault mkIf mkOption mkOpt types;
 
-    cfg = config.nix-polyglot;
-    languages = flatten (mapAttrsToList (name: type: 
-        if type == "directory" then 
-            "${name}" 
-        else ""  
-    ) (readDir (./lang))) ++ ["all"];
+  cfg = config.nix-polyglot;
+  languages = flatten
+    (mapAttrsToList (name: type: if type == "directory" then "${name}" else "")
+      (readDir (./lang))) ++ [ "all" ];
 
-    polyglotPackages = with pkgs; [
-        git-ignore
-        licensor
-        just
-        dotenv-linter
-    ];
-in
+  polyglotPackages = with pkgs; [ git-ignore licensor just dotenv-linter ];
 
-{
-  imports = [ ./neovim.nix  ./vscode ./lang ];
+in {
+  imports = [ ./neovim.nix ./vscode ./lang ];
 
   options.nix-polyglot = {
-        enable = mkEnableOption "Enable nix-polyglot";
-        langs = mkOption {
-            type = with types; nullOr (listOf (enum languages));
-            default = [];
-            description = "List of languages to use.";
-        };
-        enableZshIntegration = mkOption {
-            default = true;
-            type = types.bool;
-            description = ''
-            Whether to enable Zsh integration.
-            '';
-        };
-        packages = mkOption {
-            type = types.listOf types.package;
-            default = polyglotPackages;
-            example = literalExample "with pkgs; [ git-ignore licensor just dotenv-linter ]";
-            description = ''
-            List of generic packages to install for development.
-            '';
-        };
+    enable = mkEnableOption "Enable nix-polyglot";
+    langs = mkOption {
+      type = with types; nullOr (listOf (enum languages));
+      default = [ ];
+      description = "List of languages to use.";
     };
-    config = mkIf cfg.enable {
-        home.packages = nix-polyglot.packages;
+    enableZshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Zsh integration.
+      '';
     };
+    packages = mkOption {
+      type = types.listOf types.package;
+      default = polyglotPackages;
+      example =
+        literalExample "with pkgs; [ git-ignore licensor just dotenv-linter ]";
+      description = ''
+        List of generic packages to install for development.
+      '';
+    };
+  };
+  config = mkIf cfg.enable { home.packages = nix-polyglot.packages; };
 }
