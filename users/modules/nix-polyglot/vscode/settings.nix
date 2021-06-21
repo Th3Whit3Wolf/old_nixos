@@ -1,7 +1,7 @@
-{ libs, ... }:
+{ config, lib, pkgs, ... }:
 
-with types:
-
+with lib;
+with types;
 # Default vscode settings https://code.visualstudio.com/docs/getstarted/settings
 {
   options.nix-polyglot.vscode.userSettings = {
@@ -231,7 +231,14 @@ with types:
         '';
       };
       cursorStyle = mkOption {
-        type = enum [ "line" "block" "underline" "line-thin" "block-outline" "underline-thin" ];
+        type = enum [
+          "line"
+          "block"
+          "underline"
+          "line-thin"
+          "block-outline"
+          "underline-thin"
+        ];
         default = "line";
         description = ''
           Controls the cursor style.
@@ -374,7 +381,8 @@ with types:
       };
       fontFamily = mkOption {
         type = str;
-        default = "'JetBrainsMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
+        default =
+          "'JetBrainsMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
         description = ''
           Controls the font family.
         '';
@@ -394,7 +402,8 @@ with types:
         '';
       };
       fontWeight = mkOption {
-        type = enum [ "normal" "bold" 100 200 300 400 500 600 700 800 900 1000 ];
+        type =
+          enum [ "normal" "bold" 100 200 300 400 500 600 700 800 900 1000 ];
         default = "normal";
         description = ''
           Controls the font weight. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
@@ -616,7 +625,8 @@ with types:
         };
         fontFamily = mkOption {
           type = str;
-          default = "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
+          default =
+            "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
           description = ''
             Controls font family of inlay hints in the editor.
           '';
@@ -729,7 +739,7 @@ with types:
         };
         side = mkOption {
           type = enum [ "right" "left" ];
-          default = 1;
+          default = "right";
           description = ''
             Controls the side where to render the minimap.
           '';
@@ -825,7 +835,7 @@ with types:
       };
       peekWidgetDefaultFocus = mkOption {
         type = enum [ "tree" "editor" ];
-        default = "spread";
+        default = "tree";
         description = ''
           Controls whether to focus the inline editor or the tree in the peek widget.
             - tree: Focus the tree when opening peek
@@ -965,7 +975,7 @@ with types:
       semanticHighlighting = {
         enabled = mkOption {
           type = enum [ true false "configuredByTheme" ];
-          default = "selection";
+          default = "configuredByTheme";
           description = ''
             Controls whether the semanticHighlighting is shown for the languages that support it.
               - true: Semantic highlighting enabled for all color themes.
@@ -990,7 +1000,7 @@ with types:
       };
       showFoldingControls = mkOption {
         type = enum [ "always" "mouseover" ];
-        default = "selection";
+        default = "mouseover";
         description = ''
           Controls when the folding controls on the gutter are shown.
             - always: Always show the folding controls.
@@ -1055,7 +1065,7 @@ with types:
         };
         insertMode = mkOption {
           type = enum [ "insert" "replace" ];
-          default = true;
+          default = "insert";
           description = ''
             Controls whether words are overwritten when accepting completions. Note that this depends on extensions opting into this feature.
               - insert: Insert suggestion without overwriting text right of the cursor.
@@ -1411,16 +1421,16 @@ with types:
             - allDocuments: Suggest words from all open documents.
         '';
       };
-      wordBasedSuggestionsMode = mkOption {
+      wordSeparators = mkOption {
         type = str;
-        default = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
+        default = ''`~!@#$%^&*()-=+[{]}\|;:'",.<>/?'';
         description = ''
           Characters that will be used as word separators when doing word related navigations or operations.
         '';
       };
       wordWrap = mkOption {
         type = enum [ "off" "on" "wordWrapColumn" "bounded" ];
-        default = "matchingDocuments";
+        default = "off";
         description = ''
           Controls how lines should wrap.
             - off: Lines will never wrap.
@@ -1528,14 +1538,14 @@ with types:
             - hover: Show the diff decorator in the gutter only on hover.
         '';
       };
-      diffDecorationsGutterVisibility = mkOption {
+      diffDecorationsGutterWidth = mkOption {
         type = int;
         default = 3;
         description = ''
           Controls the width(px) of diff decorations in gutter (added & modified).
         '';
       };
-      diffDecorationsGutterVisibility = mkOption {
+      inputFontFamily = mkOption {
         type = str;
         default = "default";
         description = ''
@@ -1676,8 +1686,8 @@ with types:
         closeOnFileDelete = mkOption {
           type = bool;
           default = false;
-          description = ''
-            Controls whether editors showing a file that was opened during the session should close automatically when getting deleted or renamed by some other process. Disabling this will keep the editor open  on such an event. Note that deleting from within the application will always close the editor and that dirty files will never close to preserve your data.          '';
+          description =
+            "Controls whether editors showing a file that was opened during the session should close automatically when getting deleted or renamed by some other process. Disabling this will keep the editor open  on such an event. Note that deleting from within the application will always close the editor and that dirty files will never close to preserve your data.          ";
         };
         decorations = {
           badges = mkOption {
@@ -1778,7 +1788,7 @@ with types:
             Controls where editors open. Select `left` or `right` to open editors to the left or right of the currently active one. Select `first` or `last` to open editors independently from the currently active one.
           '';
         };
-        openPositioning = mkOption {
+        openSideBySideDirection = mkOption {
           type = enum [ "right" "down" ];
           default = "right";
           description = ''
@@ -2130,14 +2140,22 @@ with types:
       sideBar = {
         location = mkOption {
           type = enum [ "left" "right" ];
-          default = "filter";
+          default = "left";
           description = ''
             Controls the location of the sidebar and activity bar. They can either show on the left or right of the workbench.
           '';
         };
       };
       startupEditor = mkOption {
-        type = enum [ "none" "welcomePage" "readme" "newUntitledFile" "welcomePageInEmptyWorkbench" "gettingStarted" "gettingStartedInEmptyWorkbench" ];
+        type = enum [
+          "none"
+          "welcomePage"
+          "readme"
+          "newUntitledFile"
+          "welcomePageInEmptyWorkbench"
+          "gettingStarted"
+          "gettingStartedInEmptyWorkbench"
+        ];
         default = "gettingStarted";
         description = ''
           Controls which editor is shown at startup, if none are restored from the previous session.
@@ -2357,7 +2375,7 @@ with types:
       };
       restoreWindows = mkOption {
         type = enum [ "preserve" "all" "folders" "one" "none" ];
-        default = "on";
+        default = "all";
         description = ''
           Controls how windows are being reopened after starting for the first time. This setting has no effect when the application is already running.
             - preserve: Always reopen all windows. If a folder or workspace is opened (e.g. from the command line) it opens as a new window unless it was opened before. If files are opened they will open in one of the restored windows.
@@ -2369,7 +2387,8 @@ with types:
       };
       title = mkOption {
         type = str;
-        default = "\${dirty}\${activeEditorShort}\${separator}\${rootName}\${separator}\${appName}";
+        default =
+          "\${dirty}\${activeEditorShort}\${separator}\${rootName}\${separator}\${appName}";
         description = ''
           Controls the window title based on the active editor. Variables are substituted based on the context:
             - `$\{activeEditorShort}`: the file name (e.g. myFile.txt).
@@ -2438,7 +2457,7 @@ with types:
             - onWindowChange: A dirty editor is automatically saved when the window loses focus.
         '';
       };
-      autoSave = mkOption {
+      autoSaveDelay = mkOption {
         type = int;
         default = 1000;
         description = ''
@@ -2462,7 +2481,7 @@ with types:
           Disabling this will delete files/folders permanently.
         '';
       };
-      autoSave = mkOption {
+      encoding = mkOption {
         type = enum [
           "utf8"
           "utf8bom"
@@ -2635,2165 +2654,765 @@ with types:
         '';
       };
     };
+    screencastMode = {
+      fontSize = mkOption {
+        type = int;
+        default = 56;
+        description = ''
+          Controls the font size (in pixels) of the screencast mode keyboard.
+        '';
+      };
+      keyboardOverlayTimeout = mkOption {
+        type = int;
+        default = 800;
+        description = ''
+          Controls how long (in milliseconds) the keyboard overlay is shown in screencast mode.
+        '';
+      };
+      mouseIndicatorColor = mkOption {
+        type = str;
+        default = "#FF0000";
+        description = ''
+          Controls the color in hex (#_RGB, #RGBA, #RRGGBB or #RRGGBBAA) of the mouse indicator in screencast mode.
+        '';
+      };
+      mouseIndicatorSize = mkOption {
+        type = int;
+        default = 20;
+        description = ''
+          Controls the size (in pixels) of the mouse indicator in screencast mode.
+        '';
+      };
+      onlyKeyboardShortcuts = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Only show keyboard shortcuts in screencast mode.
+        '';
+      };
+      verticalOffset = mkOption {
+        type = int;
+        default = 20;
+        description = ''
+          Controls the vertical offset of the screencast mode overlay from the bottom as a percentage of the workbench height.
+        '';
+      };
+    };
+    zenMode = {
+      centerLayout = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also centers the layout.
+        '';
+      };
+      fullScreen = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also puts the workbench into full screen mode.
+        '';
+      };
+      hideActivityBar = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also hides the activity bar either at the left or right of the workbench.
+        '';
+      };
+      hideLineNumbers = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also hides the editor line numbers.
+        '';
+      };
+      hideStatusBar = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also hides the status bar at the bottom of the workbench.
+        '';
+      };
+      hideTabs = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether turning on Zen Mode also hides workbench tabs.
+        '';
+      };
+      restore = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether a window should restore to zen mode if it was exited in zen mode.
+        '';
+      };
+      silentNotifications = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether notifications are shown while in zen mode. If true, only error notifications will pop out.
+        '';
+      };
+    };
+    explorer = {
+      autoReveal = mkOption {
+        type = either bool (enum [ "focusNoScroll" ]);
+        default = true;
+        description = ''
+          Controls whether the explorer should automatically reveal and select files when opening them.
+            - true: Files will be revealed and selected.
+            - false: Files will not be revealed and selected.
+            - focusNoScroll: Files will not be scrolled into view, but will still be focused.
+        '';
+      };
+      compactFolders = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the explorer should render folders in a compact form.
+          In such a form, single child folders will be compressed in a combined tree element. Useful for Java package structures, for example.
+        '';
+      };
+      confirmDelete = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the explorer should ask for confirmation when deleting a file via the trash.
+        '';
+      };
+      confirmDragAndDrop = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the explorer should automatically reveal and select files when opening them.
+            - true: Files will be revealed and selected.
+            - false: Files will not be revealed and selected.
+            - focusNoScroll: Files will not be scrolled into view, but will still be focused.
+        '';
+      };
+      decorations = {
+        badges = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether file decorations should use badges.
+          '';
+        };
+        colors = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether file decorations should use colors.
+          '';
+        };
+      };
+      enableDragAndDrop = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the explorer should allow to move files and folders via drag and drop.
+          This setting only effects drag and drop from inside the explorer.
+        '';
+      };
+      incrementalNaming = mkOption {
+        type = enum [ "simple" "smart" ];
+        default = "simple";
+        description = ''
+          Controls what naming strategy to use when a giving a new name to a duplicated explorer item on paste.
+            - simple: Appends the word "copy" at the end of the duplicated name potentially followed by a number
+            - smart: Adds a number at the end of the duplicated name. If some number is already part of the name, tries to increase that number
+        '';
+      };
+      openEditors = {
+        sortOrder = mkOption {
+          type = enum [ "editorOrder" "alphabetical" ];
+          default = "editorOrder";
+          description = ''
+            Controls the sorting order of editors in the Open Editors pane.
+              - editorOrder: Editors are ordered in the same order editor tabs are shown.
+              - alphabetical: Editors are ordered in alphabetical order inside each editor group.
+          '';
+        };
+        visible = mkOption {
+          type = int;
+          default = 9;
+          description = ''
+            Number of editors shown in the Open Editors pane. Setting this to 0 hides the Open Editors pane.
+          '';
+        };
+      };
+      sortOrder = mkOption {
+        type = enum [ "default" "mixed" "filesFirst" "type" "modified" ];
+        default = "default";
+        description = ''
+          Controls the property-based sorting of files and folders in the explorer.
+            - default: Files and folders are sorted by their names. Folders are displayed before files.
+            - mixed: Files and folders are sorted by their names. Files are interwoven with folders.
+            - filesFirst: Files and folders are sorted by their names. Files are displayed before folders.
+            - type: Files and folders are grouped by extension type then sorted by their names. Folders are displayed before files.
+            - modified: Files and folders are sorted by last modified date in descending order. Folders are displayed before files.
+        '';
+      };
+      sortOrderLexicographicOptions = mkOption {
+        type = enum [ "default" "upper" "lower" "unicode" ];
+        default = "default";
+        description = ''
+          Controls the lexicographic sorting of file and folder names in the Explorer.
+            - default: Uppercase and lowercase names are mixed together.
+            - upper: Uppercase names are grouped together before lowercase names.
+            - lower: Lowercase names are grouped together before uppercase names.
+            - unicode: Names are sorted in unicode order.
+        '';
+      };
+    };
+    search = {
+      actionsPosition = mkOption {
+        type = enum [ "right" "left" ];
+        default = "right";
+        description = ''
+          Controls the positioning of the actionbar on rows in the search view.
+            - auto: Position the actionbar to the right when the search view is narrow, and immediately after the content when the search view is wide.
+            - right: Always position the actionbar to the right.
+        '';
+      };
+      collapseResults = mkOption {
+        type = enum [ "auto" "alwaysCollapse" "alwaysExpand" ];
+        default = "alwaysExpand";
+        description = ''
+          Controls whether the search results will be collapsed or expanded.
+            - auto: Files with less than 10 results are expanded. Others are collapsed.
+            - alwaysCollapse
+            - alwaysExpand
+        '';
+      };
+      exclude = mkOption {
+        type = attrsOf bool;
+        default = {
+          "**/node_modules" = true;
+          "**/bower_components" = true;
+          "**/*.code-search" = true;
+        };
+        description = ''
+          Configure glob patterns for excluding files and folders in fulltext searches and quick open. 
+          Inherits all glob patterns from the `files.exclude` setting.
+        '';
+      };
+      followSymlinks = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to follow symlinks while searching.
+        '';
+      };
+    };
+    search = {
+      globalFindClipboard = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the search view should read or modify the shared find clipboard on macOS.
+        '';
+      };
+      mode = mkOption {
+        type = enum [ "view" "reuseEditor" "newEditor" ];
+        default = "view";
+        description = ''
+          Controls where new `Search: Find in Files` and `Find in Folder` operations occur: either in the sidebar's search view, or in a search editor
+            - view: Search in the search view, either in the panel or sidebar.
+            - reuseEditor: Search in an existing search editor if present, otherwise in a new search editor.
+            - newEditor: Search in a new search editor.
+        '';
+      };
+      quickOpen = {
+        history = {
+          filterSortOrder = mkOption {
+            type = enum [ "default" "recency" ];
+            default = "default";
+            description = ''
+              Controls sorting order of editor history in quick open when filtering.
+                - default: History entries are sorted by relevance based on the filter value used. More relevant entries appear first.
+                - recency: History entries are sorted by recency. More recently opened entries appear first.
+            '';
+          };
+        };
+        includeHistory = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to include results from recently opened files in the file results for Quick Open.
+          '';
+        };
+        includeSymbols = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Whether to include results from a global symbol search in the file results for Quick Open.
+          '';
+        };
+      };
+      searchEditor = {
+        defaultNumberOfContextLines = mkOption {
+          type = int;
+          default = 1;
+          description = ''
+            The default number of surrounding context lines to use when creating new Search Editors.
+            If using `search.searchEditor.reusePriorSearchConfiguration`, this can be set to `null` (empty) to use the prior Search Editor's configuration.
+          '';
+        };
+        doubleClickBehaviour = mkOption {
+          type = enum [ "selectWord" "goToLocation" "openLocationToSide" ];
+          default = "goToLocation";
+          description = ''
+            Configure effect of double clicking a result in a search editor.
+              - selectWord: Double clicking selects the word under the cursor.
+              - goToLocation: Double clicking opens the result in the active editor group.
+              - openLocationToSide: Double clicking opens the result in the editor group to the side, creating one if it does not yet exist.
+          '';
+        };
+        reusePriorSearchConfiguration = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            When enabled, new Search Editors will reuse the includes, excludes, and flags of the previously opened Search Editor.
+          '';
+        };
+      };
+      searchOnType = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Search all files as you type.
+        '';
+      };
+      searchOnTypeDebouncePeriod = mkOption {
+        type = int;
+        default = 300;
+        description = ''
+          When `search.searchOnType` is enabled, controls the timeout in milliseconds between a character being typed and the search starting.
+          Has no effect when `search.searchOnType` is disabled.
+        '';
+      };
+      seedOnFocus = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Update the search query to the editor's selected text when focusing the search view. 
+          This happens either on click or when triggering the `workbench.views.search.focus` command.
+        '';
+      };
+      seedWithNearestWord = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Enable seeding search from the word nearest the cursor when the active editor has no selection.
+        '';
+      };
+      showLineNumbers = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether to show line numbers for search results.
+        '';
+      };
+      smartCase = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Search case-insensitively if the pattern is all lowercase, otherwise, search case-sensitively.
+        '';
+      };
+      sortOrder = mkOption {
+        type = enum [
+          "default"
+          "fileNames"
+          "type"
+          "modified"
+          "countDescending"
+          "countAscending"
+        ];
+        default = "default";
+        description = ''
+          Controls sorting order of search results.
+            - default: Results are sorted by folder and file names, in alphabetical order.
+            - fileNames: Results are sorted by file names ignoring folder order, in alphabetical order.
+            - type: Results are sorted by file extensions, in alphabetical order.
+            - modified: Results are sorted by file last modified date, in descending order.
+            - countDescending: Results are sorted by count per file, in descending order.
+            - countAscending: Results are sorted by count per file, in ascending order.
+        '';
+      };
+      useGlobalIgnoreFiles = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether to use global `.gitignore` and `.ignore` files when searching for files.
+        '';
+      };
+      useIgnoreFiles = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to use `.gitignore` and `.ignore` files when searching for files.
+        '';
+      };
+      useReplacePreview = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to open Replace Preview when selecting or replacing a match.
+        '';
+      };
+    };
+    http = {
+      proxy = mkOption {
+        type = str;
+        default = "";
+        description = ''
+          Controls whether to open Replace Preview when selecting or replacing a match.
+        '';
+      };
+      proxyAuthorization = mkOption {
+        type = nullOr str;
+        default = "";
+        description = ''
+          Controls whether to open Replace Preview when selecting or replacing a match.
+        '';
+      };
+      proxyStrictSSL = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the proxy server certificate should be verified against the list of supplied CAs.
+        '';
+      };
+      proxySupport = mkOption {
+        type = enum [ "off" "on" "fallback" "override" ];
+        default = "override";
+        description = ''
+          Use the proxy support for extensions.
+            - off: Disable proxy support for extensions.
+            - on: Enable proxy support for extensions.
+            - fallback: Enable proxy support for extensions, fall back to request options, when no proxy found.
+            - override: Enable proxy support for extensions, override request options.
+        '';
+      };
+      systemCertificates = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether CA certificates should be loaded from the OS. 
+          (On Windows and macOS, a reload of the window is required after turning this off.)
+        '';
+      };
+    };
+    keyboard = {
+      dispatch = mkOption {
+        type = enum [ "code" "keyCode" ];
+        default = "code";
+        description = ''
+          Controls the dispatching logic for key presses to use either `code` (recommended) or `keyCode`.
+        '';
+      };
+      touchbar = {
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enables the macOS touchbar buttons on the keyboard if available.
+          '';
+        };
+        ignored = mkOption {
+          type = listOf str;
+          default = [ ];
+          description = ''
+            A set of identifiers for entries in the touchbar that should not show up (for example `workbench.action.navigateBack`).
+          '';
+        };
+      };
+    };
+    update = {
+      enableWindowsBackgroundUpdates = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable to download and install new VS Code versions in the background on Windows.
+        '';
+      };
+      mode = mkOption {
+        type = enum [ "none" "manual" "start" "default" ];
+        default = "default";
+        description = ''
+          Enable to download and install new VS Code versions in the background on Windows.
+        '';
+      };
+      showReleaseNotes = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Show Release Notes after an update. 
+          The Release Notes are fetched from a Microsoft online service.
+        '';
+      };
+    };
+    comments = {
+      openPanel = mkOption {
+        type = enum [
+          "neverOpen"
+          "openOnSessionStart"
+          "openOnSessionStartWithComments"
+        ];
+        default = "openOnSessionStartWithComments";
+        description = ''
+          Controls when the comments panel should open.
+        '';
+      };
+    };
+
+    debug = {
+      allowBreakpointsEverywhere = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Allow setting breakpoints in any file.
+        '';
+      };
+      console = {
+        closeOnEnd = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls if the debug console should be automatically closed when the debug session ends.
+          '';
+        };
+        collapseIdenticalLines = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls if the debug console should collapse identical lines and show a number of occurrences with a badge.
+          '';
+        };
+        fontFamily = mkOption {
+          type = str;
+          default = "default";
+          description = ''
+            Controls the font family in the debug console.
+          '';
+        };
+        fontSize = mkOption {
+          type = int;
+          default = 14;
+          description = ''
+            Controls the font size in pixels in the debug console.
+          '';
+        };
+        historySuggestions = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls if the debug console should suggest previously typed input.
+          '';
+        };
+        lineHeight = mkOption {
+          type = int;
+          default = 0;
+          description = ''
+            Controls the line height in pixels in the debug console. Use 0 to compute the line height from the font size.
+          '';
+        };
+        wordWrap = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls if the lines should wrap in the debug console.
+          '';
+        };
+      };
+      focusWindowOnBreak = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the workbench window should be focused when the debugger breaks.
+        '';
+      };
+      inlineValues = mkOption {
+        type = either bool (enum [ "auto" ]);
+        default = true;
+        description = ''
+          Show variable values inline in editor while debugging.
+            - true: Always show variable values inline in editor while debugging.
+            - false: Never show variable values inline in editor while debugging.
+            - auto: Show variable values inline in editor while debugging when the language supports inline value locations.
+        '';
+      };
+      internalConsoleOptions = mkOption {
+        type =
+          enum [ "neverOpen" "openOnFirstSessionStart" "openOnSessionStart" ];
+        default = "openOnFirstSessionStart";
+        description = ''
+          Controls when the internal debug console should open.
+        '';
+      };
+      onTaskErrors = mkOption {
+        type = enum [ "debugAnyway" "showErrors" "prompt" "auto" ];
+        default = "prompt";
+        description = ''
+          Controls what to do when errors are encountered after running a preLaunchTask.
+            - debugAnyway: Ignore task errors and start debugging.
+            - showErrors: Show the Problems view and do not start debugging.
+            - prompt: Prompt user.
+            - abort: Cancel debugging.
+        '';
+      };
+      openDebug = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Automatically open the explorer view at the end of a debug session.
+        '';
+      };
+      saveBeforeStart = mkOption {
+        type = enum [
+          "allEditorsInActiveGroup"
+          "nonUntitledEditorsInActiveGroup"
+          "none"
+        ];
+        default = "allEditorsInActiveGroup";
+        description = ''
+          Controls what editors to save before starting a debug session.
+            - allEditorsInActiveGroup: Save all editors in the active group before starting a debug session.
+            - nonUntitledEditorsInActiveGroup: Save all editors in the active group except untitled ones before starting a debug session.
+            - none: Don't save any editors before starting a debug session.
+        '';
+      };
+      showBreakpointsInOverviewRuler = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether breakpoints should be shown in the overview ruler.
+        '';
+      };
+      showInlineBreakpointCandidates = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether inline breakpoints candidate decorations should be shown in the editor while debugging.
+        '';
+      };
+      showInStatusBar = mkOption {
+        type = enum [ "never" "always" "onFirstSessionStart" ];
+        default = "onFirstSessionStart";
+        description = ''
+          Controls when the debug status bar should be visible.
+            - never: Never show debug in status bar
+            - always: Always show debug in status bar
+            - onFirstSessionStart: Show debug in status bar only after debug was started for the first time
+        '';
+      };
+      showSubSessionsInToolBar = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether the debug sub-sessions are shown in the debug tool bar.
+          When this setting is false the stop command on a sub-session will also stop the parent session.
+        '';
+      };
+      clearBeforeReusing = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Before starting a new debug session in an integrated or external terminal, clear the terminal.
+        '';
+      };
+      toolBarLocation = mkOption {
+        type = enum [ "floating" "docked" "hidden" ];
+        default = "floating";
+        description = ''
+          Controls the location of the debug toolbar.
+          Either `floating` in all views, `docked` in the debug view, or `hidden`.
+        '';
+      };
+    };
+    launch = mkOption {
+      type = attrsOf (listOf str);
+      default = {
+        configurations = [ ];
+        compounds = [ ];
+      };
+      description = ''
+        Global debug launch configuration.
+        Should be used as an alternative to 'launch.json' that is shared across workspaces.
+      '';
+    };
+    html = {
+      autoClosingTags = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable/disable autoclosing of HTML tags.
+        '';
+      };
+      customData = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          A list of relative file paths pointing to JSON files following the custom data format.
+          VS Code loads custom data on startup to enhance its HTML support for the custom HTML tags, attributes and attribute values you specify in the JSON files.
+          The file paths are relative to workspace and only workspace folder settings are considered.
+        '';
+      };
+      format = {
+        contentUnformatted = mkOption {
+          type = str;
+          default = "pre,code,textarea";
+          description = ''
+            List of tags, comma separated, where the content shouldn't be reformatted. `null` defaults to the `pre` tag.
+          '';
+        };
+        enable = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable default HTML formatter.
+          '';
+        };
+        endWithNewline = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            End with a newline.
+          '';
+        };
+        extraLiners = mkOption {
+          type = str;
+          default = "head, body, /html";
+          description = ''
+            List of tags, comma separated, that should have an extra newline before them. `null` defaults to `"head, body, /html"`.
+          '';
+        };
+        indentHandlebars = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Format and indent ``.
+          '';
+        };
+        indentInnerHtml = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Indent `<head>` and `<body>` sections.
+          '';
+        };
+        maxPreserveNewLines = mkOption {
+          type = nullOr int;
+          default = null;
+          description = ''
+            Maximum number of line breaks to be preserved in one chunk. Use `null` for unlimited.
+          '';
+        };
+      };
+    };
   };
 }
-/*
-
-  // Screencast Mode
-
-  // Controls the font size (in pixels) of the screencast mode keyboard.
-  " screencastMode.fontSize ": 56,
-
-  // Controls how long (in milliseconds) the keyboard overlay is shown in screencast mode.
-  "
-  screencastMode.keyboardOverlayTimeout ": 800,
-
-  // Controls the color in hex (#_RGB, #RGBA, #RRGGBB or #RRGGBBAA) of the mouse indicator in screencast mode.
-  "
-  screencastMode.mouseIndicatorColor ": "#FF0000",
-
-  // Controls the size (in pixels) of the mouse indicator in screencast mode.
-"screencastMode.mouseIndicatorSize": 20,
-
-// Only show keyboard shortcuts in screencast mode.
-"screencastMode.onlyKeyboardShortcuts": false,
-
-// Controls the vertical offset of the screencast mode overlay from the bottom as a percentage of the workbench height.
-"screencastMode.verticalOffset": 20,
-
-// Zen Mode
-
-// Controls whether turning on Zen Mode also centers the layout.
-"zenMode.centerLayout": true,
-
-// Controls whether turning on Zen Mode also puts the workbench into full screen mode.
-"zenMode.fullScreen": true,
-
-// Controls whether turning on Zen Mode also hides the activity bar either at the left or right of the workbench.
-"zenMode.hideActivityBar": true,
-
-// Controls whether turning on Zen Mode also hides the editor line numbers.
-"zenMode.hideLineNumbers": true,
-
-// Controls whether turning on Zen Mode also hides the status bar at the bottom of the workbench.
-"zenMode.hideStatusBar": true,
-
-// Controls whether turning on Zen Mode also hides workbench tabs.
-"zenMode.hideTabs": true,
-
-// Controls whether a window should restore to zen mode if it was exited in zen mode.
-"zenMode.restore": true,
-
-// Controls whether notifications are shown while in zen mode. If true, only error notifications will pop out.
-"zenMode.silentNotifications": true,
-
-// File Explorer
-
-// Controls whether the explorer should automatically reveal and select files when opening them.
-//  - true: Files will be revealed and selected.
-//  - false: Files will not be revealed and selected.
-//  - focusNoScroll: Files will not be scrolled into view, but will still be focused.
-"explorer.autoReveal": true,
-
-// Controls whether the explorer should render folders in a compact form. In such a form, single child folders will be compressed in a combined tree element. Useful for Java package structures, for example.
-"explorer.compactFolders": true,
-
-// Controls whether the explorer should ask for confirmation when deleting a file via the trash.
-"explorer.confirmDelete": true,
-
-// Controls whether the explorer should ask for confirmation to move files and folders via drag and drop.
-"explorer.confirmDragAndDrop": true,
-
-// Controls whether file decorations should use badges.
-"explorer.decorations.badges": true,
-
-// Controls whether file decorations should use colors.
-"explorer.decorations.colors": true,
-
-// Controls whether the explorer should allow to move files and folders via drag and drop. This setting only effects drag and drop from inside the explorer.
-"explorer.enableDragAndDrop": true,
-
-// Controls what naming strategy to use when a giving a new name to a duplicated explorer item on paste.
-//  - simple: Appends the word "copy" at the end of the duplicated name potentially followed by a number
-//  - smart: Adds a number at the end of the duplicated name. If some number is already part of the name, tries to increase that number
-"explorer.incrementalNaming": "simple",
-
-// Controls the sorting order of editors in the Open Editors pane.
-//  - editorOrder: Editors are ordered in the same order editor tabs are shown.
-//  - alphabetical: Editors are ordered in alphabetical order inside each editor group.
-"explorer.openEditors.sortOrder": "editorOrder",
-
-// Number of editors shown in the Open Editors pane. Setting this to 0 hides the Open Editors pane.
-"explorer.openEditors.visible": 9,
-
-// Controls the property-based sorting of files and folders in the explorer.
-//  - default: Files and folders are sorted by their names. Folders are displayed before files.
-//  - mixed: Files and folders are sorted by their names. Files are interwoven with folders.
-//  - filesFirst: Files and folders are sorted by their names. Files are displayed before folders.
-//  - type: Files and folders are grouped by extension type then sorted by their names. Folders are displayed before files.
-//  - modified: Files and folders are sorted by last modified date in descending order. Folders are displayed before files.
-"explorer.sortOrder": "default",
-
-// Controls the lexicographic sorting of file and folder names in the Explorer.
-//  - default: Uppercase and lowercase names are mixed together.
-//  - upper: Uppercase names are grouped together before lowercase names.
-//  - lower: Lowercase names are grouped together before uppercase names.
-//  - unicode: Names are sorted in unicode order.
-"explorer.sortOrderLexicographicOptions": "default",
-
-// Search
-
-// Controls the positioning of the actionbar on rows in the search view.
-//  - auto: Position the actionbar to the right when the search view is narrow, and immediately after the content when the search view is wide.
-//  - right: Always position the actionbar to the right.
-"search.actionsPosition": "right",
-
-// Controls whether the search results will be collapsed or expanded.
-//  - auto: Files with less than 10 results are expanded. Others are collapsed.
-//  - alwaysCollapse
-//  - alwaysExpand
-"search.collapseResults": "alwaysExpand",
-
-// Configure glob patterns for excluding files and folders in fulltext searches and quick open. Inherits all glob patterns from the `files.exclude` setting.
-"search.exclude": {
-"**/node_modules": true,
-"**/bower_components": true,
-"**/*.code-search": true
-},
-
-// Controls whether to follow symlinks while searching.
-"search.followSymlinks": true,
-
-// Controls whether the search view should read or modify the shared find clipboard on macOS.
-"search.globalFindClipboard": false,
-
-// Controls where new `Search: Find in Files` and `Find in Folder` operations occur: either in the sidebar's search view, or in a search editor
-//  - view: Search in the search view, either in the panel or sidebar.
-//  - reuseEditor: Search in an existing search editor if present, otherwise in a new search editor.
-//  - newEditor: Search in a new search editor.
-"search.mode": "view",
-
-// Controls sorting order of editor history in quick open when filtering.
-//  - default: History entries are sorted by relevance based on the filter value used. More relevant entries appear first.
-//  - recency: History entries are sorted by recency. More recently opened entries appear first.
-"search.quickOpen.history.filterSortOrder": "default",
-
-// Whether to include results from recently opened files in the file results for Quick Open.
-"search.quickOpen.includeHistory": true,
-
-// Whether to include results from a global symbol search in the file results for Quick Open.
-"search.quickOpen.includeSymbols": false,
-
-// The default number of surrounding context lines to use when creating new Search Editors. If using `search.searchEditor.reusePriorSearchConfiguration`, this can be set to `null` (empty) to use the prior Search Editor's configuration.
-"search.searchEditor.defaultNumberOfContextLines": 1,
-
-// Configure effect of double clicking a result in a search editor.
-//  - selectWord: Double clicking selects the word under the cursor.
-//  - goToLocation: Double clicking opens the result in the active editor group.
-//  - openLocationToSide: Double clicking opens the result in the editor group to the side, creating one if it does not yet exist.
-"search.searchEditor.doubleClickBehaviour": "goToLocation",
-
-// When enabled, new Search Editors will reuse the includes, excludes, and flags of the previously opened Search Editor.
-"search.searchEditor.reusePriorSearchConfiguration": false,
-
-// Search all files as you type.
-"search.searchOnType": true,
-
-// When `search.searchOnType` is enabled, controls the timeout in milliseconds between a character being typed and the search starting. Has no effect when `search.searchOnType` is disabled.
-"search.searchOnTypeDebouncePeriod": 300,
-
-// Update the search query to the editor's selected text when focusing the search view. This happens either on click or when triggering the `workbench.views.search.focus` command.
-"search.seedOnFocus": false,
-
-// Enable seeding search from the word nearest the cursor when the active editor has no selection.
-"search.seedWithNearestWord": false,
-
-// Controls whether to show line numbers for search results.
-"search.showLineNumbers": false,
-
-// Search case-insensitively if the pattern is all lowercase, otherwise, search case-sensitively.
-"search.smartCase": false,
-
-// Controls sorting order of search results.
-//  - default: Results are sorted by folder and file names, in alphabetical order.
-//  - fileNames: Results are sorted by file names ignoring folder order, in alphabetical order.
-//  - type: Results are sorted by file extensions, in alphabetical order.
-//  - modified: Results are sorted by file last modified date, in descending order.
-//  - countDescending: Results are sorted by count per file, in descending order.
-//  - countAscending: Results are sorted by count per file, in ascending order.
-"search.sortOrder": "default",
-
-// Controls whether to use global `.gitignore` and `.ignore` files when searching for files.
-"search.useGlobalIgnoreFiles": false,
-
-// Controls whether to use `.gitignore` and `.ignore` files when searching for files.
-"search.useIgnoreFiles": true,
-
-// Controls whether to open Replace Preview when selecting or replacing a match.
-"search.useReplacePreview": true,
-
-// HTTP
-
-// The proxy setting to use. If not set, will be inherited from the `http_proxy` and `https_proxy` environment variables.
-"http.proxy": "",
-
-// The value to send as the `Proxy-Authorization` header for every network request.
-"http.proxyAuthorization": null,
-
-// Controls whether the proxy server certificate should be verified against the list of supplied CAs.
-"http.proxyStrictSSL": true,
-
-// Use the proxy support for extensions.
-//  - off: Disable proxy support for extensions.
-//  - on: Enable proxy support for extensions.
-//  - fallback: Enable proxy support for extensions, fall back to request options, when no proxy found.
-//  - override: Enable proxy support for extensions, override request options.
-"http.proxySupport": "override",
-
-// Controls whether CA certificates should be loaded from the OS. (On Windows and macOS, a reload of the window is required after turning this off.)
-"http.systemCertificates": true,
-
-// Keyboard
-
-// Controls the dispatching logic for key presses to use either `code` (recommended) or `keyCode`.
-"keyboard.dispatch": "code",
-
-// Enables the macOS touchbar buttons on the keyboard if available.
-"keyboard.touchbar.enabled": true,
-
-// A set of identifiers for entries in the touchbar that should not show up (for example `workbench.action.navigateBack`).
-"keyboard.touchbar.ignored": [],
-
-// Update
-
-// Enable to download and install new VS Code versions in the background on Windows.
-"update.enableWindowsBackgroundUpdates": true,
-
-// Configure whether you receive automatic updates. Requires a restart after change. The updates are fetched from a Microsoft online service.
-//  - none: Disable updates.
-//  - manual: Disable automatic background update checks. Updates will be available if you manually check for updates.
-//  - start: Check for updates only on startup. Disable automatic background update checks.
-//  - default: Enable automatic update checks. Code will check for updates automatically and periodically.
-"update.mode": "default",
-
-// Show Release Notes after an update. The Release Notes are fetched from a Microsoft online service.
-"update.showReleaseNotes": true,
-
-// Debug
-
-// Controls when the comments panel should open.
-"comments.openPanel": "openOnSessionStartWithComments",
-
-// Allow setting breakpoints in any file.
-"debug.allowBreakpointsEverywhere": false,
-
-// Controls if the debug console should be automatically closed when the debug session ends.
-"debug.console.closeOnEnd": false,
-
-// Controls if the debug console should collapse identical lines and show a number of occurrences with a badge.
-"debug.console.collapseIdenticalLines": true,
-
-// Controls the font family in the debug console.
-"debug.console.fontFamily": "default",
-
-// Controls the font size in pixels in the debug console.
-"debug.console.fontSize": 14,
-
-// Controls if the debug console should suggest previously typed input.
-"debug.console.historySuggestions": true,
-
-// Controls the line height in pixels in the debug console. Use 0 to compute the line height from the font size.
-"debug.console.lineHeight": 0,
-
-// Controls if the lines should wrap in the debug console.
-"debug.console.wordWrap": true,
-
-// Controls whether the workbench window should be focused when the debugger breaks.
-"debug.focusWindowOnBreak": true,
-
-// Show variable values inline in editor while debugging.
-//  - true: Always show variable values inline in editor while debugging.
-//  - false: Never show variable values inline in editor while debugging.
-//  - auto: Show variable values inline in editor while debugging when the language supports inline value locations.
-"debug.inlineValues": "auto",
-
-// Controls when the internal debug console should open.
-"debug.internalConsoleOptions": "openOnFirstSessionStart",
-
-// Controls what to do when errors are encountered after running a preLaunchTask.
-//  - debugAnyway: Ignore task errors and start debugging.
-//  - showErrors: Show the Problems view and do not start debugging.
-//  - prompt: Prompt user.
-//  - abort: Cancel debugging.
-"debug.onTaskErrors": "prompt",
-
-// Controls when the debug view should open.
-"debug.openDebug": "openOnDebugBreak",
-
-// Automatically open the explorer view at the end of a debug session.
-"debug.openExplorerOnEnd": false,
-
-// Controls what editors to save before starting a debug session.
-//  - allEditorsInActiveGroup: Save all editors in the active group before starting a debug session.
-//  - nonUntitledEditorsInActiveGroup: Save all editors in the active group except untitled ones before starting a debug session.
-//  - none: Don't save any editors before starting a debug session.
-"debug.saveBeforeStart": "allEditorsInActiveGroup",
-
-// Controls whether breakpoints should be shown in the overview ruler.
-"debug.showBreakpointsInOverviewRuler": false,
-
-// Controls whether inline breakpoints candidate decorations should be shown in the editor while debugging.
-"debug.showInlineBreakpointCandidates": true,
-
-// Controls when the debug status bar should be visible.
-//  - never: Never show debug in status bar
-//  - always: Always show debug in status bar
-//  - onFirstSessionStart: Show debug in status bar only after debug was started for the first time
-"debug.showInStatusBar": "onFirstSessionStart",
-
-// Controls whether the debug sub-sessions are shown in the debug tool bar. When this setting is false the stop command on a sub-session will also stop the parent session.
-"debug.showSubSessionsInToolBar": false,
-
-// Before starting a new debug session in an integrated or external terminal, clear the terminal.
-"debug.terminal.clearBeforeReusing": false,
-
-// Controls the location of the debug toolbar. Either `floating` in all views, `docked` in the debug view, or `hidden`.
-"debug.toolBarLocation": "floating",
-
-// Global debug launch configuration. Should be used as an alternative to 'launch.json' that is shared across workspaces.
-"launch": {
-"configurations": [],
-"compounds": []
-},
-
-// HTML
-
-// Enable/disable autoclosing of HTML tags.
-"html.autoClosingTags": true,
-
-// A list of relative file paths pointing to JSON files following the custom data format.
-// VS Code loads custom data on startup to enhance its HTML support for the custom HTML tags, attributes and attribute values you specify in the JSON files.
-// The file paths are relative to workspace and only workspace folder settings are considered.
-"html.customData": [],
-
-// List of tags, comma separated, where the content shouldn't be reformatted. `null` defaults to the `pre` tag.
-"html.format.contentUnformatted": "pre,code,textarea",
-
-// Enable/disable default HTML formatter.
-"html.format.enable": true,
-
-// End with a newline.
-"html.format.endWithNewline": false,
-
-// List of tags, comma separated, that should have an extra newline before them. `null` defaults to `"head, body, /html"`.
-"html.format.extraLiners": "head, body, /html",
-
-// Format and indent ``.
-"html.format.indentHandlebars": false,
-
-// Indent `<head>` and `<body>` sections.
-"html.format.indentInnerHtml": false,
-
-// Maximum number of line breaks to be preserved in one chunk. Use `null` for unlimited.
-"html.format.maxPreserveNewLines": null,
-
-// Controls whether existing line breaks before elements should be preserved. Only works before elements, not inside tags or for text.
-"html.format.preserveNewLines": true,
-
-// Honor django, erb, handlebars and php templating language tags.
-"html.format.templating": false,
-
-// List of tags, comma separated, that shouldn't be reformatted.
-"html.format.unformatted": "wbr",
-
-// Keep text content together between this string.
-"html.format.unformattedContentDelimiter": "",
-
-// Wrap attributes.
-//  - auto: Wrap attributes only when line length is exceeded.
-//  - force: Wrap each attribute except first.
-//  - force-aligned: Wrap each attribute except first and keep aligned.
-//  - force-expand-multiline: Wrap each attribute.
-//  - aligned-multiple: Wrap when line length is exceeded, align attributes vertically.
-//  - preserve: Preserve wrapping of attributes.
-//  - preserve-aligned: Preserve wrapping of attributes but align.
-"html.format.wrapAttributes": "auto",
-
-// Alignment size when using 'force aligned' and 'aligned multiple' in `html.format.wrapAttributes` or `null` to use the default indent size.
-"html.format.wrapAttributesIndentSize": null,
-
-// Maximum amount of characters per line (0 = disable).
-"html.format.wrapLineLength": 120,
-
-// Show tag and attribute documentation in hover.
-"html.hover.documentation": true,
-
-// Show references to MDN in hover.
-"html.hover.references": true,
-
-// Controls whether the built-in HTML language support suggests HTML5 tags, properties and values.
-"html.suggest.html5": true,
-
-// Traces the communication between VS Code and the HTML language server.
-"html.trace.server": "off",
-
-// Controls whether the built-in HTML language support validates embedded scripts.
-"html.validate.scripts": true,
-
-// Controls whether the built-in HTML language support validates embedded styles.
-"html.validate.styles": true,
-
-// JSON
-
-// Enable/disable default JSON formatter
-"json.format.enable": true,
-
-// The maximum number of outline symbols and folding regions computed (limited for performance reasons).
-"json.maxItemsComputed": 5000,
-
-// When enabled, JSON schemas can be fetched from http and https locations.
-"json.schemaDownload.enable": true,
-
-// Associate schemas to JSON files in the current project.
-"json.schemas": [],
-
-// Traces the communication between VS Code and the JSON language server.
-"json.trace.server": "off",
-
-// Markdown
-
-// Controls where links in Markdown files should be opened.
-//  - currentGroup: Open links in the active editor group.
-//  - beside: Open links beside the active editor.
-"markdown.links.openLocation": "currentGroup",
-
-// Sets how line-breaks are rendered in the Markdown preview. Setting it to 'true' creates a <br> for newlines inside paragraphs.
-"markdown.preview.breaks": false,
-
-// Double click in the Markdown preview to switch to the editor.
-"markdown.preview.doubleClickToSwitchToEditor": true,
-
-// Controls the font family used in the Markdown preview.
-"markdown.preview.fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif",
-
-// Controls the font size in pixels used in the Markdown preview.
-"markdown.preview.fontSize": 14,
-
-// Controls the line height used in the Markdown preview. This number is relative to the font size.
-"markdown.preview.lineHeight": 1.6,
-
-// Enable or disable conversion of URL-like text to links in the Markdown preview.
-"markdown.preview.linkify": true,
-
-// Mark the current editor selection in the Markdown preview.
-"markdown.preview.markEditorSelection": true,
-
-// Controls how links to other Markdown files in the Markdown preview should be opened.
-//  - inPreview: Try to open links in the Markdown preview.
-//  - inEditor: Try to open links in the editor.
-"markdown.preview.openMarkdownLinks": "inPreview",
-
-// When a Markdown preview is scrolled, update the view of the editor.
-"markdown.preview.scrollEditorWithPreview": true,
-
-// When a Markdown editor is scrolled, update the view of the preview.
-"markdown.preview.scrollPreviewWithEditor": true,
-
-// Enable or disable some language-neutral replacement and quotes beautification in the Markdown preview.
-"markdown.preview.typographer": false,
-
-// A list of URLs or local paths to CSS style sheets to use from the Markdown preview. Relative paths are interpreted relative to the folder open in the explorer. If there is no open folder, they are interpreted relative to the location of the Markdown file. All '\' need to be written as '\\'.
-"markdown.styles": [],
-
-// Enable debug logging for the Markdown extension.
-"markdown.trace": "off",
-
-// PHP
-
-// Controls whether the built-in PHP language suggestions are enabled. The support suggests PHP globals and variables.
-"php.suggest.basic": true,
-
-// Enable/disable built-in PHP validation.
-"php.validate.enable": true,
-
-// Points to the PHP executable.
-"php.validate.executablePath": null,
-
-// Whether the linter is run on save or on type.
-"php.validate.run": "onSave",
-
-// TypeScript
-
-// Enable/disable automatic closing of JSX tags.
-"javascript.autoClosingTags": true,
-
-// Enable/disable default JavaScript formatter.
-"javascript.format.enable": true,
-
-// Defines space handling after a comma delimiter.
-"javascript.format.insertSpaceAfterCommaDelimiter": true,
-
-// Defines space handling after the constructor keyword.
-"javascript.format.insertSpaceAfterConstructor": false,
-
-// Defines space handling after function keyword for anonymous functions.
-"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
-
-// Defines space handling after keywords in a control flow statement.
-"javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
-
-// Defines space handling after opening and before closing empty braces.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
-
-// Defines space handling after opening and before closing JSX expression braces.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
-
-// Defines space handling after opening and before closing non-empty braces.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-
-// Defines space handling after opening and before closing non-empty brackets.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
-
-// Defines space handling after opening and before closing non-empty parenthesis.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-
-// Defines space handling after opening and before closing template string braces.
-"javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
-
-// Defines space handling after a semicolon in a for statement.
-"javascript.format.insertSpaceAfterSemicolonInForStatements": true,
-
-// Defines space handling after a binary operator.
-"javascript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
-
-// Defines space handling before function argument parentheses.
-"javascript.format.insertSpaceBeforeFunctionParenthesis": false,
-
-// Defines whether an open brace is put onto a new line for control blocks or not.
-"javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
-
-// Defines whether an open brace is put onto a new line for functions or not.
-"javascript.format.placeOpenBraceOnNewLineForFunctions": false,
-
-// Defines handling of optional semicolons. Requires using TypeScript 3.7 or newer in the workspace.
-//  - ignore: Don't insert or remove any semicolons.
-//  - insert: Insert semicolons at statement ends.
-//  - remove: Remove unnecessary semicolons.
-"javascript.format.semicolons": "ignore",
-
-// Preferred path style for auto imports.
-//  - shortest: Prefers a non-relative import only if one is available that has fewer path segments than a relative import.
-//  - relative: Prefers a relative path to the imported file location.
-//  - non-relative: Prefers a non-relative import based on the `baseUrl` or `paths` configured in your `jsconfig.json` / `tsconfig.json`.
-//  - project-relative: Prefers a non-relative import only if the relative import path would leave the package or project directory. Requires using TypeScript 4.2+ in the workspace.
-"javascript.preferences.importModuleSpecifier": "shortest",
-
-// Preferred path ending for auto imports.
-//  - auto: Use project settings to select a default.
-//  - minimal: Shorten `./component/index.js` to `./component`.
-//  - index: Shorten `./component/index.js` to `./component/index`.
-//  - js: Do not shorten path endings;
-include the `.js`
-  extension."javascript.preferences.importModuleSpecifierEnding": "auto",
-
-// Preferred quote style to use for quick fixes: `single` quotes, `double` quotes, or `auto` infer quote type from existing imports.
-"javascript.preferences.quoteStyle": "auto",
-
-// The setting 'typescript.preferences.renameShorthandProperties' has been deprecated in favor of 'typescript.preferences.useAliasesForRenames'
-// Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
-"javascript.preferences.renameShorthandProperties": true,
-
-// Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
-"javascript.preferences.useAliasesForRenames": true,
-
-// Enable/disable references CodeLens in JavaScript files.
-"javascript.referencesCodeLens.enabled": false,
-
-// Enable/disable references CodeLens on all functions in JavaScript files.
-"javascript.referencesCodeLens.showOnAllFunctions": false,
-
-// Enable/disable auto import suggestions.
-"javascript.suggest.autoImports": true,
-
-// Complete functions with their parameter signature.
-"javascript.suggest.completeFunctionCalls": false,
-
-// Enable/disable suggestion to complete JSDoc comments.
-"javascript.suggest.completeJSDocs": true,
-
-// Enabled/disable autocomplete suggestions.
-"javascript.suggest.enabled": true,
-
-// Enable/disable showing completions on potentially undefined values that insert an optional chain call. Requires TS 3.7+ and strict null checks to be enabled.
-"javascript.suggest.includeAutomaticOptionalChainCompletions": true,
-
-// Enable/disable auto-import-style completions on partially-typed import statements. Requires using TypeScript 4.3+ in the workspace.
-"javascript.suggest.includeCompletionsForImportStatements": true,
-
-// Enable/disable generating `@return` annotations for JSDoc templates. Requires using TypeScript 4.2+ in the workspace.
-"javascript.suggest.jsdoc.generateReturns": true,
-
-// Enable/disable including unique names from the file in JavaScript suggestions. Note that name suggestions are always disabled in JavaScript code that is semantically checked using `@ts-check` or `checkJs`.
-"javascript.suggest.names": true,
-
-// Enable/disable suggestions for paths in import statements and require calls.
-"javascript.suggest.paths": true,
-
-// Enable/disable suggestion diagnostics for JavaScript files in the editor.
-"javascript.suggestionActions.enabled": true,
-
-// Enable/disable automatic updating of import paths when you rename or move a file in VS Code.
-//  - prompt: Prompt on each rename.
-//  - always: Always update paths automatically.
-//  - never: Never rename paths and don't prompt.
-"javascript.updateImportsOnFileMove.enabled": "prompt",
-
-// Enable/disable JavaScript validation.
-"javascript.validate.enable": true,
-
-// Enable/disable semantic checking of JavaScript files. Existing `jsconfig.json` or `tsconfig.json` files override this setting.
-"js/ts.implicitProjectConfig.checkJs": false,
-
-// Enable/disable strict function types in JavaScript and TypeScript files that are not part of a project. Existing `jsconfig.json` or `tsconfig.json` files override this setting.
-"js/ts.implicitProjectConfig.strictFunctionTypes": true,
-
-// Enable/disable strict null checks in JavaScript and TypeScript files that are not part of a project. Existing `jsconfig.json` or `tsconfig.json` files override this setting.
-"js/ts.implicitProjectConfig.strictNullChecks": false,
-
-// Enable/disable automatic closing of JSX tags.
-"typescript.autoClosingTags": true,
-
-// Check if npm is installed for Automatic Type Acquisition.
-"typescript.check.npmIsInstalled": true,
-
-// Disables automatic type acquisition. Automatic type acquisition fetches `@types` packages from npm to improve IntelliSense for external libraries.
-"typescript.disableAutomaticTypeAcquisition": false,
-
-// Enables prompting of users to use the TypeScript version configured in the workspace for Intellisense.
-"typescript.enablePromptUseWorkspaceTsdk": false,
-
-// Enable/disable default TypeScript formatter.
-"typescript.format.enable": true,
-
-// Defines space handling after a comma delimiter.
-"typescript.format.insertSpaceAfterCommaDelimiter": true,
-
-// Defines space handling after the constructor keyword.
-"typescript.format.insertSpaceAfterConstructor": false,
-
-// Defines space handling after function keyword for anonymous functions.
-"typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
-
-// Defines space handling after keywords in a control flow statement.
-"typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
-
-// Defines space handling after opening and before closing empty braces.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
-
-// Defines space handling after opening and before closing JSX expression braces.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
-
-// Defines space handling after opening and before closing non-empty braces.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-
-// Defines space handling after opening and before closing non-empty brackets.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
-
-// Defines space handling after opening and before closing non-empty parenthesis.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-
-// Defines space handling after opening and before closing template string braces.
-"typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
-
-// Defines space handling after a semicolon in a for statement.
-"typescript.format.insertSpaceAfterSemicolonInForStatements": true,
-
-// Defines space handling after type assertions in TypeScript.
-"typescript.format.insertSpaceAfterTypeAssertion": false,
-
-// Defines space handling after a binary operator.
-"typescript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
-
-// Defines space handling before function argument parentheses.
-"typescript.format.insertSpaceBeforeFunctionParenthesis": false,
-
-// Defines whether an open brace is put onto a new line for control blocks or not.
-"typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
-
-// Defines whether an open brace is put onto a new line for functions or not.
-"typescript.format.placeOpenBraceOnNewLineForFunctions": false,
-
-// Defines handling of optional semicolons. Requires using TypeScript 3.7 or newer in the workspace.
-//  - ignore: Don't insert or remove any semicolons.
-//  - insert: Insert semicolons at statement ends.
-//  - remove: Remove unnecessary semicolons.
-"typescript.format.semicolons": "ignore",
-
-// Enable/disable implementations CodeLens. This CodeLens shows the implementers of an interface.
-"typescript.implementationsCodeLens.enabled": false,
-
-// Sets the locale used to report JavaScript and TypeScript errors. Default of `null` uses VS Code's locale.
-"typescript.locale": null,
-
-// Specifies the path to the npm executable used for Automatic Type Acquisition.
-"typescript.npm": null,
-
-// Preferred path style for auto imports.
-//  - shortest: Prefers a non-relative import only if one is available that has fewer path segments than a relative import.
-//  - relative: Prefers a relative path to the imported file location.
-//  - non-relative: Prefers a non-relative import based on the `baseUrl` or `paths` configured in your `jsconfig.json` / `tsconfig.json`.
-//  - project-relative: Prefers a non-relative import only if the relative import path would leave the package or project directory. Requires using TypeScript 4.2+ in the workspace.
-"typescript.preferences.importModuleSpecifier": "shortest",
-
-// Preferred path ending for auto imports.
-//  - auto: Use project settings to select a default.
-//  - minimal: Shorten `./component/index.js` to `./component`.
-//  - index: Shorten `./component/index.js` to `./component/index`.
-//  - js: Do not shorten path endings; include the `.js` extension.
-"typescript.preferences.importModuleSpecifierEnding": "auto",
-
-// Enable/disable searching `package.json` dependencies for available auto imports.
-//  - auto: Search dependencies based on estimated performance impact.
-//  - on: Always search dependencies.
-//  - off: Never search dependencies.
-"typescript.preferences.includePackageJsonAutoImports": "auto",
-
-// Preferred quote style to use for quick fixes: `single` quotes, `double` quotes, or `auto` infer quote type from existing imports.
-"typescript.preferences.quoteStyle": "auto",
-
-// Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
-"typescript.preferences.useAliasesForRenames": true,
-
-// Enable/disable references CodeLens in TypeScript files.
-"typescript.referencesCodeLens.enabled": false,
-
-// Enable/disable references CodeLens on all functions in TypeScript files.
-"typescript.referencesCodeLens.showOnAllFunctions": false,
-
-// Report style checks as warnings.
-"typescript.reportStyleChecksAsWarnings": true,
-
-// Enable/disable auto import suggestions.
-"typescript.suggest.autoImports": true,
-
-// Complete functions with their parameter signature.
-"typescript.suggest.completeFunctionCalls": false,
-
-// Enable/disable suggestion to complete JSDoc comments.
-"typescript.suggest.completeJSDocs": true,
-
-// Enabled/disable autocomplete suggestions.
-"typescript.suggest.enabled": true,
-
-// Enable/disable showing completions on potentially undefined values that insert an optional chain call. Requires TS 3.7+ and strict null checks to be enabled.
-"typescript.suggest.includeAutomaticOptionalChainCompletions": true,
-
-// Enable/disable auto-import-style completions on partially-typed import statements. Requires using TypeScript 4.3+ in the workspace.
-"typescript.suggest.includeCompletionsForImportStatements": true,
-
-// Enable/disable snippet completions from TS Server. Requires using TypeScript 4.3+ in the workspace.
-"typescript.suggest.includeCompletionsWithSnippetText": true,
-
-// Enable/disable generating `@return` annotations for JSDoc templates. Requires using TypeScript 4.2+ in the workspace.
-"typescript.suggest.jsdoc.generateReturns": true,
-
-// Enable/disable suggestions for paths in import statements and require calls.
-"typescript.suggest.paths": true,
-
-// Enable/disable suggestion diagnostics for TypeScript files in the editor.
-"typescript.suggestionActions.enabled": true,
-
-// Controls auto detection of tsc tasks.
-//  - on: Create both build and watch tasks.
-//  - off: Disable this feature.
-//  - build: Only create single run compile tasks.
-//  - watch: Only create compile and watch tasks.
-"typescript.tsc.autoDetect": "on",
-
-// Specifies the folder path to the tsserver and `lib*.d.ts` files under a TypeScript install to use for IntelliSense, for example: `./node_modules/typescript/lib`.
-// - When specified as a user setting, the TypeScript version from `typescript.tsdk` automatically replaces the built-in TypeScript version.
-// - When specified as a workspace setting, `typescript.tsdk` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
-"typescript.tsdk": null,
-
-// Enables tracing TS server performance to a directory. These trace files can be used to diagnose TS Server performance issues. The log may contain file paths, source code, and other potentially sensitive information from your project.
-"typescript.tsserver.enableTracing": false,
-
-// Enables logging of the TS server to a file. This log can be used to diagnose TS Server issues. The log may contain file paths, source code, and other potentially sensitive information from your project.
-"typescript.tsserver.log": "off",
-
-// The maximum amount of memory (in MB) to allocate to the TypeScript server process.
-"typescript.tsserver.maxTsServerMemory": 3072,
-
-// Additional paths to discover TypeScript Language Service plugins.
-"typescript.tsserver.pluginPaths": [],
-
-// Enables tracing of messages sent to the TS server. This trace can be used to diagnose TS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project.
-"typescript.tsserver.trace": "off",
-
-// Enable/disable spawning a separate TypeScript server that can more quickly respond to syntax related operations, such as calculating folding or computing document symbols. Requires using TypeScript 3.4.0 or newer in the workspace.
-"typescript.tsserver.useSeparateSyntaxServer": true,
-
-// Configure which watching strategies should be used to keep track of files and directories. Requires using TypeScript 3.8+ in the workspace.
-"typescript.tsserver.watchOptions": {},
-
-// Enable/disable automatic updating of import paths when you rename or move a file in VS Code.
-//  - prompt: Prompt on each rename.
-//  - always: Always update paths automatically.
-//  - never: Never rename paths and don't prompt.
-"typescript.updateImportsOnFileMove.enabled": "prompt",
-
-// Enable/disable TypeScript validation.
-"typescript.validate.enable": true,
-
-// Controls which files are searched by go to symbol in workspace.
-//  - allOpenProjects: Search all open JavaScript or TypeScript projects for symbols. Requires using TypeScript 3.9 or newer in the workspace.
-//  - currentProject: Only search for symbols in the current JavaScript or TypeScript project.
-"typescript.workspaceSymbols.scope": "allOpenProjects",
-
-// CSS
-
-// Insert semicolon at end of line when completing CSS properties.
-"css.completion.completePropertyWithSemicolon": true,
-
-// By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-"css.completion.triggerPropertyValueCompletion": true,
-
-// A list of relative file paths pointing to JSON files following the custom data format.
-// VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
-// The file paths are relative to workspace and only workspace folder settings are considered.
-"css.customData": [],
-
-// Show tag and attribute documentation in CSS hovers.
-"css.hover.documentation": true,
-
-// Show references to MDN in CSS hovers.
-"css.hover.references": true,
-
-// Invalid number of parameters.
-"css.lint.argumentsInColorFunction": "error",
-
-// Do not use `width` or `height` when using `padding` or `border`.
-"css.lint.boxModel": "ignore",
-
-// When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-"css.lint.compatibleVendorPrefixes": "ignore",
-
-// Do not use duplicate style definitions.
-"css.lint.duplicateProperties": "ignore",
-
-// Do not use empty rulesets.
-"css.lint.emptyRules": "warning",
-
-// Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-"css.lint.float": "ignore",
-
-// `@font-face` rule must define `src` and `font-family` properties.
-"css.lint.fontFaceProperties": "warning",
-
-// Hex colors must consist of three or six hex numbers.
-"css.lint.hexColorLength": "error",
-
-// Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-"css.lint.idSelector": "ignore",
-
-// IE hacks are only necessary when supporting IE7 and older.
-"css.lint.ieHack": "ignore",
-
-// Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-"css.lint.important": "ignore",
-
-// Import statements do not load in parallel.
-"css.lint.importStatement": "ignore",
-
-// Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-"css.lint.propertyIgnoredDueToDisplay": "warning",
-
-// The universal selector (`*`) is known to be slow.
-"css.lint.universalSelector": "ignore",
-
-// Unknown at-rule.
-"css.lint.unknownAtRules": "warning",
-
-// Unknown property.
-"css.lint.unknownProperties": "warning",
-
-// Unknown vendor specific property.
-"css.lint.unknownVendorSpecificProperties": "ignore",
-
-// A list of properties that are not validated against the `unknownProperties` rule.
-"css.lint.validProperties": [],
-
-// When using a vendor-specific prefix, also include the standard property.
-"css.lint.vendorPrefix": "warning",
-
-// No unit for zero needed.
-"css.lint.zeroUnits": "ignore",
-
-// Traces the communication between VS Code and the CSS language server.
-"css.trace.server": "off",
-
-// Enables or disables all validations.
-"css.validate": true,
-
-// LESS
-
-// Insert semicolon at end of line when completing CSS properties.
-"less.completion.completePropertyWithSemicolon": true,
-
-// By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-"less.completion.triggerPropertyValueCompletion": true,
-
-// Show tag and attribute documentation in LESS hovers.
-"less.hover.documentation": true,
-
-// Show references to MDN in LESS hovers.
-"less.hover.references": true,
-
-// Invalid number of parameters.
-"less.lint.argumentsInColorFunction": "error",
-
-// Do not use `width` or `height` when using `padding` or `border`.
-"less.lint.boxModel": "ignore",
-
-// When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-"less.lint.compatibleVendorPrefixes": "ignore",
-
-// Do not use duplicate style definitions.
-"less.lint.duplicateProperties": "ignore",
-
-// Do not use empty rulesets.
-"less.lint.emptyRules": "warning",
-
-// Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-"less.lint.float": "ignore",
-
-// `@font-face` rule must define `src` and `font-family` properties.
-"less.lint.fontFaceProperties": "warning",
-
-// Hex colors must consist of three or six hex numbers.
-"less.lint.hexColorLength": "error",
-
-// Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-"less.lint.idSelector": "ignore",
-
-// IE hacks are only necessary when supporting IE7 and older.
-"less.lint.ieHack": "ignore",
-
-// Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-"less.lint.important": "ignore",
-
-// Import statements do not load in parallel.
-"less.lint.importStatement": "ignore",
-
-// Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-"less.lint.propertyIgnoredDueToDisplay": "warning",
-
-// The universal selector (`*`) is known to be slow.
-"less.lint.universalSelector": "ignore",
-
-// Unknown at-rule.
-"less.lint.unknownAtRules": "warning",
-
-// Unknown property.
-"less.lint.unknownProperties": "warning",
-
-// Unknown vendor specific property.
-"less.lint.unknownVendorSpecificProperties": "ignore",
-
-// A list of properties that are not validated against the `unknownProperties` rule.
-"less.lint.validProperties": [],
-
-// When using a vendor-specific prefix, also include the standard property.
-"less.lint.vendorPrefix": "warning",
-
-// No unit for zero needed.
-"less.lint.zeroUnits": "ignore",
-
-// Enables or disables all validations.
-"less.validate": true,
-
-// SCSS (Sass)
-
-// Insert semicolon at end of line when completing CSS properties.
-"scss.completion.completePropertyWithSemicolon": true,
-
-// By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-"scss.completion.triggerPropertyValueCompletion": true,
-
-// Show tag and attribute documentation in SCSS hovers.
-"scss.hover.documentation": true,
-
-// Show references to MDN in SCSS hovers.
-"scss.hover.references": true,
-
-// Invalid number of parameters.
-"scss.lint.argumentsInColorFunction": "error",
-
-// Do not use `width` or `height` when using `padding` or `border`.
-"scss.lint.boxModel": "ignore",
-
-// When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-"scss.lint.compatibleVendorPrefixes": "ignore",
-
-// Do not use duplicate style definitions.
-"scss.lint.duplicateProperties": "ignore",
-
-// Do not use empty rulesets.
-"scss.lint.emptyRules": "warning",
-
-// Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-"scss.lint.float": "ignore",
-
-// `@font-face` rule must define `src` and `font-family` properties.
-"scss.lint.fontFaceProperties": "warning",
-
-// Hex colors must consist of three or six hex numbers.
-"scss.lint.hexColorLength": "error",
-
-// Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-"scss.lint.idSelector": "ignore",
-
-// IE hacks are only necessary when supporting IE7 and older.
-"scss.lint.ieHack": "ignore",
-
-// Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-"scss.lint.important": "ignore",
-
-// Import statements do not load in parallel.
-"scss.lint.importStatement": "ignore",
-
-// Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-"scss.lint.propertyIgnoredDueToDisplay": "warning",
-
-// The universal selector (`*`) is known to be slow.
-"scss.lint.universalSelector": "ignore",
-
-// Unknown at-rule.
-"scss.lint.unknownAtRules": "warning",
-
-// Unknown property.
-"scss.lint.unknownProperties": "warning",
-
-// Unknown vendor specific property.
-"scss.lint.unknownVendorSpecificProperties": "ignore",
-
-// A list of properties that are not validated against the `unknownProperties` rule.
-"scss.lint.validProperties": [],
-
-// When using a vendor-specific prefix, also include the standard property.
-"scss.lint.vendorPrefix": "warning",
-
-// No unit for zero needed.
-"scss.lint.zeroUnits": "ignore",
-
-// Enables or disables all validations.
-"scss.validate": true,
-
-// Extensions
-
-// When enabled, automatically checks extensions for updates. If an extension has an update, it is marked as outdated in the Extensions view. The updates are fetched from a Microsoft online service.
-"extensions.autoCheckUpdates": true,
-
-// Controls the automatic update behavior of extensions. The updates are fetched from a Microsoft online service.
-//  - true: Download and install updates automatically for all extensions.
-//  - onlyEnabledExtensions: Download and install updates automatically only for enabled extensions. Disabled extensions will not be updated automatically.
-//  - false: Extensions are not automatically updated.
-"extensions.autoUpdate": true,
-
-// When enabled, editors with extension details will be automatically closed upon navigating away from the Extensions View.
-"extensions.closeExtensionDetailsOnViewChange": false,
-
-// When an extension is listed here, a confirmation prompt will not be shown when that extension handles a URI.
-"extensions.confirmedUriHandlerExtensionIds": [],
-
-// When enabled, the notifications for extension recommendations will not be shown.
-"extensions.ignoreRecommendations": false,
-
-// Override the untrusted workspace support of an extension. Extensions using `true` will always be enabled. Extensions using `limited` will always be enabled, and the extension will hide functionality that requires trust. Extensions using `false` will only be enabled only when the workspace is trusted.
-"extensions.supportUntrustedWorkspaces": {},
-
-// Override the virtual workspaces support of an extension.
-"extensions.supportVirtualWorkspaces": {
-"pub.name": false
-},
-
-// Output
-
-// Enable/disable the ability of smart scrolling in the output view. Smart scrolling allows you to lock scrolling automatically when you click in the output view and unlocks when you click in the last line.
-"output.smartScroll.enabled": true,
-
-// Settings Sync
-
-// List of extensions to be ignored while synchronizing. The identifier of an extension is always `${publisher}.${name}`. For example: `vscode.csharp`.
-"settingsSync.ignoredExtensions": [],
-
-// Configure settings to be ignored while synchronizing.
-"settingsSync.ignoredSettings": [],
-
-// Synchronize keybindings for each platform.
-"settingsSync.keybindingsPerPlatform": true,
-
-// Notebooks
-
-// When enabled notebook breadcrumbs contain code cells.
-"notebook.breadcrumbs.showCodeCells": true,
-
-// Control whether to render the focus indicator as cell borders or a highlight bar on the left gutter
-"notebook.cellFocusIndicator": "border",
-
-// Where the cell toolbar should be shown, or whether it should be hidden.
-"notebook.cellToolbarLocation": {
-"default": "right"
-},
-
-// Whether the cell toolbar should appear on hover or click.
-"notebook.cellToolbarVisibility": "click",
-
-// Control whether the notebook editor should be rendered in a compact form.
-"notebook.compactView": true,
-
-// Control whether outputs action should be rendered in the output toolbar.
-"notebook.consolidatedOutputButton": true,
-
-// Control whether extra actions are shown in a dropdown next to the run button.
-"notebook.consolidatedRunButton": true,
-
-// Whether to use the enhanced text diff editor for notebook.
-"notebook.diff.enablePreview": true,
-
-// Hide Metadata Differences
-"notebook.diff.ignoreMetadata": false,
-
-// Hide Outputs Differences
-"notebook.diff.ignoreOutputs": false,
-
-// Priority list for output mime types
-"notebook.displayOrder": [],
-
-// Control whether the notebook editor should allow moving cells through drag and drop.
-"notebook.dragAndDropEnabled": true,
-
-// Settings for code editors used in notebooks. This can be used to customize most editor.* settings.
-"notebook.editorOptionsCustomizations": {},
-
-// Enable/disable using the new extensible Markdown renderer.
-"notebook.experimental.useMarkdownRenderer": true,
-
-// Control whether to render a global toolbar inside the notebook editor.
-"notebook.globalToolbar": false,
-
-// Control where the insert cell actions should be rendered.
-"notebook.insertToolbarLocation": "both",
-
-// Controls the display of line numbers in the cell editor.
-"notebook.lineNumbers": "off",
-
-// When enabled cursor can navigate to the next/previous cell when the current cursor in the cell editor is at the first/last line.
-"notebook.navigation.allowNavigateToSurroundingCells": true,
-
-// When enabled notebook outline shows code cells.
-"notebook.outline.showCodeCells": false,
-
-// Whether the cell status bar should be shown.
-//  - hidden: The cell Status bar is always hidden.
-//  - visible: The cell Status bar is always visible.
-//  - visibleAfterExecute: The cell Status bar is hidden until the cell has executed. Then it becomes visible to show the execution status.
-"notebook.showCellStatusBar": true,
-
-// Controls when the folding controls are shown.
-"notebook.showFoldingControls": "always",
-
-// Whether to use separate undo/redo stack for each cell.
-"notebook.undoRedoPerCell": false,
-
-// Terminal
-
-// Customizes what kind of terminal to launch.
-//  - integrated: Use VS Code's integrated terminal.
-//  - external: Use the configured external terminal.
-"terminal.explorerKind": "integrated",
-
-// External Terminal
-
-// Customizes which terminal to run on Linux.
-"terminal.external.linuxExec": "xterm",
-
-// Customizes which terminal application to run on macOS.
-"terminal.external.osxExec": "Terminal.app",
-
-// Customizes which terminal to run on Windows.
-"terminal.external.windowsExec": "C:\\Windows\\System32\\cmd.exe",
-
-// Integrated Terminal
-
-// Whether or not to allow chord keybindings in the terminal. Note that when this is true and the keystroke results in a chord it will bypass `terminal.integrated.commandsToSkipShell`, setting this to false is particularly useful when you want ctrl+k to go to your shell (not VS Code).
-"terminal.integrated.allowChords": true,
-
-// Whether to allow menubar mnemonics (eg. alt+f) to trigger the open the menubar. Note that this will cause all alt keystrokes to skip the shell when true. This does nothing on macOS.
-"terminal.integrated.allowMnemonics": false,
-
-// If enabled, alt/option + click will reposition the prompt cursor to underneath the mouse when `editor.multiCursorModifier` is set to `'alt'` (the default value). This may not work reliably depending on your shell.
-"terminal.integrated.altClickMovesCursor": true,
-
-// A path that when set will override `terminal.integrated.shell.linux` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-"terminal.integrated.automationShell.linux": null,
-
-// A path that when set will override `terminal.integrated.shell.osx` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-"terminal.integrated.automationShell.osx": null,
-
-// A path that when set will override `terminal.integrated.shell.windows` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-"terminal.integrated.automationShell.windows": null,
-
-// The number of milliseconds to show the bell within a terminal tab when triggered.
-"terminal.integrated.bellDuration": 1000,
-
-// A set of command IDs whose keybindings will not be sent to the shell but instead always be handled by VS Code. This allows keybindings that would normally be consumed by the shell to act instead the same as when the terminal is not focused, for example `Ctrl+P` to launch Quick Open.
-"terminal.integrated.commandsToSkipShell": [],
-
-// Controls whether to confirm on exit if there are active terminal sessions.
-"terminal.integrated.confirmOnExit": false,
-
-// Controls whether text selected in the terminal will be copied to the clipboard.
-"terminal.integrated.copyOnSelection": false,
-
-// Controls whether the terminal cursor blinks.
-"terminal.integrated.cursorBlinking": false,
-
-// Controls the style of terminal cursor.
-"terminal.integrated.cursorStyle": "block",
-
-// Controls the width of the cursor when `terminal.integrated.cursorStyle` is set to `line`.
-"terminal.integrated.cursorWidth": 1,
-
-// An explicit start path where the terminal will be launched, this is used as the current working directory (cwd) for the shell process. This may be particularly useful in workspace settings if the root directory is not a convenient cwd.
-"terminal.integrated.cwd": "",
-
-// The default profile used on Linux. This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
-"terminal.integrated.defaultProfile.linux": null,
-
-// The default profile used on macOS. This setting will currently be ignored if either `terminal.integrated.shell.osx` or `terminal.integrated.shellArgs.osx` are set.
-"terminal.integrated.defaultProfile.osx": null,
-
-// The default profile used on Windows. This setting will currently be ignored if either `terminal.integrated.shell.windows#` or `#terminal.integrated.shellArgs.windows` are set.
-"terminal.integrated.defaultProfile.windows": null,
-
-// Controls whether to detect and set the `$LANG` environment variable to a UTF-8 compliant option since VS Code's terminal only supports UTF-8 encoded data coming from the shell.
-//  - auto: Set the `$LANG` environment variable if the existing variable does not exist or it does not end in `'.UTF-8'`.
-//  - off: Do not set the `$LANG` environment variable.
-//  - on: Always set the `$LANG` environment variable.
-"terminal.integrated.detectLocale": "auto",
-
-// Controls whether bold text in the terminal will always use the "bright" ANSI color variant.
-"terminal.integrated.drawBoldTextInBrightColors": true,
-
-// Controls whether the terminal bell is enabled, this shows up as a visual bell next to the terminal's name.
-"terminal.integrated.enableBell": false,
-
-// Whether to enable file links in the terminal. Links can be slow when working on a network drive in particular because each file link is verified against the file system. Changing this will take effect only in new terminals.
-"terminal.integrated.enableFileLinks": true,
-
-// Persist terminal sessions for the workspace across window reloads.
-"terminal.integrated.enablePersistentSessions": true,
-
-// Object with environment variables that will be added to the VS Code process to be used by the terminal on Linux. Set to `null` to delete the environment variable.
-"terminal.integrated.env.linux": {},
-
-// Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS. Set to `null` to delete the environment variable.
-"terminal.integrated.env.osx": {},
-
-// Object with environment variables that will be added to the VS Code process to be used by the terminal on Windows. Set to `null` to delete the environment variable.
-"terminal.integrated.env.windows": {},
-
-// Whether to display the environment changes indicator on each terminal which explains whether extensions have made, or want to make changes to the terminal's environment.
-//  - off: Disable the indicator.
-//  - on: Enable the indicator.
-//  - warnonly: Only show the warning indicator when a terminal's environment is 'stale', not the information indicator that shows a terminal has had its environment modified by an extension.
-"terminal.integrated.environmentChangesIndicator": "warnonly",
-
-// Whether to relaunch terminals automatically if extension want to contribute to their environment and have not been interacted with yet.
-"terminal.integrated.environmentChangesRelaunch": true,
-
-// Scrolling speed multiplier when pressing `Alt`.
-"terminal.integrated.fastScrollSensitivity": 5,
-
-// Controls the font family of the terminal, this defaults to `editor.fontFamily`'s value.
-"terminal.integrated.fontFamily": "",
-
-// Controls the font size in pixels of the terminal.
-"terminal.integrated.fontSize": 14,
-
-// The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
-"terminal.integrated.fontWeight": "normal",
-
-// The font weight to use within the terminal for bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
-"terminal.integrated.fontWeightBold": "bold",
-
-// Controls whether the terminal will leverage the GPU to do its rendering.
-//  - auto: Let VS Code detect which renderer will give the best experience.
-//  - on: Enable GPU acceleration within the terminal.
-//  - off: Disable GPU acceleration within the terminal.
-"terminal.integrated.gpuAcceleration": "auto",
-
-// Whether new shells should inherit their environment from VS Code, which may source a login shell to ensure $PATH and other development variables are initialized. This has no effect on Windows.
-"terminal.integrated.inheritEnv": true,
-
-// Controls the letter spacing of the terminal, this is an integer value which represents the amount of additional pixels to add between characters.
-"terminal.integrated.letterSpacing": 0,
-
-// Controls the line height of the terminal, this number is multiplied by the terminal font size to get the actual line-height in pixels.
-"terminal.integrated.lineHeight": 1,
-
-// Controls whether to force selection when using Option+click on macOS. This will force a regular (line) selection and disallow the use of column selection mode. This enables copying and pasting using the regular terminal selection, for example, when mouse mode is enabled in tmux.
-"terminal.integrated.macOptionClickForcesSelection": false,
-
-// Controls whether to treat the option key as the meta key in the terminal on macOS.
-"terminal.integrated.macOptionIsMeta": false,
-
-// When set the foreground color of each cell will change to try meet the contrast ratio specified. Example values:
-//
-// - 1: The default, do nothing.
-// - 4.5: WCAG AA compliance (minimum).
-// - 7: WCAG AAA compliance (enhanced).
-// - 21: White on black or black on white.
-"terminal.integrated.minimumContrastRatio": 1,
-
-// A multiplier to be used on the `deltaY` of mouse wheel scroll events.
-"terminal.integrated.mouseWheelScrollSensitivity": 1,
-
-// The Linux profiles to present when creating a new terminal via the terminal dropdown. When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
-"terminal.integrated.profiles.linux": {},
-
-// The macOS profiles to present when creating a new terminal via the terminal dropdown. When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
-"terminal.integrated.profiles.osx": {},
-
-// The Windows profiles to present when creating a new terminal via the terminal dropdown. Set to null to exclude them, use the `source` property to use the default detected configuration. Or, set the `path` and optional `args`.
-"terminal.integrated.profiles.windows": {},
-
-// Controls how terminal reacts to right click.
-//  - default: Show the context menu.
-//  - copyPaste: Copy when there is a selection, otherwise paste.
-//  - paste: Paste on right click.
-//  - selectWord: Select the word under the cursor and show the context menu.
-"terminal.integrated.rightClickBehavior": "copyPaste",
-
-// Controls the maximum amount of lines the terminal keeps in its buffer.
-"terminal.integrated.scrollback": 1000,
-
-// Dispatches most keybindings to the terminal instead of the workbench, overriding `terminal.integrated.commandsToSkipShell`, which can be used alternatively for fine tuning.
-"terminal.integrated.sendKeybindingsToShell": false,
-
-// Controls whether to show the alert "The terminal process terminated with exit code" when exit code is non-zero.
-"terminal.integrated.showExitAlert": true,
-
-// Controls the working directory a split terminal starts with.
-//  - workspaceRoot: A new split terminal will use the workspace root as the working directory. In a multi-root workspace a choice for which root folder to use is offered.
-//  - initial: A new split terminal will use the working directory that the parent terminal started with.
-//  - inherited: On macOS and Linux, a new split terminal will use the working directory of the parent terminal. On Windows, this behaves the same as initial.
-"terminal.integrated.splitCwd": "inherited",
-
-// Controls whether terminal tabs display as a list to the side of the terminal. When this is disabled a dropdown will display instead.
-"terminal.integrated.tabs.enabled": true,
-
-// Controls whether focusing the terminal of a tab happens on double or single click.
-//  - singleClick: Focus the terminal when clicking a terminal tab
-//  - doubleClick: Focus the terminal when double clicking a terminal tab
-"terminal.integrated.tabs.focusMode": "doubleClick",
-
-// Controls whether the terminal tabs view will hide under certain conditions.
-//  - never: Never hide the terminal tabs view
-//  - singleTerminal: Hide the terminal tabs view when there is only a single terminal opened
-//  - singleGroup: Hide the terminal tabs view when there is only a single terminal group opened
-"terminal.integrated.tabs.hideCondition": "singleTerminal",
-
-// Controls the location of the terminal tabs, either to the left or right of the actual terminal(s).
-//  - left: Show the terminal tabs view to the left of the terminal
-//  - right: Show the terminal tabs view to the right of the terminal
-"terminal.integrated.tabs.location": "right",
-
-// Shows the active terminal information in the view, this is particularly useful when the title within the tabs aren't visible.
-//  - always: Always show the active terminal
-//  - singleTerminal: Show the active terminal when it is the only terminal opened
-//  - singleTerminalOrNarrow: Show the active terminal when it is the only terminal opened or when the tabs view is in its narrow textless state
-//  - never: Never show the active terminal
-"terminal.integrated.tabs.showActiveTerminal": "singleTerminalOrNarrow",
-
-// Determines how the terminal's title is set, this shows up in the terminal's tab or dropdown entry.
-//  - executable: The title is set by the terminal, the name of the detected foreground process will be used.
-//  - sequence: The title is set by the process via an escape sequence, this is useful if your shell dynamically sets the title.
-"terminal.integrated.titleMode": "executable",
-
-// Controls what version of unicode to use when evaluating the width of characters in the terminal. If you experience emoji or other wide characters not taking up the right amount of space or backspace either deleting too much or too little then you may want to try tweaking this setting.
-//  - 6: Version 6 of unicode, this is an older version which should work better on older systems.
-//  - 11: Version 11 of unicode, this version provides better support on modern systems that use modern versions of unicode.
-"terminal.integrated.unicodeVersion": "11",
-
-// Controls whether or not WSL distros are shown in the terminal dropdown
-"terminal.integrated.useWslProfiles": true,
-
-// Whether to use ConPTY for Windows terminal process communication (requires Windows 10 build number 18309+). Winpty will be used if this is false.
-"terminal.integrated.windowsEnableConpty": true,
-
-// A string containing all characters to be considered word separators by the double click to select word feature.
-"terminal.integrated.wordSeparators": " ()[]{}',\"`─",
-
-// Tasks
-
-// Controls enablement of `provideTasks` for all task provider extension. If the Tasks: Run Task command is slow, disabling auto detect for task providers may help. Individual extensions may also provide settings that disable auto detection.
-"task.autoDetect": "on",
-
-// Configures whether to show the problem matcher prompt when running a task. Set to `true` to never prompt, or use a dictionary of task types to turn off prompting only for specific task types.
-"task.problemMatchers.neverPrompt": false,
-
-// Controls whether to show the task detail for tasks that have a detail in task quick picks, such as Run Task.
-"task.quickOpen.detail": true,
-
-// Controls the number of recent items tracked in task quick open dialog.
-"task.quickOpen.history": 30,
-
-// Causes the Tasks: Run Task command to use the slower "show all" behavior instead of the faster two level picker where tasks are grouped by provider.
-"task.quickOpen.showAll": false,
-
-// Controls whether the task quick pick is skipped when there is only one task to pick from.
-"task.quickOpen.skip": false,
-
-// Save all dirty editors before running a task.
-//  - always: Always saves all editors before running.
-//  - never: Never saves editors before running.
-//  - prompt: Prompts whether to save editors before running.
-"task.saveBeforeRun": "always",
-
-// Configures whether a warning is shown when a provider is slow
-"task.slowProviderWarning": true,
-
-// Problems
-
-// Controls whether Problems view should automatically reveal files when opening them.
-"problems.autoReveal": true,
-
-// Show Errors & Warnings on files and folder.
-"problems.decorations.enabled": true,
-
-// When enabled shows the current problem in the status bar.
-"problems.showCurrentInStatus": false,
-
-// Breadcrumb Navigation
-
-// Enable/disable navigation breadcrumbs.
-"breadcrumbs.enabled": true,
-
-// Controls whether and how file paths are shown in the breadcrumbs view.
-//  - on: Show the file path in the breadcrumbs view.
-//  - off: Do not show the file path in the breadcrumbs view.
-//  - last: Only show the last element of the file path in the breadcrumbs view.
-"breadcrumbs.filePath": "on",
-
-// Render breadcrumb items with icons.
-"breadcrumbs.icons": true,
-
-// When enabled breadcrumbs show `array`-symbols.
-"breadcrumbs.showArrays": true,
-
-// When enabled breadcrumbs show `boolean`-symbols.
-"breadcrumbs.showBooleans": true,
-
-// When enabled breadcrumbs show `class`-symbols.
-"breadcrumbs.showClasses": true,
-
-// When enabled breadcrumbs show `constant`-symbols.
-"breadcrumbs.showConstants": true,
-
-// When enabled breadcrumbs show `constructor`-symbols.
-"breadcrumbs.showConstructors": true,
-
-// When enabled breadcrumbs show `enumMember`-symbols.
-"breadcrumbs.showEnumMembers": true,
-
-// When enabled breadcrumbs show `enum`-symbols.
-"breadcrumbs.showEnums": true,
-
-// When enabled breadcrumbs show `event`-symbols.
-"breadcrumbs.showEvents": true,
-
-// When enabled breadcrumbs show `field`-symbols.
-"breadcrumbs.showFields": true,
-
-// When enabled breadcrumbs show `file`-symbols.
-"breadcrumbs.showFiles": true,
-
-// When enabled breadcrumbs show `function`-symbols.
-"breadcrumbs.showFunctions": true,
-
-// When enabled breadcrumbs show `interface`-symbols.
-"breadcrumbs.showInterfaces": true,
-
-// When enabled breadcrumbs show `key`-symbols.
-"breadcrumbs.showKeys": true,
-
-// When enabled breadcrumbs show `method`-symbols.
-"breadcrumbs.showMethods": true,
-
-// When enabled breadcrumbs show `module`-symbols.
-"breadcrumbs.showModules": true,
-
-// When enabled breadcrumbs show `namespace`-symbols.
-"breadcrumbs.showNamespaces": true,
-
-// When enabled breadcrumbs show `null`-symbols.
-"breadcrumbs.showNull": true,
-
-// When enabled breadcrumbs show `number`-symbols.
-"breadcrumbs.showNumbers": true,
-
-// When enabled breadcrumbs show `object`-symbols.
-"breadcrumbs.showObjects": true,
-
-// When enabled breadcrumbs show `operator`-symbols.
-"breadcrumbs.showOperators": true,
-
-// When enabled breadcrumbs show `package`-symbols.
-"breadcrumbs.showPackages": true,
-
-// When enabled breadcrumbs show `property`-symbols.
-"breadcrumbs.showProperties": true,
-
-// When enabled breadcrumbs show `string`-symbols.
-"breadcrumbs.showStrings": true,
-
-// When enabled breadcrumbs show `struct`-symbols.
-"breadcrumbs.showStructs": true,
-
-// When enabled breadcrumbs show `typeParameter`-symbols.
-"breadcrumbs.showTypeParameters": true,
-
-// When enabled breadcrumbs show `variable`-symbols.
-"breadcrumbs.showVariables": true,
-
-// Controls whether and how symbols are shown in the breadcrumbs view.
-//  - on: Show all symbols in the breadcrumbs view.
-//  - off: Do not show symbols in the breadcrumbs view.
-//  - last: Only show the current symbol in the breadcrumbs view.
-"breadcrumbs.symbolPath": "on",
-
-// Controls how symbols are sorted in the breadcrumbs outline view.
-//  - position: Show symbol outline in file position order.
-//  - name: Show symbol outline in alphabetical order.
-//  - type: Show symbol outline in symbol type order.
-"breadcrumbs.symbolSortOrder": "position",
-
-// Telemetry
-
-// Enable crash reports to be sent to a Microsoft online service.
-// This option requires restart to take effect.
-"telemetry.enableCrashReporter": true,
-
-// Enable usage data and errors to be sent to a Microsoft online service.
-"telemetry.enableTelemetry": true,
-
-// Outline
-
-// Render Outline Elements with Icons.
-"outline.icons": true,
-
-// Use badges for Errors & Warnings.
-"outline.problems.badges": true,
-
-// Use colors for Errors & Warnings.
-"outline.problems.colors": true,
-
-// Show Errors & Warnings on Outline Elements.
-"outline.problems.enabled": true,
-
-// When enabled outline shows `array`-symbols.
-"outline.showArrays": true,
-
-// When enabled outline shows `boolean`-symbols.
-"outline.showBooleans": true,
-
-// When enabled outline shows `class`-symbols.
-"outline.showClasses": true,
-
-// When enabled outline shows `constant`-symbols.
-"outline.showConstants": true,
-
-// When enabled outline shows `constructor`-symbols.
-"outline.showConstructors": true,
-
-// When enabled outline shows `enumMember`-symbols.
-"outline.showEnumMembers": true,
-
-// When enabled outline shows `enum`-symbols.
-"outline.showEnums": true,
-
-// When enabled outline shows `event`-symbols.
-"outline.showEvents": true,
-
-// When enabled outline shows `field`-symbols.
-"outline.showFields": true,
-
-// When enabled outline shows `file`-symbols.
-"outline.showFiles": true,
-
-// When enabled outline shows `function`-symbols.
-"outline.showFunctions": true,
-
-// When enabled outline shows `interface`-symbols.
-"outline.showInterfaces": true,
-
-// When enabled outline shows `key`-symbols.
-"outline.showKeys": true,
-
-// When enabled outline shows `method`-symbols.
-"outline.showMethods": true,
-
-// When enabled outline shows `module`-symbols.
-"outline.showModules": true,
-
-// When enabled outline shows `namespace`-symbols.
-"outline.showNamespaces": true,
-
-// When enabled outline shows `null`-symbols.
-"outline.showNull": true,
-
-// When enabled outline shows `number`-symbols.
-"outline.showNumbers": true,
-
-// When enabled outline shows `object`-symbols.
-"outline.showObjects": true,
-
-// When enabled outline shows `operator`-symbols.
-"outline.showOperators": true,
-
-// When enabled outline shows `package`-symbols.
-"outline.showPackages": true,
-
-// When enabled outline shows `property`-symbols.
-"outline.showProperties": true,
-
-// When enabled outline shows `string`-symbols.
-"outline.showStrings": true,
-
-// When enabled outline shows `struct`-symbols.
-"outline.showStructs": true,
-
-// When enabled outline shows `typeParameter`-symbols.
-"outline.showTypeParameters": true,
-
-// When enabled outline shows `variable`-symbols.
-"outline.showVariables": true,
-
-// Timeline
-
-// An array of Timeline sources that should be excluded from the Timeline view.
-"timeline.excludeSources": null,
-
-// The number of items to show in the Timeline view by default and when loading more items. Setting to `null` (the default) will automatically choose a page size based on the visible area of the Timeline view.
-"timeline.pageSize": null,
-
-// Default Configuration Overrides
-
-// Configure settings to be overridden for [css] language.
-"[css]": {
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [dockerfile] language.
-"[dockerfile]": {
-"editor.quickSuggestions": {
-"strings": true
-}
-},
-
-// Configure settings to be overridden for [git-commit] language.
-"[git-commit]": {
-"editor.rulers": [72],
-"workbench.editor.restoreViewState": false
-},
-
-// Configure settings to be overridden for [git-rebase] language.
-"[git-rebase]": {
-"workbench.editor.restoreViewState": false
-},
-
-// Configure settings to be overridden for [go] language.
-"[go]": {
-"editor.insertSpaces": false
-},
-
-// Configure settings to be overridden for [handlebars] language.
-"[handlebars]": {
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [html] language.
-"[html]": {
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [json] language.
-"[json]": {
-"editor.quickSuggestions": {
-"strings": true
-},
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [jsonc] language.
-"[jsonc]": {
-"editor.quickSuggestions": {
-"strings": true
-},
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [less] language.
-"[less]": {
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [makefile] language.
-"[makefile]": {
-"editor.insertSpaces": false
-},
-
-// Configure settings to be overridden for [markdown] language.
-"[markdown]": {
-"editor.wordWrap": "on",
-"editor.quickSuggestions": false
-},
-
-// Configure settings to be overridden for [scss] language.
-"[scss]": {
-"editor.suggest.insertMode": "replace"
-},
-
-// Configure settings to be overridden for [search-result] language.
-"[search-result]": {
-"editor.lineNumbers": "off"
-},
-
-// Configure settings to be overridden for [shellscript] language.
-"[shellscript]": {
-"files.eol": "\n"
-},
-
-// Configure settings to be overridden for [yaml] language.
-"[yaml]": {
-"editor.insertSpaces": true,
-"editor.tabSize": 2,
-"editor.autoIndent": "advanced"
-},
-
-// Remote
-
-// When enabled, new running processes are detected and ports that they listen on are automatically forwarded.
-"remote.autoForwardPorts": true,
-
-// Sets the source from which ports are automatically forwarded when `remote.autoForwardPorts` is true. On Windows and Mac remotes, the `process` option has no effect and `output` will be used. Requires a reload to take effect.
-//  - process: Ports will be automatically forwarded when discovered by watching for processes that are started and include a port.
-//  - output: Ports will be automatically forwarded when discovered by reading terminal and debug output. Not all processes that use ports will print to the integrated terminal or debug console, so some ports will be missed. Ports forwarded based on output will not be "un-forwarded" until reload or until the port is closed by the user in the Ports view.
-"remote.autoForwardPortsSource": "process",
-
-// When enabled extensions are downloaded locally and installed on remote.
-"remote.downloadExtensionsLocally": false,
-
-// Override the kind of an extension. `ui` extensions are installed and run on the local machine while `workspace` extensions are run on the remote. By overriding an extension's default kind using this setting, you specify if that extension should be installed and enabled locally or remotely.
-"remote.extensionKind": {
-"pub.name": ["ui"]
-},
-
-// Set default properties that are applied to all ports that don't get properties from the setting `remote.portsAttributes`.
-"remote.otherPortsAttributes": {},
-
-// Set properties that are applied when a specific port number is forwarded.
-"remote.portsAttributes": {},
-
-// Restores the ports you forwarded in a workspace.
-"remote.restoreForwardedPorts": true,
-
-// Emmet
-
-// An array of languages where Emmet abbreviations should not be expanded.
-"emmet.excludeLanguages": ["markdown"],
-
-// An array of paths, where each path can contain Emmet syntaxProfiles and/or snippet files.
-// In case of conflicts, the profiles/snippets of later paths will override those of earlier paths.
-"emmet.extensionsPath": [],
-
-// Enable Emmet abbreviations in languages that are not supported by default. Add a mapping here between the language and Emmet supported language.
-//  For example: `{"vue-html": "html", "javascript": "javascriptreact"}`
-"emmet.includeLanguages": {},
-
-// When set to `false`, the whole file is parsed to determine if current position is valid for expanding Emmet abbreviations. When set to `true`, only the content around the current position in CSS/SCSS/Less files is parsed.
-"emmet.optimizeStylesheetParsing": true,
-
-// Preferences used to modify behavior of some actions and resolvers of Emmet.
-"emmet.preferences": {},
-
-// Shows possible Emmet abbreviations as suggestions. Not applicable in stylesheets or when emmet.showExpandedAbbreviation is set to `"never"`.
-"emmet.showAbbreviationSuggestions": true,
-
-// Shows expanded Emmet abbreviations as suggestions.
-// The option `"inMarkupAndStylesheetFilesOnly"` applies to html, haml, jade, slim, xml, xsl, css, scss, sass, less and stylus.
-// The option `"always"` applies to all parts of the file regardless of markup/css.
-"emmet.showExpandedAbbreviation": "always",
-
-// If `true`, then Emmet suggestions will show up as snippets allowing you to order them as per `editor.snippetSuggestions` setting.
-"emmet.showSuggestionsAsSnippets": false,
-
-// Define profile for specified syntax or use your own profile with specific rules.
-"emmet.syntaxProfiles": {},
-
-// When enabled, Emmet abbreviations are expanded when pressing TAB.
-"emmet.triggerExpansionOnTab": false,
-
-// Variables to be used in Emmet snippets.
-"emmet.variables": {},
-
-// Git
-
-// Controls whether force push (with or without lease) is enabled.
-"git.allowForcePush": false,
-
-// Controls whether commits without running pre-commit and commit-msg hooks are allowed.
-"git.allowNoVerifyCommit": false,
-
-// Always show the Staged Changes resource group.
-"git.alwaysShowStagedChangesResourceGroup": false,
-
-// Controls the signoff flag for all commits.
-"git.alwaysSignOff": false,
-
-// When set to true, commits will automatically be fetched from the default remote of the current Git repository. Setting to `all` will fetch from all remotes.
-"git.autofetch": false,
-
-// Duration in seconds between each automatic git fetch, when `git.autofetch` is enabled.
-"git.autofetchPeriod": 180,
-
-// Whether auto refreshing is enabled.
-"git.autorefresh": true,
-
-// Configures when repositories should be automatically detected.
-//  - true: Scan for both subfolders of the current opened folder and parent folders of open files.
-//  - false: Disable automatic repository scanning.
-//  - subFolders: Scan for subfolders of the currently opened folder.
-//  - openEditors: Scan for parent folders of open files.
-"git.autoRepositoryDetection": true,
-
-// Stash any changes before pulling and restore them after successful pull.
-"git.autoStash": false,
-
-// Controls the sort order for branches.
-"git.branchSortOrder": "committerdate",
-
-// A regular expression to validate new branch names.
-"git.branchValidationRegex": "",
-
-// The character to replace whitespace in new branch names.
-"git.branchWhitespaceChar": "-",
-
-// Controls what type of git refs are listed when running `Checkout to...`.
-"git.checkoutType": ["local", "remote", "tags"],
-
-// Always confirm the creation of empty commits for the 'Git: Commit Empty' command.
-"git.confirmEmptyCommits": true,
-
-// Controls whether to ask for confirmation before force-pushing.
-"git.confirmForcePush": true,
-
-// Controls whether to ask for confirmation before commiting without verification.
-"git.confirmNoVerifyCommit": true,
-
-// Confirm before synchronizing git repositories.
-"git.confirmSync": true,
-
-// Controls the Git count badge.
-//  - all: Count all changes.
-//  - tracked: Count only tracked changes.
-//  - off: Turn off counter.
-"git.countBadge": "all",
-
-// Controls whether Git contributes colors and badges to the Explorer and the Open Editors view.
-"git.decorations.enabled": true,
-
-// The default location to clone a git repository.
-"git.defaultCloneDirectory": null,
-
-// Controls whether to automatically detect git submodules.
-"git.detectSubmodules": true,
-
-// Controls the limit of git submodules detected.
-"git.detectSubmodulesLimit": 10,
-
-// Enables commit signing with GPG or X.509.
-"git.enableCommitSigning": false,
-
-// Whether git is enabled.
-"git.enabled": true,
-
-// Commit all changes when there are no staged changes.
-"git.enableSmartCommit": false,
-
-// Controls whether the Git Sync command appears in the status bar.
-"git.enableStatusBarSync": true,
-
-// When enabled, fetch all branches when pulling. Otherwise, fetch just the current one.
-"git.fetchOnPull": false,
-
-// Follow push all tags when running the sync command.
-"git.followTagsWhenSync": false,
-
-// List of git repositories to ignore.
-"git.ignoredRepositories": [],
-
-// Ignores the legacy Git warning.
-"git.ignoreLegacyWarning": false,
-
-// Ignores the warning when there are too many changes in a repository.
-"git.ignoreLimitWarning": false,
-
-// Ignores the warning when Git is missing.
-"git.ignoreMissingGitWarning": false,
-
-// Ignores the warning when it looks like the branch might have been rebased when pulling.
-"git.ignoreRebaseWarning": false,
-
-// Ignore modifications to submodules in the file tree.
-"git.ignoreSubmodules": false,
-
-// Ignores the warning when Git 2.25 - 2.26 is installed on Windows.
-"git.ignoreWindowsGit27Warning": false,
-
-// Controls when to show commit message input validation.
-"git.inputValidation": "warn",
-
-// Controls the commit message length threshold for showing a warning.
-"git.inputValidationLength": 72,
-
-// Controls the commit message subject length threshold for showing a warning. Unset it to inherit the value of `config.inputValidationLength`.
-"git.inputValidationSubjectLength": 50,
-
-// Controls whether to open a repository automatically after cloning.
-//  - always: Always open in current window.
-//  - alwaysNewWindow: Always open in a new window.
-//  - whenNoFolderOpen: Only open in current window when no folder is opened.
-//  - prompt: Always prompt for action.
-"git.openAfterClone": "prompt",
-
-// Controls whether the diff editor should be opened when clicking a change. Otherwise the regular editor will be opened.
-"git.openDiffOnClick": true,
-
-// Path and filename of the git executable, e.g. `C:\Program Files\Git\bin\git.exe` (Windows). This can also be an array of string values containing multiple paths to look up.
-"git.path": null,
-
-// Runs a git command after a successful commit.
-//  - none: Don't run any command after a commit.
-//  - push: Run 'Git Push' after a successful commit.
-//  - sync: Run 'Git Sync' after a successful commit.
-"git.postCommitCommand": "none",
-
-// Controls whether Git should check for unsaved files before committing.
-//  - always: Check for any unsaved files.
-//  - staged: Check only for unsaved staged files.
-//  - never: Disable this check.
-"git.promptToSaveFilesBeforeCommit": "always",
-
-// Controls whether Git should check for unsaved files before stashing changes.
-//  - always: Check for any unsaved files.
-//  - staged: Check only for unsaved staged files.
-//  - never: Disable this check.
-"git.promptToSaveFilesBeforeStash": "always",
-
-// Prune when fetching.
-"git.pruneOnFetch": false,
-
-// Fetch all tags when pulling.
-"git.pullTags": true,
-
-// Force git to use rebase when running the sync command.
-"git.rebaseWhenSync": false,
-
-// Controls whether to require explicit Git user configuration or allow Git to guess if missing.
-"git.requireGitUserConfig": true,
-
-// List of paths to search for git repositories in.
-"git.scanRepositories": [],
-
-// Controls whether to show the commit input in the Git source control panel.
-"git.showCommitInput": true,
-
-// Controls whether to show an inline Open File action in the Git changes view.
-"git.showInlineOpenFileAction": true,
-
-// Controls whether git actions should show progress.
-"git.showProgress": true,
-
-// Controls whether to show a notification when a push is successful.
-"git.showPushSuccessNotification": false,
-
-// Control which changes are automatically staged by Smart Commit.
-//  - all: Automatically stage all changes.
-//  - tracked: Automatically stage tracked changes only.
-"git.smartCommitChanges": "all",
-
-// Suggests to enable smart commit (commit all changes when there are no staged changes).
-"git.suggestSmartCommit": true,
-
-// Controls whether a notification comes up when running the Sync action, which allows the user to cancel the operation.
-"git.supportCancellation": false,
-
-// Controls whether to enable VS Code to be the authentication handler for git processes spawned in the integrated terminal. Note: terminals need to be restarted to pick up a change in this setting.
-"git.terminalAuthentication": true,
-
-// Controls which date to use for items in the Timeline view.
-//  - committed: Use the committed date
-//  - authored: Use the authored date
-"git.timeline.date": "committed",
-
-// Controls whether to show the commit author in the Timeline view.
-"git.timeline.showAuthor": true,
-
-// Controls how untracked changes behave.
-//  - mixed: All changes, tracked and untracked, appear together and behave equally.
-//  - separate: Untracked changes appear separately in the Source Control view. They are also excluded from several actions.
-//  - hidden: Untracked changes are hidden and excluded from several actions.
-"git.untrackedChanges": "mixed",
-
-// Controls whether to use the message from the commit input box as the default stash message.
-"git.useCommitInputAsStashMessage": false,
-
-// Controls whether force pushing uses the safer force-with-lease variant.
-"git.useForcePushWithLease": true,
-
-// Controls whether to enable automatic GitHub authentication for git commands within VS Code.
-"github.gitAuthentication": true,
-
-// URI of your GitHub Enterprise Instance
-"github-enterprise.uri": "",
-
-// Grunt
-// Controls enablement of Grunt task detection. Grunt task detection can cause files in any open workspace to be executed.
-"grunt.autoDetect": "off",
-
-// Gulp
-
-// Controls enablement of Gulp task detection. Gulp task detection can cause files in any open workspace to be executed.
-"gulp.autoDetect": "off",
-
-// Jake
-// Controls enablement of Jake task detection. Jake task detection can cause files in any open workspace to be executed.
-"jake.autoDetect": "off",
-
-// Merge Conflict
-
-// Whether to automatically navigate to the next merge conflict after resolving a merge conflict.
-"merge-conflict.autoNavigateNextConflict.enabled": false,
-
-// Create a CodeLens for merge conflict blocks within editor.
-"merge-conflict.codeLens.enabled": true,
-
-// Create decorators for merge conflict blocks within editor.
-"merge-conflict.decorators.enabled": true,
-
-// Controls where the diff view should be opened when comparing changes in merge conflicts.
-//  - Current: Open the diff view in the current editor group.
-//  - Beside: Open the diff view next to the current editor group.
-//  - Below: Open the diff view below the current editor group.
-"merge-conflict.diffViewPosition": "Current",
-
-// JavaScript Debugger
-
-// Configures which processes to automatically attach and debug when `debug.node.autoAttach` is on. A Node process launched with the `--inspect` flag will always be attached to, regardless of this setting.
-//  - always: Auto attach to every Node.js process launched in the terminal.
-//  - smart: Auto attach when running scripts that aren't in a node_modules folder.
-//  - onlyWithFlag: Only auto attach when the `--inspect` is given.
-//  - disabled: Auto attach is disabled and not shown in status bar.
-"debug.javascript.autoAttachFilter": "disabled",
-
-// Configures glob patterns for determining when to attach in "smart" `debug.javascript.autoAttachFilter` mode. `$KNOWN_TOOLS$` is replaced with a list of names of common test and code runners.
-"debug.javascript.autoAttachSmartPattern": [
-"${workspaceFolder}/**",
-"!**/node_modules/**",
-"**/$KNOWN_TOOLS$/**"
-],
-
-// Configures whether property getters will be expanded automatically. If this is false, the getter will appear as `get propertyName` and will only be evaluated when you click on it.
-"debug.javascript.autoExpandGetters": false,
-
-// When debugging a remote web app, configures whether to automatically tunnel the remote server to your local machine.
-"debug.javascript.automaticallyTunnelRemoteServer": true,
-
-// Whether to stop when conditional breakpoints throw an error. Note: your launch.json `type` must be prefixed with `pwa-` to use this, such as `pwa-node`.
-"debug.javascript.breakOnConditionalError": false,
-
-// Where a "Run" and "Debug" code lens should be shown in your npm scripts. It may be on "all", scripts, on "top" of the script section, or "never".
-"debug.javascript.codelens.npmScripts": "top",
-
-// Options used when debugging open links clicked from inside the JavaScript Debug Terminal. Can be set to "off" to disable this behavior, or "always" to enable debugging in all terminals.
-"debug.javascript.debugByLinkOptions": "on",
-
-// The default `runtimeExecutable` used for launch configurations, if unspecified. This can be used to config custom paths to Node.js or browser installations.
-"debug.javascript.defaultRuntimeExecutable": {
-"pwa-node": "node"
-},
-
-// Default options used when debugging a process through the `Debug: Attach to Node.js Process` command.
-"debug.javascript.pickAndAttachOptions": {},
-
-// Request options to use when loading resources, such as source maps, in the debugger. You may need to configure this if your sourcemaps require authentication or use a self-signed certificate, for instance. Options are used to create a request using the `got`library.
-// A common case to disable certificate verification can be done by passing `{ "https": { "rejectUnauthorized": false } }`.
-"debug.javascript.resourceRequestOptions": {},
-
-// Whether to suggest pretty printing JavaScript code that looks minified when you step into it.
-"debug.javascript.suggestPrettyPrinting": true,
-
-// Default launch options for the JavaScript debug terminal and npm scripts.
-"debug.javascript.terminalOptions": {},
-
-// Configures whether sourcemapped file where the original file can't be read will automatically be unmapped. If this is false (default), a prompt is shown.
-"debug.javascript.unmapMissingSources": false,
-
-// Use the new in-preview JavaScript debugger for Node.js and Chrome.
-"debug.javascript.usePreview": true,
-
-// Controls whether to show a warning when the 'useWSL' attribute is used.
-"debug.node.showUseWslIsDeprecatedWarning": true,
-
-// References Search View
-
-// Controls whether 'Peek References' or 'Find References' is invoked when selecting CodeLens references.
-//  - peek: Show references in peek editor.
-//  - view: Show references in separate view.
-"references.preferredLocation": "peek",
-
-// Npm
-
-// Controls whether npm scripts should be automatically detected.
-"npm.autoDetect": "on",
-
-// Enable running npm scripts contained in a folder from the Explorer context menu.
-"npm.enableRunFromFolder": false,
-
-// The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
-// Enable an explorer view for npm scripts when there is no top-level 'package.json' file.
-"npm.enableScriptExplorer": false,
-
-// Configure glob patterns for folders that should be excluded from automatic script detection.
-"npm.exclude": "",
-
-// Fetch data from https://registry.npmjs.org and https://registry.bower.io to provide auto-completion and information on hover features on npm dependencies.
-"npm.fetchOnlinePackageInfo": true,
-
-// The package manager used to run scripts.
-//  - auto: Auto-detect which package manager to use for running scripts based on lock files and installed package managers.
-//  - npm: Use npm as the package manager for running scripts.
-//  - yarn: Use yarn as the package manager for running scripts.
-//  - pnpm: Use pnpm as the package manager for running scripts.
-"npm.packageManager": "auto",
-
-// Run npm commands with the `--silent` option.
-"npm.runSilent": false,
-
-// The default click action used in the npm scripts explorer: `open` or `run`, the default is `open`.
-"npm.scriptExplorerAction": "open"
-}
-*/
