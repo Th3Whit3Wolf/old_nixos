@@ -19,6 +19,7 @@ in {
     slurp
     qt5.qtwayland
     nwg-launchers
+    mpv
   ];
   systemd.user.sessionVariables = {
     # Wayland Settings
