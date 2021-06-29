@@ -6,6 +6,9 @@ with builtins;
 let
   cfg = config.nix-polyglot.vscode;
 
+  # When true vscode settings will be created from all possible settings
+  testing = true;
+
   flattenTree =
     /**
       This was stolen and modified from https://github.com/divnix/digga/blob/cb928ec8dd13f328d865d525d5dd190d46570544/src/importers.nix
@@ -39,7 +42,7 @@ let
           let
             pathStr = builtins.concatStringsSep "." path; # dot-based reverse DNS notation
             isOption = hasAttrByPath ((splitString "." pathStr) ++ [ "default" ]) options.nix-polyglot.vscode.userSettings;
-            notDefaultVal = attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
+            notDefaultVal = if testing then true else attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
           in
           if lib.strings.isCoercibleToString val && notDefaultVal then
           # builtins.trace "${toString val} is a path"
