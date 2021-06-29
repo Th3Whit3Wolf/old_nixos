@@ -32,6 +32,9 @@ in {
     profiles.${username} = {
       settings = {
         "devtools.theme" = "dark";
+
+        # Disables annoying prompt to reset firefox addons and settings
+        "browser.disableResetPrompt" = true; 
         # Enable userContent.css and userChrome.css for our theme modules
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Stop creating ~/Downloads!
