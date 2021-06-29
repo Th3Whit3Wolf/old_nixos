@@ -8,6 +8,8 @@ let
 
   flattenTree =
     /**
+      This was stolen and modified from https://github.com/divnix/digga/blob/cb928ec8dd13f328d865d525d5dd190d46570544/src/importers.nix
+      Thank you Pacman99  and blaggacao!
       Synopsis: flattenTree _tree_
       Convert nix config attrset into something more simimilar to
       vscode's settings.json and ignores key if value is equal to default.
