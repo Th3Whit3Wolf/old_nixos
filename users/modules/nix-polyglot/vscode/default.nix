@@ -5,7 +5,76 @@ with builtins;
 
 let
   cfg = config.nix-polyglot.vscode;
-  polyglot = config.nix-polyglot;
+
+  flattenTree =
+    /**
+      Synopsis: flattenTree _tree_
+      Convert nix config attrset into something more simimilar to
+      vscode's settings.json and ignores key if value is equal to default.
+      Output Format:
+      An attrset with names in the spirit of the Reverse DNS Notation form
+      that fully preserve information about grouping from nesting.
+      Example input:
+      ```
+      {
+        a = {
+          b = {
+            c = <value>;
+          };
+        };
+      }
+      ```
+      Example output:
+      ```
+      {
+        "a.b.c" = <path>;
+      }
+      ```
+    **/
+    tree:
+      let
+        op = sum: path: val:
+          let
+            pathStr = builtins.concatStringsSep "." path; # dot-based reverse DNS notation
+            isOption = hasAttrByPath ((splitString "." pathStr) ++ [ "default" ]) options.nix-polyglot.vscode.userSettings;
+            notDefaultVal = attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
+          in
+          if lib.strings.isCoercibleToString val && notDefaultVal then
+          # builtins.trace "${toString val} is a path"
+            (sum // {
+              "${pathStr}" = val;
+            })
+          else if builtins.isAttrs val then
+          # builtins.trace "${builtins.toJSON val} is an attrset"
+          # recurse into that attribute set
+            if isOption && notDefaultVal then
+              (sum // {
+                "${pathStr}" = val;
+              })
+            else if ! isOption then
+              (recurse sum path val)
+            else
+              sum
+          else
+          # ignore that value
+          # builtins.trace "${toString path} is something else"
+            sum
+        ;
+
+        recurse = sum: path: val:
+          builtins.foldl'
+            (sum: key: op sum (path ++ [ key ]) val.${key})
+            sum
+            (builtins.attrNames val)
+        ;
+      in
+      recurse { } [ ] tree;
+
+  mkUserSettings = ''
+  {
+    ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (flattenTree cfg.userSettings))}
+  }
+  '';
 
   vscodePname = cfg.package.pname;
   configDir = {
@@ -70,16 +139,6 @@ let
     zxh404.vscode-proto3
     skellock.just
   ];
-  defaultUserSettings = {
-    editor = {
-      fontFamily =
-        "'JetBrainsMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
-      fontLigatures = true;
-      inlayHints.fontFamily =
-        "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
-    };
-    update.mode = "none";
-  };
 
 in {
   imports = [ ./settings.nix ];
@@ -113,18 +172,33 @@ in {
       vscode = {
         enable = true;
         package = (cfg.package);
-        #userSettings = (builtins.toJSON cfg.userSettings);
         extensions = defaultExt;
       };
       ZSH.shellAliases = aliases;
+    };
+
+    nix-polyglot.vscode.userSettings = {
+      editor = {
+        fontFamily =
+          "'JetBrainsMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
+        fontLigatures = true;
+        inlayHints.fontFamily =
+          "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
+      };
+      update = {
+        enableWindowsBackgroundUpdates = false;
+        mode = "none";
+        showReleaseNotes = false;
+      };
     };
     home = {
       packages = [ pkgs.nerdfonts ];
 
       file = {
-        "${configFilePath}" = mkIf (cfg.userSettings != { }) {
-          source = writePrettyJSON "vscode-user-settings"
-            (cfg.userSettings // defaultUserSettings);
+        "${configFilePath}" = {
+          # Force json validation
+          # if mkUserSettings contains invalid json this will throw
+          source = writePrettyJSON "vscode-user-settings" (fromJSON mkUserSettings);
         };
       };
     };
