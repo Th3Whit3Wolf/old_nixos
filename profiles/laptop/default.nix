@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, options, ... }: {
   environment.systemPackages = with pkgs; [
     acpi
     lm_sensors
@@ -28,8 +28,15 @@
         # In first three updates step the system clock instead of slew
         # if the adjustment is larger than 1 second.
         makestep 1.0 3
+        pool time.nist.gov iburst
+        server time.cloudflare.com nts iburst
+        pool nixos.pool.ntp.org iburst
+        pool pool.ntp.org iburst
+        pool amazon.pool.ntp.org iburst
+        initstepslew ${toString config.services.chrony.initstepslew.threshold} ${lib.concatStringsSep " " config.networking.timeServers}
         # Enable kernel synchronization of the real-time clock (RTC).
         rtcsync
+        ntsdumpdir /var/lib/chrony/nts
       '';
     };
     tlp = {
@@ -117,6 +124,12 @@
       }];
       wifi.powersave = true;
     };
+    timeServers = [
+      # NIST
+      "time.nist.gov"
+      # Cloudflare
+      "time.cloudflare.com"
+    ] ++ options.networking.timeServers.default;
     useDHCP = false;
   };
 
