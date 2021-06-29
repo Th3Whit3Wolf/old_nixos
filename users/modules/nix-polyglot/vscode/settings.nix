@@ -145,7 +145,7 @@ with types;
         '';
       };
       codeActionsOnSave = mkOption {
-        type = attrsOf attrs;
+        type = either (attrsOf bool) (listOf str);
         default = { };
         description = ''
           Code action kinds to be run on save.
@@ -199,13 +199,6 @@ with types;
           default = true;
           description = ''
             Controls whether a space character is inserted when commenting.
-          '';
-        };
-        copyWithSyntaxHighlighting = mkOption {
-          type = bool;
-          default = true;
-          description = ''
-            Controls whether syntax highlighting should be copied into the clipboard.
           '';
         };
       };
@@ -841,19 +834,16 @@ with types;
             - editor: Focus the editor when opening peek
         '';
       };
-      quickSuggestions = {
-        other = mkOption {
-          type = bool;
-          default = true;
+      quickSuggestions = mkOption {
+        type = attrsOf bool;
+        default = {
+          "other" = true;
+          "comments" = false;
+          "strings" = false;
         };
-        comments = mkOption {
-          type = bool;
-          default = false;
-        };
-        strings = mkOption {
-          type = bool;
-          default = false;
-        };
+        description = ''
+          Controls whether suggestions should automatically show up while typing.
+        '';
       };
       quickSuggestionsDelay = mkOption {
         type = int;
@@ -4045,484 +4035,1172 @@ with types;
         };
       };
     };
+    typescript = {
+      autoClosingTags = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable/disable automatic closing of JSX tags.
+        '';
+      };
+      check = {
+        npmIsInstalled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Check if npm is installed for Automatic Type Acquisition.
+          '';
+        };
+      };
+      disableAutomaticTypeAcquisition = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Disables automatic type acquisition.
+          Automatic type acquisition fetches `@types` packages from npm to improve IntelliSense for external libraries.
+        '';
+      };
+      enablePromptUseWorkspaceTsdk = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Enables prompting of users to use the TypeScript version configured in the workspace for Intellisense.
+        '';
+      };
+      format = {
+        enablePromptUseWorkspaceTsdk = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable default TypeScript formatter.
+          '';
+        };
+        insertSpaceAfterCommaDelimiter = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after a comma delimiter.
+          '';
+        };
+        insertSpaceAfterConstructor = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after the constructor keyword.
+          '';
+        };
+        insertSpaceAfterFunctionKeywordForAnonymousFunctions = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after the function keyword for anonymous functions.
+          '';
+        };
+        insertSpaceAfterKeywordsInControlFlowStatements = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after keywords in a control flow statement.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingEmptyBraces = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after opening and before closing empty braces.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after opening and before closing JSX expression braces.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after opening and before closing non-empty braces.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after opening and before closing non-empty brackets.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after opening and before closing non-empty parenthesis.
+          '';
+        };
+        insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after opening and before closing template string braces.
+          '';
+        };
+        insertSpaceAfterSemicolonInForStatements = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after a semicolon in a for statement.
+          '';
+        };
+        insertSpaceAfterTypeAssertion = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling after type assertions in TypeScript.
+          '';
+        };
+        insertSpaceBeforeAndAfterBinaryOperators = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Defines space handling after a binary operator.
+          '';
+        };
+        insertSpaceBeforeFunctionParenthesis = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines space handling before function argument parentheses.
+          '';
+        };
+        placeOpenBraceOnNewLineForControlBlocks = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines whether an open brace is put onto a new line for control blocks or not.
+          '';
+        };
+        placeOpenBraceOnNewLineForFunctions = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Defines whether an open brace is put onto a new line for functions or not.
+          '';
+        };
+        semicolons = mkOption {
+          type = enum [ "ignore" "insert" "remove" ];
+          default = "ignore";
+          description = ''
+            Defines handling of optional semicolons. Requires using TypeScript 3.7 or newer in the workspace.
+              - ignore: Don't insert or remove any semicolons.
+              - insert: Insert semicolons at statement ends.
+              - remove: Remove unnecessary semicolons.
+          '';
+        };
+      };
+      implementationsCodeLens = {
+        enabled = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Enable/disable implementations CodeLens.
+            This CodeLens shows the implementers of an interface.
+          '';
+        };
+      };
+      locale = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Sets the locale used to report JavaScript and TypeScript errors.
+          Default of `null` uses VS Code's locale.
+        '';
+      };
+      npm = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Specifies the path to the npm executable used for Automatic Type Acquisition.
+        '';
+      };
+      preferences = {
+        importModuleSpecifier = mkOption {
+          type =
+            enum [ "shortest" "relative" "non-relative" "project-relative" ];
+          default = "shortest";
+          description = ''
+            Preferred path style for auto imports.
+              - shortest: Prefers a non-relative import only if one is available that has fewer path segments than a relative import.
+              - relative: Prefers a relative path to the imported file location.
+              - non-relative: Prefers a non-relative import based on the `baseUrl` or `paths` configured in your `jsconfig.json` / `tsconfig.json`.
+              - project-relative: Prefers a non-relative import only if the relative import path would leave the package or project directory. Requires using TypeScript 4.2+ in the workspace.
+          '';
+        };
+        importModuleSpecifierEnding = mkOption {
+          type = enum [ "auto" "minimal" "index" "js" ];
+          default = "auto";
+          description = ''
+            Preferred path ending for auto imports.
+              - auto: Use project settings to select a default.
+              - minimal: Shorten `./component/index.js` to `./component`.
+              - index: Shorten `./component/index.js` to `./component/index`.
+              - js: Do not shorten path endings; include the `.js` extension.
+          '';
+        };
+        includePackageJsonAutoImports = mkOption {
+          type = enum [ "auto" "on" "off" ];
+          default = "auto";
+          description = ''
+            Enable/disable searching `package.json` dependencies for available auto imports.
+              - auto: Search dependencies based on estimated performance impact.
+              - on: Always search dependencies.
+              - off: Never search dependencies.
+          '';
+        };
+        quoteStyle = mkOption {
+          type = enum [ "single" "double" "auto" ];
+          default = "auto";
+          description = ''
+            Preferred quote style to use for quick fixes: `single` quotes, `double` quotes, or `auto` infer quote type from existing imports.
+          '';
+        };
+        useAliasesForRenames = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable introducing aliases for object shorthand properties during renames.
+            Requires using TypeScript 3.4 or newer in the workspace.
+          '';
+        };
+      };
+      referencesCodeLens = {
+        enabled = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Enable/disable references CodeLens in TypeScript files.
+          '';
+        };
+        showOnAllFunctions = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Enable/disable references CodeLens on all functions in TypeScript files.
+          '';
+        };
+      };
+      reportStyleChecksAsWarnings = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Report style checks as warnings.
+        '';
+      };
+      suggest = {
+        autoImports = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable auto import suggestions.
+          '';
+        };
+        completeFunctionCalls = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Complete functions with their parameter signature.
+          '';
+        };
+        completeJSDocs = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable suggestion to complete JSDoc comments.
+          '';
+        };
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enabled/disable autocomplete suggestions.
+          '';
+        };
+        includeAutomaticOptionalChainCompletions = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable showing completions on potentially undefined values that insert an optional chain call.
+            Requires TS 3.7+ and strict null checks to be enabled.
+          '';
+        };
+        includeCompletionsForImportStatements = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable auto-import-style completions on partially-typed import statements.
+            Requires using TypeScript 4.3+ in the workspace.
+          '';
+        };
+        includeCompletionsWithSnippetText = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable snippet completions from TS Server.
+            Requires using TypeScript 4.3+ in the workspace.
+          '';
+        };
+        jsdoc = {
+          generateReturns = mkOption {
+            type = bool;
+            default = true;
+            description = ''
+              Enable/disable generating `@return` annotations for JSDoc templates.
+              Requires using TypeScript 4.2+ in the workspace.
+            '';
+          };
+        };
+        paths = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable suggestions for paths in import statements and require calls.
+          '';
+        };
+      };
+      suggestionActions = {
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable suggestion diagnostics for TypeScript files in the editor.
+          '';
+        };
+      };
+      tsc = {
+        autoDetect = mkOption {
+          type = enum [ "on" "off" "build" "watch" ];
+          default = "on";
+          description = ''
+            Controls auto detection of tsc tasks.
+              - on: Create both build and watch tasks.
+              - off: Disable this feature.
+              - build: Only create single run compile tasks.
+              - watch: Only create compile and watch tasks.
+          '';
+        };
+      };
+      tsdk = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Specifies the folder path to the tsserver and `lib*.d.ts` files under a TypeScript install to use for IntelliSense, for example: `./node_modules/typescript/lib`.
+            - When specified as a user setting, the TypeScript version from `typescript.tsdk` automatically replaces the built-in TypeScript version.
+            - When specified as a workspace setting, `typescript.tsdk` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
+        '';
+      };
+      tsserver = {
+        enableTracing = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Enables tracing TS server performance to a directory.
+            These trace files can be used to diagnose TS Server performance issues. The log may contain file paths, source code, and other potentially sensitive information from your project.
+          '';
+        };
+        log = mkOption {
+          type = enum [ "off" "terse" "normal" "verbose" ];
+          default = "off";
+          description = ''
+            Enables logging of the TS server to a file. This log can be used to diagnose TS Server issues.
+            The log may contain file paths, source code, and other potentially sensitive information from your project.
+          '';
+        };
+        maxTsServerMemory = mkOption {
+          type = int;
+          default = 3072;
+          description = ''
+            The maximum amount of memory (in MB) to allocate to the TypeScript server process.
+          '';
+        };
+        pluginPaths = mkOption {
+          type = listOf str;
+          default = [ ];
+          description = ''
+            Additional paths to discover TypeScript Language Service plugins.
+          '';
+        };
+        trace = mkOption {
+          type = enum [ "off" "message" "verbose" ];
+          default = "off";
+          description = ''
+            Enables tracing of messages sent to the TS server.
+            This trace can be used to diagnose TS Server issues.
+            The trace may contain file paths, source code, and other potentially sensitive information from your project.
+          '';
+        };
+        useSeparateSyntaxServer = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable spawning a separate TypeScript server that can more quickly respond to syntax related operations, such as calculating folding or computing document symbols.
+            Requires using TypeScript 3.4.0 or newer in the workspace.
+          '';
+        };
+        watchOptions = mkOption {
+          type = attrsOf str;
+          default = { };
+          description = ''
+            Configure which watching strategies should be used to keep track of files and directories.
+            Requires using TypeScript 3.8+ in the workspace.
+          '';
+        };
+      };
+      updateImportsOnFileMove = {
+        enabled = mkOption {
+          type = enum [ "prompt" "always" "never" ];
+          default = "prompt";
+          description = ''
+            Enable/disable automatic updating of import paths when you rename or move a file in VS Code.
+              - prompt: Prompt on each rename.
+              - always: Always update paths automatically.
+              - never: Never rename paths and don't prompt.
+          '';
+        };
+      };
+      validate = {
+        enable = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable TypeScript validation.
+          '';
+        };
+      };
+      workspaceSymbols = {
+        enabled = mkOption {
+          type = enum [ "allOpenProjects" "currentProject" ];
+          default = "allOpenProjects";
+          description = ''
+            Controls which files are searched by go to symbol in workspace.
+              - allOpenProjects: Search all open JavaScript or TypeScript projects for symbols. Requires using TypeScript 3.9 or newer in the workspace.
+              - currentProject: Only search for symbols in the current JavaScript or TypeScript project.
+          '';
+        };
+      };
+    };
+    css = {
+      completion = {
+        completePropertyWithSemicolon = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Insert semicolon at end of line when completing CSS properties.
+          '';
+        };
+        triggerPropertyValueCompletion = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            By default, VS Code triggers property value completion after selecting a CSS property.
+            Use this setting to disable this behavior.
+          '';
+        };
+      };
+      triggerPropertyValueCompletion = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          A list of relative file paths pointing to JSON files following the custom data format.
+          VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
+          The file paths are relative to workspace and only workspace folder settings are considered.
+        '';
+      };
+      hover = {
+        documentation = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show tag and attribute documentation in CSS hovers.
+          '';
+        };
+        references = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show references to MDN in CSS hovers.
+          '';
+        };
+      };
+      lint = {
+        argumentsInColorFunction = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Invalid number of parameters.
+          '';
+        };
+        boxModel = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use `width` or `height` when using `padding` or `border`.
+          '';
+        };
+        compatibleVendorPrefixes = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
+          '';
+        };
+        duplicateProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use duplicate style definitions.
+          '';
+        };
+        emptyRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use empty rulesets.
+          '';
+        };
+        float = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `float`.
+            Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
+          '';
+        };
+        fontFaceProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            `@font-face` rule must define `src` and `font-family` properties.
+          '';
+        };
+        hexColorLength = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Hex colors must consist of three or six hex numbers.
+          '';
+        };
+        idSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
+          '';
+        };
+        ieHack = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            IE hacks are only necessary when supporting IE7 and older.
+          '';
+        };
+        important = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `!important`.
+            It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
+          '';
+        };
+        importStatement = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Import statements do not load in parallel.
+          '';
+        };
+        propertyIgnoredDueToDisplay = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Property is ignored due to the display.
+            E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
+          '';
+        };
+        universalSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            The universal selector (`*`) is known to be slow.
+          '';
+        };
+        unknownAtRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown at-rule.
+          '';
+        };
+        unknownProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown property.
+          '';
+        };
+        unknownVendorSpecificProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Unknown vendor specific property.
+          '';
+        };
+        validProperties = mkOption {
+          type = listOf str;
+          default = [ ];
+          description = ''
+            A list of properties that are not validated against the `unknownProperties` rule.
+          '';
+        };
+        vendorPrefix = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            When using a vendor-specific prefix, also include the standard property.
+          '';
+        };
+        zeroUnits = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            No unit for zero needed.
+          '';
+        };
+      };
+      trace = {
+        server = mkOption {
+          type = enum [ "off" "messages" "verbose" ];
+          default = "off";
+          description = ''
+            Traces the communication between VS Code and the CSS language server.
+          '';
+        };
+      };
+      validate = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enables or disables all validations.
+        '';
+      };
+    };
+    less = {
+      completion = {
+        completePropertyWithSemicolon = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Insert semicolon at end of line when completing CSS properties.
+          '';
+        };
+        triggerPropertyValueCompletion = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            By default, VS Code triggers property value completion after selecting a CSS property.
+            Use this setting to disable this behavior.
+          '';
+        };
+      };
+      triggerPropertyValueCompletion = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          A list of relative file paths pointing to JSON files following the custom data format.
+          VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
+          The file paths are relative to workspace and only workspace folder settings are considered.
+        '';
+      };
+      hover = {
+        documentation = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show tag and attribute documentation in LESS hovers.
+          '';
+        };
+        references = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show references to MDN in LESS hovers.
+          '';
+        };
+      };
+      lint = {
+        argumentsInColorFunction = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Invalid number of parameters.
+          '';
+        };
+        boxModel = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use `width` or `height` when using `padding` or `border`.
+          '';
+        };
+        compatibleVendorPrefixes = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
+          '';
+        };
+        duplicateProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use duplicate style definitions.
+          '';
+        };
+        emptyRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use empty rulesets.
+          '';
+        };
+        float = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `float`.
+            Floats lead to fragile LESS that is easy to break if one aspect of the layout changes.
+          '';
+        };
+        fontFaceProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            `@font-face` rule must define `src` and `font-family` properties.
+          '';
+        };
+        hexColorLength = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Hex colors must consist of three or six hex numbers.
+          '';
+        };
+        idSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
+          '';
+        };
+        ieHack = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            IE hacks are only necessary when supporting IE7 and older.
+          '';
+        };
+        important = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `!important`.
+            It is an indication that the specificity of the entire LESS has gotten out of control and needs to be refactored.
+          '';
+        };
+        importStatement = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Import statements do not load in parallel.
+          '';
+        };
+        propertyIgnoredDueToDisplay = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Property is ignored due to the display.
+            E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
+          '';
+        };
+        universalSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            The universal selector (`*`) is known to be slow.
+          '';
+        };
+        unknownAtRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown at-rule.
+          '';
+        };
+        unknownProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown property.
+          '';
+        };
+        unknownVendorSpecificProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Unknown vendor specific property.
+          '';
+        };
+        validProperties = mkOption {
+          type = listOf str;
+          default = [ ];
+          description = ''
+            A list of properties that are not validated against the `unknownProperties` rule.
+          '';
+        };
+        vendorPrefix = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            When using a vendor-specific prefix, also include the standard property.
+          '';
+        };
+        zeroUnits = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            No unit for zero needed.
+          '';
+        };
+      };
+      trace = {
+        server = mkOption {
+          type = enum [ "off" "messages" "verbose" ];
+          default = "off";
+          description = ''
+            Traces the communication between VS Code and the LESS language server.
+          '';
+        };
+      };
+      validate = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enables or disables all validations.
+        '';
+      };
+    };
+    scss = {
+      completion = {
+        completePropertyWithSemicolon = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Insert semicolon at end of line when completing CSS properties.
+          '';
+        };
+        triggerPropertyValueCompletion = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            By default, VS Code triggers property value completion after selecting a CSS property.
+            Use this setting to disable this behavior.
+          '';
+        };
+      };
+      triggerPropertyValueCompletion = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          A list of relative file paths pointing to JSON files following the custom data format.
+          VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
+          The file paths are relative to workspace and only workspace folder settings are considered.
+        '';
+      };
+      hover = {
+        documentation = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show tag and attribute documentation in SCSS hovers.
+          '';
+        };
+        references = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show references to MDN in SCSS hovers.
+          '';
+        };
+      };
+      lint = {
+        argumentsInColorFunction = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Invalid number of parameters.
+          '';
+        };
+        boxModel = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use `width` or `height` when using `padding` or `border`.
+          '';
+        };
+        compatibleVendorPrefixes = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
+          '';
+        };
+        duplicateProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use duplicate style definitions.
+          '';
+        };
+        emptyRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Do not use empty rulesets.
+          '';
+        };
+        float = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `float`.
+            Floats lead to fragile SCSS that is easy to break if one aspect of the layout changes.
+          '';
+        };
+        fontFaceProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            `@font-face` rule must define `src` and `font-family` properties.
+          '';
+        };
+        hexColorLength = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "error";
+          description = ''
+            Hex colors must consist of three or six hex numbers.
+          '';
+        };
+        idSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
+          '';
+        };
+        ieHack = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            IE hacks are only necessary when supporting IE7 and older.
+          '';
+        };
+        important = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Avoid using `!important`.
+            It is an indication that the specificity of the entire SCSS has gotten out of control and needs to be refactored.
+          '';
+        };
+        importStatement = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Import statements do not load in parallel.
+          '';
+        };
+        propertyIgnoredDueToDisplay = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Property is ignored due to the display.
+            E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
+          '';
+        };
+        universalSelector = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            The universal selector (`*`) is known to be slow.
+          '';
+        };
+        unknownAtRules = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown at-rule.
+          '';
+        };
+        unknownProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            Unknown property.
+          '';
+        };
+        unknownVendorSpecificProperties = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            Unknown vendor specific property.
+          '';
+        };
+        validProperties = mkOption {
+          type = listOf str;
+          default = [ ];
+          description = ''
+            A list of properties that are not validated against the `unknownProperties` rule.
+          '';
+        };
+        vendorPrefix = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "warning";
+          description = ''
+            When using a vendor-specific prefix, also include the standard property.
+          '';
+        };
+        zeroUnits = mkOption {
+          type = enum [ "ignore" "warning" "error" ];
+          default = "ignore";
+          description = ''
+            No unit for zero needed.
+          '';
+        };
+      };
+      trace = {
+        server = mkOption {
+          type = enum [ "off" "messages" "verbose" ];
+          default = "off";
+          description = ''
+            Traces the communication between VS Code and the SCSS language server.
+          '';
+        };
+      };
+      validate = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enables or disables all validations.
+        '';
+      };
+    };
+    extensions = {
+      autoCheckUpdates = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled, automatically checks extensions for updates.
+          If an extension has an update, it is marked as outdated in the Extensions view. The updates are fetched from a Microsoft online service.
+        '';
+      };
+      autoUpdate = mkOption {
+        type = enum [ true false "onlyEnabledExtensions" ];
+        default = true;
+        description = ''
+          Controls the automatic update behavior of extensions. The updates are fetched from a Microsoft online service.
+            - true: Download and install updates automatically for all extensions.
+            - onlyEnabledExtensions: Download and install updates automatically only for enabled extensions. Disabled extensions will not be updated automatically.
+            - false: Extensions are not automatically updated.
+        '';
+      };
+      closeExtensionDetailsOnViewChange = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled, editors with extension details will be automatically closed upon navigating away from the Extensions View.
+        '';
+      };
+      confirmedUriHandlerExtensionIds = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          When an extension is listed here, a confirmation prompt will not be shown when that extension handles a URI.
+        '';
+      };
+      ignoreRecommendations = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled, the notifications for extension recommendations will not be shown.
+        '';
+      };
+      supportUntrustedWorkspaces = mkOption {
+        type = attrsOf bool;
+        default = { };
+        description = ''
+          Override the untrusted workspace support of an extension.
+          Extensions using `true` will always be enabled.
+          Extensions using `limited` will always be enabled, and the extension will hide functionality that requires trust.
+          Extensions using `false` will only be enabled only when the workspace is trusted.
+        '';
+      };
+      supportVirtualWorkspaces = mkOption {
+        type = attrsOf bool;
+        default = { "pub.name" = false; };
+        description = ''
+          Override the virtual workspaces support of an extension.
+        '';
+      };
+    };
+    output = {
+      smartScroll = {
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable the ability of smart scrolling in the output view.
+            Smart scrolling allows you to lock scrolling automatically when you click in the output view and unlocks when you click in the last line.
+          '';
+        };
+      };
+    };
+    settingsSync = {
+      ignoredExtensions = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          List of extensions to be ignored while synchronizing.
+          The identifier of an extension is always `$\{publisher}.$\{name}`. For example: `vscode.csharp`.
+        '';
+      };
+      ignoredSettings = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          Configure settings to be ignored while synchronizing.
+        '';
+      };
+      keybindingsPerPlatform = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Synchronize keybindings for each platform.
+        '';
+      };
+    };
   };
 }
 
-/* // TypeScript
-        // Enable/disable automatic closing of JSX tags.
-        "typescript.autoClosingTags": true,
-
-        // Check if npm is installed for Automatic Type Acquisition.
-        "typescript.check.npmIsInstalled": true,
-
-        // Disables automatic type acquisition. Automatic type acquisition fetches `@types` packages from npm to improve IntelliSense for external libraries.
-        "typescript.disableAutomaticTypeAcquisition": false,
-
-        // Enables prompting of users to use the TypeScript version configured in the workspace for Intellisense.
-        "typescript.enablePromptUseWorkspaceTsdk": false,
-
-        // Enable/disable default TypeScript formatter.
-        "typescript.format.enable": true,
-
-        // Defines space handling after a comma delimiter.
-        "typescript.format.insertSpaceAfterCommaDelimiter": true,
-
-        // Defines space handling after the constructor keyword.
-        "typescript.format.insertSpaceAfterConstructor": false,
-
-        // Defines space handling after function keyword for anonymous functions.
-        "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
-
-        // Defines space handling after keywords in a control flow statement.
-        "typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
-
-        // Defines space handling after opening and before closing empty braces.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
-
-        // Defines space handling after opening and before closing JSX expression braces.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
-
-        // Defines space handling after opening and before closing non-empty braces.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-
-        // Defines space handling after opening and before closing non-empty brackets.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
-
-        // Defines space handling after opening and before closing non-empty parenthesis.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-
-        // Defines space handling after opening and before closing template string braces.
-        "typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
-
-        // Defines space handling after a semicolon in a for statement.
-        "typescript.format.insertSpaceAfterSemicolonInForStatements": true,
-
-        // Defines space handling after type assertions in TypeScript.
-        "typescript.format.insertSpaceAfterTypeAssertion": false,
-
-        // Defines space handling after a binary operator.
-        "typescript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
-
-        // Defines space handling before function argument parentheses.
-        "typescript.format.insertSpaceBeforeFunctionParenthesis": false,
-
-        // Defines whether an open brace is put onto a new line for control blocks or not.
-        "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
-
-        // Defines whether an open brace is put onto a new line for functions or not.
-        "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
-
-        // Defines handling of optional semicolons. Requires using TypeScript 3.7 or newer in the workspace.
-        //  - ignore: Don't insert or remove any semicolons.
-        //  - insert: Insert semicolons at statement ends.
-        //  - remove: Remove unnecessary semicolons.
-        "typescript.format.semicolons": "ignore",
-
-        // Enable/disable implementations CodeLens. This CodeLens shows the implementers of an interface.
-        "typescript.implementationsCodeLens.enabled": false,
-
-        // Sets the locale used to report JavaScript and TypeScript errors. Default of `null` uses VS Code's locale.
-        "typescript.locale": null,
-
-        // Specifies the path to the npm executable used for Automatic Type Acquisition.
-        "typescript.npm": null,
-
-        // Preferred path style for auto imports.
-        //  - shortest: Prefers a non-relative import only if one is available that has fewer path segments than a relative import.
-        //  - relative: Prefers a relative path to the imported file location.
-        //  - non-relative: Prefers a non-relative import based on the `baseUrl` or `paths` configured in your `jsconfig.json` / `tsconfig.json`.
-        //  - project-relative: Prefers a non-relative import only if the relative import path would leave the package or project directory. Requires using TypeScript 4.2+ in the workspace.
-        "typescript.preferences.importModuleSpecifier": "shortest",
-
-        // Preferred path ending for auto imports.
-        //  - auto: Use project settings to select a default.
-        //  - minimal: Shorten `./component/index.js` to `./component`.
-        //  - index: Shorten `./component/index.js` to `./component/index`.
-        //  - js: Do not shorten path endings; include the `.js` extension.
-        "typescript.preferences.importModuleSpecifierEnding": "auto",
-
-        // Enable/disable searching `package.json` dependencies for available auto imports.
-        //  - auto: Search dependencies based on estimated performance impact.
-        //  - on: Always search dependencies.
-        //  - off: Never search dependencies.
-        "typescript.preferences.includePackageJsonAutoImports": "auto",
-
-        // Preferred quote style to use for quick fixes: `single` quotes, `double` quotes, or `auto` infer quote type from existing imports.
-        "typescript.preferences.quoteStyle": "auto",
-
-        // Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
-        "typescript.preferences.useAliasesForRenames": true,
-
-        // Enable/disable references CodeLens in TypeScript files.
-        "typescript.referencesCodeLens.enabled": false,
-
-        // Enable/disable references CodeLens on all functions in TypeScript files.
-        "typescript.referencesCodeLens.showOnAllFunctions": false,
-
-        // Report style checks as warnings.
-        "typescript.reportStyleChecksAsWarnings": true,
-
-        // Enable/disable auto import suggestions.
-        "typescript.suggest.autoImports": true,
-
-        // Complete functions with their parameter signature.
-        "typescript.suggest.completeFunctionCalls": false,
-
-        // Enable/disable suggestion to complete JSDoc comments.
-        "typescript.suggest.completeJSDocs": true,
-
-        // Enabled/disable autocomplete suggestions.
-        "typescript.suggest.enabled": true,
-
-        // Enable/disable showing completions on potentially undefined values that insert an optional chain call. Requires TS 3.7+ and strict null checks to be enabled.
-        "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
-
-        // Enable/disable auto-import-style completions on partially-typed import statements. Requires using TypeScript 4.3+ in the workspace.
-        "typescript.suggest.includeCompletionsForImportStatements": true,
-
-        // Enable/disable snippet completions from TS Server. Requires using TypeScript 4.3+ in the workspace.
-        "typescript.suggest.includeCompletionsWithSnippetText": true,
-
-        // Enable/disable generating `@return` annotations for JSDoc templates. Requires using TypeScript 4.2+ in the workspace.
-        "typescript.suggest.jsdoc.generateReturns": true,
-
-        // Enable/disable suggestions for paths in import statements and require calls.
-        "typescript.suggest.paths": true,
-
-        // Enable/disable suggestion diagnostics for TypeScript files in the editor.
-        "typescript.suggestionActions.enabled": true,
-
-        // Controls auto detection of tsc tasks.
-        //  - on: Create both build and watch tasks.
-        //  - off: Disable this feature.
-        //  - build: Only create single run compile tasks.
-        //  - watch: Only create compile and watch tasks.
-        "typescript.tsc.autoDetect": "on",
-
-        // Specifies the folder path to the tsserver and `lib*.d.ts` files under a TypeScript install to use for IntelliSense, for example: `./node_modules/typescript/lib`.
-        // - When specified as a user setting, the TypeScript version from `typescript.tsdk` automatically replaces the built-in TypeScript version.
-        // - When specified as a workspace setting, `typescript.tsdk` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
-        "typescript.tsdk": null,
-
-        // Enables tracing TS server performance to a directory. These trace files can be used to diagnose TS Server performance issues. The log may contain file paths, source code, and other potentially sensitive information from your project.
-        "typescript.tsserver.enableTracing": false,
-
-        // Enables logging of the TS server to a file. This log can be used to diagnose TS Server issues. The log may contain file paths, source code, and other potentially sensitive information from your project.
-        "typescript.tsserver.log": "off",
-
-        // The maximum amount of memory (in MB) to allocate to the TypeScript server process.
-        "typescript.tsserver.maxTsServerMemory": 3072,
-
-        // Additional paths to discover TypeScript Language Service plugins.
-        "typescript.tsserver.pluginPaths": [],
-
-        // Enables tracing of messages sent to the TS server. This trace can be used to diagnose TS Server issues. The trace may contain file paths, source code, and other potentially sensitive information from your project.
-        "typescript.tsserver.trace": "off",
-
-        // Enable/disable spawning a separate TypeScript server that can more quickly respond to syntax related operations, such as calculating folding or computing document symbols. Requires using TypeScript 3.4.0 or newer in the workspace.
-        "typescript.tsserver.useSeparateSyntaxServer": true,
-
-        // Configure which watching strategies should be used to keep track of files and directories. Requires using TypeScript 3.8+ in the workspace.
-        "typescript.tsserver.watchOptions": {},
-
-        // Enable/disable automatic updating of import paths when you rename or move a file in VS Code.
-        //  - prompt: Prompt on each rename.
-        //  - always: Always update paths automatically.
-        //  - never: Never rename paths and don't prompt.
-        "typescript.updateImportsOnFileMove.enabled": "prompt",
-
-        // Enable/disable TypeScript validation.
-        "typescript.validate.enable": true,
-
-        // Controls which files are searched by go to symbol in workspace.
-        //  - allOpenProjects: Search all open JavaScript or TypeScript projects for symbols. Requires using TypeScript 3.9 or newer in the workspace.
-        //  - currentProject: Only search for symbols in the current JavaScript or TypeScript project.
-        "typescript.workspaceSymbols.scope": "allOpenProjects",
-
-        // CSS
-
-        // Insert semicolon at end of line when completing CSS properties.
-        "css.completion.completePropertyWithSemicolon": true,
-
-        // By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-        "css.completion.triggerPropertyValueCompletion": true,
-
-        // A list of relative file paths pointing to JSON files following the custom data format.
-        // VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
-        // The file paths are relative to workspace and only workspace folder settings are considered.
-        "css.customData": [],
-
-        // Show tag and attribute documentation in CSS hovers.
-        "css.hover.documentation": true,
-
-        // Show references to MDN in CSS hovers.
-        "css.hover.references": true,
-
-        // Invalid number of parameters.
-        "css.lint.argumentsInColorFunction": "error",
-
-        // Do not use `width` or `height` when using `padding` or `border`.
-        "css.lint.boxModel": "ignore",
-
-        // When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-        "css.lint.compatibleVendorPrefixes": "ignore",
-
-        // Do not use duplicate style definitions.
-        "css.lint.duplicateProperties": "ignore",
-
-        // Do not use empty rulesets.
-        "css.lint.emptyRules": "warning",
-
-        // Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-        "css.lint.float": "ignore",
-
-        // `@font-face` rule must define `src` and `font-family` properties.
-        "css.lint.fontFaceProperties": "warning",
-
-        // Hex colors must consist of three or six hex numbers.
-        "css.lint.hexColorLength": "error",
-
-        // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-        "css.lint.idSelector": "ignore",
-
-        // IE hacks are only necessary when supporting IE7 and older.
-        "css.lint.ieHack": "ignore",
-
-        // Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-        "css.lint.important": "ignore",
-
-        // Import statements do not load in parallel.
-        "css.lint.importStatement": "ignore",
-
-        // Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-        "css.lint.propertyIgnoredDueToDisplay": "warning",
-
-        // The universal selector (`*`) is known to be slow.
-        "css.lint.universalSelector": "ignore",
-
-        // Unknown at-rule.
-        "css.lint.unknownAtRules": "warning",
-
-        // Unknown property.
-        "css.lint.unknownProperties": "warning",
-
-        // Unknown vendor specific property.
-        "css.lint.unknownVendorSpecificProperties": "ignore",
-
-        // A list of properties that are not validated against the `unknownProperties` rule.
-        "css.lint.validProperties": [],
-
-        // When using a vendor-specific prefix, also include the standard property.
-        "css.lint.vendorPrefix": "warning",
-
-        // No unit for zero needed.
-        "css.lint.zeroUnits": "ignore",
-
-        // Traces the communication between VS Code and the CSS language server.
-        "css.trace.server": "off",
-
-        // Enables or disables all validations.
-        "css.validate": true,
-
-      // LESS
-
-        // Insert semicolon at end of line when completing CSS properties.
-        "less.completion.completePropertyWithSemicolon": true,
-
-        // By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-        "less.completion.triggerPropertyValueCompletion": true,
-
-        // Show tag and attribute documentation in LESS hovers.
-        "less.hover.documentation": true,
-
-        // Show references to MDN in LESS hovers.
-        "less.hover.references": true,
-
-        // Invalid number of parameters.
-        "less.lint.argumentsInColorFunction": "error",
-
-        // Do not use `width` or `height` when using `padding` or `border`.
-        "less.lint.boxModel": "ignore",
-
-        // When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-        "less.lint.compatibleVendorPrefixes": "ignore",
-
-        // Do not use duplicate style definitions.
-        "less.lint.duplicateProperties": "ignore",
-
-        // Do not use empty rulesets.
-        "less.lint.emptyRules": "warning",
-
-        // Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-        "less.lint.float": "ignore",
-
-        // `@font-face` rule must define `src` and `font-family` properties.
-        "less.lint.fontFaceProperties": "warning",
-
-        // Hex colors must consist of three or six hex numbers.
-        "less.lint.hexColorLength": "error",
-
-        // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-        "less.lint.idSelector": "ignore",
-
-        // IE hacks are only necessary when supporting IE7 and older.
-        "less.lint.ieHack": "ignore",
-
-        // Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-        "less.lint.important": "ignore",
-
-        // Import statements do not load in parallel.
-        "less.lint.importStatement": "ignore",
-
-        // Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-        "less.lint.propertyIgnoredDueToDisplay": "warning",
-
-        // The universal selector (`*`) is known to be slow.
-        "less.lint.universalSelector": "ignore",
-
-        // Unknown at-rule.
-        "less.lint.unknownAtRules": "warning",
-
-        // Unknown property.
-        "less.lint.unknownProperties": "warning",
-
-        // Unknown vendor specific property.
-        "less.lint.unknownVendorSpecificProperties": "ignore",
-
-        // A list of properties that are not validated against the `unknownProperties` rule.
-        "less.lint.validProperties": [],
-
-        // When using a vendor-specific prefix, also include the standard property.
-        "less.lint.vendorPrefix": "warning",
-
-        // No unit for zero needed.
-        "less.lint.zeroUnits": "ignore",
-
-        // Enables or disables all validations.
-        "less.validate": true,
-
-        // SCSS (Sass)
-
-        // Insert semicolon at end of line when completing CSS properties.
-        "scss.completion.completePropertyWithSemicolon": true,
-
-        // By default, VS Code triggers property value completion after selecting a CSS property. Use this setting to disable this behavior.
-        "scss.completion.triggerPropertyValueCompletion": true,
-
-        // Show tag and attribute documentation in SCSS hovers.
-        "scss.hover.documentation": true,
-
-        // Show references to MDN in SCSS hovers.
-        "scss.hover.references": true,
-
-        // Invalid number of parameters.
-        "scss.lint.argumentsInColorFunction": "error",
-
-        // Do not use `width` or `height` when using `padding` or `border`.
-        "scss.lint.boxModel": "ignore",
-
-        // When using a vendor-specific prefix make sure to also include all other vendor-specific properties.
-        "scss.lint.compatibleVendorPrefixes": "ignore",
-
-        // Do not use duplicate style definitions.
-        "scss.lint.duplicateProperties": "ignore",
-
-        // Do not use empty rulesets.
-        "scss.lint.emptyRules": "warning",
-
-        // Avoid using `float`. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-        "scss.lint.float": "ignore",
-
-        // `@font-face` rule must define `src` and `font-family` properties.
-        "scss.lint.fontFaceProperties": "warning",
-
-        // Hex colors must consist of three or six hex numbers.
-        "scss.lint.hexColorLength": "error",
-
-        // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-        "scss.lint.idSelector": "ignore",
-
-        // IE hacks are only necessary when supporting IE7 and older.
-        "scss.lint.ieHack": "ignore",
-
-        // Avoid using `!important`. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-        "scss.lint.important": "ignore",
-
-        // Import statements do not load in parallel.
-        "scss.lint.importStatement": "ignore",
-
-        // Property is ignored due to the display. E.g. with `display: inline`, the `width`, `height`, `margin-top`, `margin-bottom`, and `float` properties have no effect.
-        "scss.lint.propertyIgnoredDueToDisplay": "warning",
-
-        // The universal selector (`*`) is known to be slow.
-        "scss.lint.universalSelector": "ignore",
-
-        // Unknown at-rule.
-        "scss.lint.unknownAtRules": "warning",
-
-        // Unknown property.
-        "scss.lint.unknownProperties": "warning",
-
-        // Unknown vendor specific property.
-        "scss.lint.unknownVendorSpecificProperties": "ignore",
-
-        // A list of properties that are not validated against the `unknownProperties` rule.
-        "scss.lint.validProperties": [],
-
-        // When using a vendor-specific prefix, also include the standard property.
-        "scss.lint.vendorPrefix": "warning",
-
-        // No unit for zero needed.
-        "scss.lint.zeroUnits": "ignore",
-
-        // Enables or disables all validations.
-        "scss.validate": true,
-
-        // Extensions
-
-        // When enabled, automatically checks extensions for updates. If an extension has an update, it is marked as outdated in the Extensions view. The updates are fetched from a Microsoft online service.
-        "extensions.autoCheckUpdates": true,
-
-        // Controls the automatic update behavior of extensions. The updates are fetched from a Microsoft online service.
-        //  - true: Download and install updates automatically for all extensions.
-        //  - onlyEnabledExtensions: Download and install updates automatically only for enabled extensions. Disabled extensions will not be updated automatically.
-        //  - false: Extensions are not automatically updated.
-        "extensions.autoUpdate": true,
-
-        // When enabled, editors with extension details will be automatically closed upon navigating away from the Extensions View.
-        "extensions.closeExtensionDetailsOnViewChange": false,
-
-        // When an extension is listed here, a confirmation prompt will not be shown when that extension handles a URI.
-        "extensions.confirmedUriHandlerExtensionIds": [],
-
-        // When enabled, the notifications for extension recommendations will not be shown.
-        "extensions.ignoreRecommendations": false,
-
-        // Override the untrusted workspace support of an extension. Extensions using `true` will always be enabled. Extensions using `limited` will always be enabled, and the extension will hide functionality that requires trust. Extensions using `false` will only be enabled only when the workspace is trusted.
-        "extensions.supportUntrustedWorkspaces": {},
-
-        // Override the virtual workspaces support of an extension.
-        "extensions.supportVirtualWorkspaces": {
-          "pub.name": false
-        },
-
-        // Output
-
-        // Enable/disable the ability of smart scrolling in the output view. Smart scrolling allows you to lock scrolling automatically when you click in the output view and unlocks when you click in the last line.
-        "output.smartScroll.enabled": true,
-
-        // Settings Sync
-
-        // List of extensions to be ignored while synchronizing. The identifier of an extension is always `${publisher}.${name}`. For example: `vscode.csharp`.
-        "settingsSync.ignoredExtensions": [],
-
-        // Configure settings to be ignored while synchronizing.
-        "settingsSync.ignoredSettings": [],
-
-        // Synchronize keybindings for each platform.
-        "settingsSync.keybindingsPerPlatform": true,
-
-        // Notebooks
+/* // Notebooks
 
         // When enabled notebook breadcrumbs contain code cells.
         "notebook.breadcrumbs.showCodeCells": true,
@@ -5497,6 +6175,10 @@ with types;
         //  - onlyWithFlag: Only auto attach when the `--inspect` is given.
         //  - disabled: Auto attach is disabled and not shown in status bar.
         "debug.javascript.autoAttachFilter": "disabled",
+
+        #############
+        ## SEE BOTTOM
+        #############
 
         // Configures whether property getters will be expanded automatically. If this is false, the getter will appear as `get propertyName` and will only be evaluated when you click on it.
         "debug.javascript.autoExpandGetters": false,
