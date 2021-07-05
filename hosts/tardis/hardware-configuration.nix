@@ -5,11 +5,9 @@
 
   # Use the latest kernel
   boot = {
-
-  };
-
-  boot = {
+    consoleLogLevel = 0;
     initrd = {
+      verbose = false;
       availableKernelModules = [
         "aesni_intel"
         "cryptd"
@@ -34,6 +32,7 @@
 
       # Prevents unneccesary infor being written to stdout durring boot.
       "quiet"
+      "udev.log_priority=3"
 
       "add_efi_memmap"
       "acpi_backlight=native"
