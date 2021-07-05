@@ -40,6 +40,8 @@
       [[ -n "''${key[Control-Right]}" ]] && bindkey -- "''${key[Control-Right]}" forward-word
           '';
     integrations = {
+      # Should be moved to nix-polyglot
+      direnv = true;
       nix-index = true;
       starship = true;
       zoxide = true;
@@ -198,4 +200,5 @@
       }
     ];
   };
+  services.lorri.enable = config.programs.ZSH.integrations.direnv;
 }

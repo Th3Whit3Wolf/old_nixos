@@ -21,6 +21,7 @@ in {
     nwg-launchers
     mpv
   ];
+  
   systemd.user.sessionVariables = {
     # Wayland Settings
     _JAVA_AWT_WM_NONREPARENTING = "1";

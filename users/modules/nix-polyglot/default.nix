@@ -16,6 +16,14 @@ let
 in {
   imports = [ ./neovim.nix ./vscode ./lang ];
 
+  /*
+   * Should have strong integrations with many editors
+   * VSCODE - In Progress
+   * NVIM   - Started
+   * EMACS  - Not Started 
+   * HELIX  - Not Started 
+  */
+
   options.nix-polyglot = {
     enable = mkEnableOption "Enable nix-polyglot";
     langs = mkOption {

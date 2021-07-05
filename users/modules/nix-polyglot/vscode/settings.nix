@@ -723,8 +723,8 @@ with types;
           '';
         };
         showSlider = mkOption {
-          type = enum [ "showSlider" "always" ];
-          default = "showSlider";
+          type = enum [ "mouseover" "always" ];
+          default = "mouseover";
           description = ''
             Controls when the minimap slider is shown.
           '';
@@ -1900,8 +1900,8 @@ with types;
         };
       };
       editorAssociations = mkOption {
-        type = attrsOf str;
-        default = { };
+        type = listOf (attrsOf str);
+        default = [{ }];
         description = ''
           Configure glob patterns to editors (e.g. `"*.hex": "hexEditor.hexEdit"`). These have precedence over the default behavior.
         '';
@@ -3255,8 +3255,8 @@ with types;
         '';
       };
       openDebug = mkOption {
-        type = bool;
-        default = false;
+        type = enum [ "neverOpen" "openOnSessionStart" "openOnFirstSessionStart" "openOnDebugBreak" ];
+        default = "openOnDebugBreak";
         description = ''
           Automatically open the explorer view at the end of a debug session.
         '';
