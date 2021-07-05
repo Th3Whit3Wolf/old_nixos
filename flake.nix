@@ -6,9 +6,9 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
     latest.url = "nixpkgs";
     digga = {
-        url = "github:divnix/digga/develop";
-        inputs.nipxkgs.follows = "latest";
-      };
+      url = "github:divnix/digga/develop";
+      inputs.nipxkgs.follows = "latest";
+    };
 
     ci-agent = {
       url = "github:hercules-ci/hercules-ci-agent";
@@ -39,10 +39,10 @@
       inputs.nixpkgs.follows = "latest";
     };
 
-    naersk = {
-      url = "github:nmattia/naersk";
-      inputs.nixpkgs.follows = "latest";
-    };
+    #naersk = {
+    #  url = "github:nmattia/naersk";
+    #  inputs.nixpkgs.follows = "latest";
+    #};
 
     rust = {
       url = "github:oxalica/rust-overlay";
@@ -52,6 +52,11 @@
     pkgs = {
       url = "path:./pkgs";
       inputs.nixpkgs.follows = "nixos";
+    };
+
+    nvfetcher = {
+      url = "github:berberman/nvfetcher";
+      inputs.nixpkgs.follows = "latest";
     };
 
     #neovim-overlay = {
@@ -65,8 +70,20 @@
     #};
   };
 
-  outputs = { self, pkgs, digga, nixos, ci-agent, home, nixos-hardware, nur
-    , agenix, rust, ... }@inputs:
+  outputs = { 
+    self,
+    pkgs, 
+    digga, 
+    nixos, 
+    ci-agent, 
+    home, 
+    nixos-hardware, 
+    nur,
+    agenix,
+    nvfetcher,
+    rust, 
+    ...
+    }@inputs:
     digga.lib.mkFlake {
       inherit self inputs;
 
@@ -81,6 +98,7 @@
             nur.overlay
             agenix.overlay
             rust.overlay
+            nvfetcher.overlay
           ];
         };
         latest = { };
@@ -90,7 +108,10 @@
 
       sharedOverlays = [
         (final: prev: {
-          lib = prev.lib.extend (lfinal: lprev: { our = self.lib; });
+          __dontExport = true;
+          lib = prev.lib.extend (lfinal: lprev: {
+            our = self.lib;
+          });
         })
       ];
 
@@ -98,9 +119,9 @@
         hostDefaults = {
           system = "x86_64-linux";
           channelName = "nixos";
-          modules = ./modules/module-list.nix;
+          imports = [ (digga.lib.importers.modules ./modules) ];
           externalModules = [
-            { _module.args.ourLib = self.lib; }
+            { lib.our = self.lib; }
             ci-agent.nixosModules.agent-profile
             home.nixosModules.home-manager
             agenix.nixosModules.age
@@ -128,7 +149,7 @@
       };
 
       home = {
-        modules = ./users/modules/module-list.nix;
+        imports = [ (digga.lib.importers.modules ./users/modules) ];
         externalModules = [ "${inputs.impermanence}/home-manager.nix" ];
         importables = rec {
           profiles = digga.lib.importers.rakeLeaves ./users/profiles;
@@ -144,8 +165,16 @@
         };
       };
 
-      devshell.externalModules = { pkgs, ... }: { packages = [ pkgs.agenix ]; };
-
+      devshell.externalModules = { pkgs, ... }: {
+        commands = [
+          { package = pkgs.agenix; category = "secrets"; }
+          {
+            name = pkgs.nvfetcher-bin.pname;
+            help = pkgs.nvfetcher-bin.meta.description;
+            command = "cd $DEVSHELL_ROOT/pkgs; ${pkgs.nvfetcher-bin}/bin/nvfetcher -c ./sources.toml --no-output $@; nixpkgs-fmt _sources/";
+          }
+        ];
+      };
       homeConfigurations =
         digga.lib.mkHomeConfigurations self.nixosConfigurations;
 
