@@ -5,7 +5,10 @@
     nixos.url = "nixpkgs/nixos-21.05";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     latest.url = "nixpkgs";
-    digga.url = "github:divnix/digga/develop";
+    digga = {
+        url = "github:divnix/digga/develop";
+        inputs.nipxkgs.follows = "latest";
+      };
 
     ci-agent = {
       url = "github:hercules-ci/hercules-ci-agent";
