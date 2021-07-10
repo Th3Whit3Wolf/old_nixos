@@ -58,7 +58,7 @@
     "/" = {
       device = "tmpfs";
       fsType = "tmpfs";
-      options = [ "defaults" "size=2G" "mode=755" "nodev" "nosuid" "noexec" ];
+      options = [ "defaults" "size=8G" "mode=755" "nodev" "nosuid" "noexec" ];
     };
 
     "/nix" = {
