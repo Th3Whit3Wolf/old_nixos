@@ -58,6 +58,7 @@
     "/" = {
       device = "tmpfs";
       fsType = "tmpfs";
+      # Note: insufficient size may cause nixos-rebuild to fail (nixos builds on /tmp)
       options = [ "defaults" "size=8G" "mode=755" "nodev" "nosuid" "noexec" ];
     };
 
