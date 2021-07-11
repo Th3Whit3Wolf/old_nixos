@@ -50,3 +50,7 @@ in {
   };
   config = mkIf cfg.enable { home.packages = nix-polyglot.packages; };
 }
+
+/* 
+  "dashboard.projectData": null
+*/
