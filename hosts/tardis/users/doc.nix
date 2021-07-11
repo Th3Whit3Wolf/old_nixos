@@ -48,6 +48,8 @@ in {
         river
         firefox-wayland
         brightnessctl
+        nvfetcher-bin
+        nixpkgs-fmt
       ] ++ themePackages;
   };
 
