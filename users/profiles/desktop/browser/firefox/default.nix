@@ -1,35 +1,38 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-let inherit (config.home) homeDirectory username;
+let 
+  inherit (config.home) homeDirectory username;
+  ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
+    auto-tab-discard
+    bitwarden
+    canvasblocker
+    clearurls
+    darkreader
+    fraidycat
+    i-dont-care-about-cookies
+    lastpass-password-manager
+    netflix-1080p
+    octotree
+    refined-github
+    tabcenter-reborn
+    temporary-containers
+    terms-of-service-didnt-read
+    ublock-origin
+    unpaywall
+  ];
 in
+
+
 {
   home.persistence."/persist/${homeDirectory}".directories =
     mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
       [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
-    extensions = with pkgs.nur.repos; [
+    extensions =  [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
-      #ijohanne.firefoxPlugins.lastpass-password-manager
-      rycee.firefox-addons.auto-tab-discard
-      rycee.firefox-addons.bitwarden
-      rycee.firefox-addons.canvasblocker
-      rycee.firefox-addons.clearurls
-      rycee.firefox-addons.darkreader
-      rycee.firefox-addons.fraidycat
-      rycee.firefox-addons.i-dont-care-about-cookies
-      rycee.firefox-addons.lastpass-password-manager
-      rycee.firefox-addons.netflix-1080p
-      rycee.firefox-addons.octotree
-      rycee.firefox-addons.reddit-enhancement-suite
-      rycee.firefox-addons.refined-github
-      rycee.firefox-addons.tabcenter-reborn
-      rycee.firefox-addons.temporary-containers
-      rycee.firefox-addons.terms-of-service-didnt-read
-      rycee.firefox-addons.ublock-origin
-      rycee.firefox-addons.unpaywall
-    ];
+    ] ++ ryceeAddons;
     profiles.${username} = {
       settings = {
         "devtools.theme" = "dark";
