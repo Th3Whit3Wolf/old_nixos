@@ -18,11 +18,13 @@ let
       (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir)
     else
       (builtins.substring (builtins.stringLength homeDirectory)
-        (builtins.stringLength xdgDir) xdgDir);
-  data = if config.xdg.enable then
-    (relToHome config.xdg.dataHome)
-  else
-    ".local/share";
+        (builtins.stringLength xdgDir)
+        xdgDir);
+  data =
+    if config.xdg.enable then
+      (relToHome config.xdg.dataHome)
+    else
+      ".local/share";
 
   rust-stable = pkgs.rust-bin.stable.latest.default.override {
     extensions =
@@ -126,7 +128,8 @@ let
     };
   };
 
-in {
+in
+{
   options.nix-polyglot.lang.rust = {
     enable = mkOption {
       type = types.bool;

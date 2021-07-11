@@ -16,42 +16,49 @@ let
       (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir)
     else
       (builtins.substring (builtins.stringLength homeDirectory)
-        (builtins.stringLength xdgDir) xdgDir);
+        (builtins.stringLength xdgDir)
+        xdgDir);
 
   conf = if xdg.enable then (relToHome xdg.configHome) else ".config";
   cache = if xdg.enable then (relToHome xdg.cacheHome) else ".cache";
   data = if xdg.enable then (relToHome xdg.dataHome) else ".local/share";
   desktop =
     if xdg.userDirs.enable then (relToHome xdg.userDirs.desktop) else "Desktop";
-  documents = if xdg.userDirs.enable then
-    (relToHome xdg.userDirs.documents)
-  else
-    "Documents";
-  download = if xdg.userDirs.enable then
-    (relToHome xdg.userDirs.download)
-  else
-    "Downloads";
+  documents =
+    if xdg.userDirs.enable then
+      (relToHome xdg.userDirs.documents)
+    else
+      "Documents";
+  download =
+    if xdg.userDirs.enable then
+      (relToHome xdg.userDirs.download)
+    else
+      "Downloads";
   music =
     if xdg.userDirs.enable then (relToHome xdg.userDirs.music) else "Music";
-  pictures = if xdg.userDirs.enable then
-    (relToHome xdg.userDirs.pictures)
-  else
-    "Pictures";
-  publicShare = if xdg.userDirs.enable then
-    (relToHome xdg.userDirs.publicShare)
-  else
-    "Public";
-  templates = if xdg.userDirs.enable then
-    (relToHome xdg.userDirs.templates)
-  else
-    "Templates";
+  pictures =
+    if xdg.userDirs.enable then
+      (relToHome xdg.userDirs.pictures)
+    else
+      "Pictures";
+  publicShare =
+    if xdg.userDirs.enable then
+      (relToHome xdg.userDirs.publicShare)
+    else
+      "Public";
+  templates =
+    if xdg.userDirs.enable then
+      (relToHome xdg.userDirs.templates)
+    else
+      "Templates";
   videos =
     if xdg.userDirs.enable then (relToHome xdg.userDirs.videos) else "Videos";
-  extraUserDirs = if xdg.userDirs.enable then
-    (attrsets.mapAttrsToList (name: value: relToHome "${value}")
-      xdg.userDirs.extraConfig)
-  else
-    [ ];
+  extraUserDirs =
+    if xdg.userDirs.enable then
+      (attrsets.mapAttrsToList (name: value: relToHome "${value}")
+        xdg.userDirs.extraConfig)
+    else
+      [ ];
 
   vscodePname = npg.vscode.package.pname;
   vscodeConfigDir = {
@@ -65,7 +72,8 @@ let
     "vscodium" = ".vscode-oss";
   }.${vscodePname};
 
-in {
+in
+{
   home.persistence."/persist/${homeDirectory}" = {
     allowOther = true;
     directories = [

@@ -38,7 +38,7 @@
       [[ -n "''${key[Shift-Tab]}"     ]] && bindkey -- "''${key[Shift-Tab]}"     reverse-menu-complete
       [[ -n "''${key[Control-Left]}"  ]] && bindkey -- "''${key[Control-Left]}"  backward-word
       [[ -n "''${key[Control-Right]}" ]] && bindkey -- "''${key[Control-Right]}" forward-word
-          '';
+    '';
     integrations = {
       # Should be moved to nix-polyglot
       direnv = true;
@@ -186,17 +186,17 @@
       {
         name = "up";
         text = ''
-                  local d=""
-                  limit=$1
-                  for ((i=1 ; i <= limit ; i++)); do
-                    d=$d/..
-          				done
-          				d=$(echo $d | sed 's/^\///')
-          				if [[ -z "$d" ]]; then
-          					d=..
-          				fi
-          				cd $d
-                  '';
+          local d=""
+          limit=$1
+          for ((i=1 ; i <= limit ; i++)); do
+            d=$d/..
+          done
+          d=$(echo $d | sed 's/^\///')
+          if [[ -z "$d" ]]; then
+            d=..
+          fi
+          cd $d
+        '';
       }
     ];
   };

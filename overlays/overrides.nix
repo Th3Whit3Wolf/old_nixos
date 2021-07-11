@@ -3,16 +3,16 @@ channels: final: prev: {
   __dontExport = true; # overrides clutter up actual creations
 
   inherit (channels.latest)
-    cachix 
-    dhall 
-    nixUnstable 
-    rage 
+    cachix
+    dhall
+    nixUnstable
+    rage
     nixpkgs-fmt
     starship
     #sway
     #river
     #mesa
-  ;
+    ;
 
   haskellPackages = prev.haskellPackages.override
     (old: {

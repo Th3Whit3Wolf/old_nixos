@@ -3,7 +3,8 @@ let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
 
-in {
+in
+{
   imports = [ ./doc.nix ];
 
   users.users.root.initialHashedPassword = fileContents ../secrets/root;

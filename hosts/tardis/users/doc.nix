@@ -6,7 +6,8 @@ let
   theme = config.home-manager.users.${user}.home.theme;
   themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
   homey = config.home-manager.users.${user}.home.homeDirectory;
-in {
+in
+{
   imports = [
     (lib.mkAliasOptionModule [ "${user}" ] [ "home-manager" "users" "${user}" ])
   ];

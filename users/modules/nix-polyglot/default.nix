@@ -13,15 +13,16 @@ let
 
   polyglotPackages = with pkgs; [ git-ignore licensor just dotenv-linter ];
 
-in {
+in
+{
   imports = [ ./neovim.nix ./vscode ./lang ];
 
   /*
-   * Should have strong integrations with many editors
-   * VSCODE - In Progress
-   * NVIM   - Started
-   * EMACS  - Not Started 
-   * HELIX  - Not Started 
+    * Should have strong integrations with many editors
+    * VSCODE - In Progress
+    * NVIM   - Started
+    * EMACS  - Not Started 
+    * HELIX  - Not Started 
   */
 
   options.nix-polyglot = {

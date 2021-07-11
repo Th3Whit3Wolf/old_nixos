@@ -16,53 +16,57 @@ let
       (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir)
     else
       (builtins.substring (builtins.stringLength homeDirectory)
-        (builtins.stringLength xdgDir) xdgDir);
+        (builtins.stringLength xdgDir)
+        xdgDir);
   cache =
     if config.xdg.enable then (relToHome config.xdg.cacheHome) else ".cache";
-  data = if config.xdg.enable then
-    (relToHome config.xdg.dataHome)
-  else
-    ".local/share";
-
-  PATH = if (cfg.pathVar != [ ]) then ''
-    typeset -U PATH path
-
-    path=(${concatMapStrings (x: "\n    \"" + x + ''"'') cfg.pathVar}
-        "$path[@]"
-    )
-
-    export PATH
-  '' else
-    "";
-
-  neovimAliases = if polyglot.enableZshIntegration then ''
-    # Open lazygit commit window inside neovim
-    if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-      alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-      alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-      alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-      alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  data =
+    if config.xdg.enable then
+      (relToHome config.xdg.dataHome)
     else
-      alias vim="nvim"
-      alias vi="nvim"
-      alias v="nvim"
-    fi
-    if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-        export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    else
-        export EDITOR="nvim"
-    fi
-  '' else ''
-    # Open lazygit commit window inside neovim
-    if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-      alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    fi
-    if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-        export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    else
-        export EDITOR="nvim"
-    fi
-  '';
+      ".local/share";
+
+  PATH =
+    if (cfg.pathVar != [ ]) then ''
+      typeset -U PATH path
+
+      path=(${concatMapStrings (x: "\n    \"" + x + ''"'') cfg.pathVar}
+          "$path[@]"
+      )
+
+      export PATH
+    '' else
+      "";
+
+  neovimAliases =
+    if polyglot.enableZshIntegration then ''
+      # Open lazygit commit window inside neovim
+      if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+        alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+        alias vim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+        alias vi="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+        alias v="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+      else
+        alias vim="nvim"
+        alias vi="nvim"
+        alias v="nvim"
+      fi
+      if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+          export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+      else
+          export EDITOR="nvim"
+      fi
+    '' else ''
+      # Open lazygit commit window inside neovim
+      if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+        alias nvim="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+      fi
+      if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+          export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+      else
+          export EDITOR="nvim"
+      fi
+    '';
 
   keychainFlags = config.programs.keychain.extraFlags
     ++ optional (config.programs.keychain.agents != [ ])
@@ -121,10 +125,11 @@ let
 
       path = mkOption {
         type = types.str;
-        default = if versionAtLeast stateVersion "20.03" then
-          "$HOME/.zsh_history"
-        else
-          relToDotDir ".zsh_history";
+        default =
+          if versionAtLeast stateVersion "20.03" then
+            "$HOME/.zsh_history"
+          else
+            relToDotDir ".zsh_history";
         defaultText = literalExample ''
           "$HOME/.zsh_history" if state version ≥ 20.03,
           "$ZDOTDIR/.zsh_history" otherwise
@@ -327,7 +332,8 @@ let
     config.file = mkDefault "${config.name}.plugin.zsh";
   });
 
-in {
+in
+{
   options = {
     programs.ZSH = {
       enable = mkEnableOption "Z shell (Zsh)";
@@ -821,7 +827,7 @@ in {
 
         # Named Directory Hashes
         ${dirHashesStr}
-              '';
+      '';
     }
 
     (mkIf cfg.integrations.autojump { programs.autojump.enable = true; })
@@ -865,18 +871,22 @@ in {
     })
 
     (mkIf (cfg.sitefunctions != [ ]) {
-      home.file = foldl' (a: b: a // b) { } (map (sitefunctions: {
-        "${siteFunctionDir}/_${sitefunctions.name}".source = sitefunctions.src;
-      }) cfg.sitefunctions);
+      home.file = foldl' (a: b: a // b) { } (map
+        (sitefunctions: {
+          "${siteFunctionDir}/_${sitefunctions.name}".source = sitefunctions.src;
+        })
+        cfg.sitefunctions);
     })
     (mkIf (cfg.scripts != [ ]) {
-      home.file = foldl' (a: b: a // b) { } (map (scripts: {
-        "${scriptsDir}/${scripts.name}".text = ''
-          ${scripts.name}() {
-            ${scripts.text}
-          }
-                '';
-      }) cfg.scripts);
+      home.file = foldl' (a: b: a // b) { } (map
+        (scripts: {
+          "${scriptsDir}/${scripts.name}".text = ''
+            ${scripts.name}() {
+              ${scripts.text}
+            }
+          '';
+        })
+        cfg.scripts);
     })
   ]);
 }

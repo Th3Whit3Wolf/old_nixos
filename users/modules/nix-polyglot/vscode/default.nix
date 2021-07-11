@@ -22,63 +22,63 @@ let
       Example input:
       ```
       {
-        a = {
-          b = {
-            c = <value>;
-          };
-        };
+      a = {
+      b = {
+      c = <value>;
+      };
+      };
       }
       ```
       Example output:
       ```
       {
-        "a.b.c" = <path>;
+      "a.b.c" = <path>;
       }
       ```
-    **/
+      **/
     tree:
-      let
-        op = sum: path: val:
-          let
-            pathStr = builtins.concatStringsSep "." path; # dot-based reverse DNS notation
-            isOption = hasAttrByPath ((splitString "." pathStr) ++ [ "default" ]) options.nix-polyglot.vscode.userSettings;
-            notDefaultVal = if testing then true else attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
-          in
-          if lib.strings.isCoercibleToString val && notDefaultVal then
-          # builtins.trace "${toString val} is a path"
+    let
+      op = sum: path: val:
+        let
+          pathStr = builtins.concatStringsSep "." path; # dot-based reverse DNS notation
+          isOption = hasAttrByPath ((splitString "." pathStr) ++ [ "default" ]) options.nix-polyglot.vscode.userSettings;
+          notDefaultVal = if testing then true else attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
+        in
+        if lib.strings.isCoercibleToString val && notDefaultVal then
+        # builtins.trace "${toString val} is a path"
+          (sum // {
+            "${pathStr}" = val;
+          })
+        else if builtins.isAttrs val then
+        # builtins.trace "${builtins.toJSON val} is an attrset"
+        # recurse into that attribute set
+          if isOption && notDefaultVal then
             (sum // {
               "${pathStr}" = val;
             })
-          else if builtins.isAttrs val then
-          # builtins.trace "${builtins.toJSON val} is an attrset"
-          # recurse into that attribute set
-            if isOption && notDefaultVal then
-              (sum // {
-                "${pathStr}" = val;
-              })
-            else if ! isOption then
-              (recurse sum path val)
-            else
-              sum
+          else if ! isOption then
+            (recurse sum path val)
           else
-          # ignore that value
-          # builtins.trace "${toString path} is something else"
             sum
-        ;
+        else
+        # ignore that value
+        # builtins.trace "${toString path} is something else"
+          sum
+      ;
 
-        recurse = sum: path: val:
-          builtins.foldl'
-            (sum: key: op sum (path ++ [ key ]) val.${key})
-            sum
-            (builtins.attrNames val)
-        ;
-      in
-      recurse { } [ ] tree;
+      recurse = sum: path: val:
+        builtins.foldl'
+          (sum: key: op sum (path ++ [ key ]) val.${key})
+          sum
+          (builtins.attrNames val)
+      ;
+    in
+    recurse { } [ ] tree;
 
   mkUserSettings = ''
-  {
-    ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (flattenTree cfg.userSettings))}
-  }
+    {
+      ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (flattenTree cfg.userSettings))}
+    }
   '';
 
   vscodePname = cfg.package.pname;
@@ -94,10 +94,11 @@ let
     "vscodium" = ".vscode-oss";
   }.${vscodePname};
 
-  userDir = if pkgs.stdenv.hostPlatform.isDarwin then
-    "Library/Application Support/${configDir}/User"
-  else
-    "${config.xdg.configHome}/${configDir}/User";
+  userDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/${configDir}/User"
+    else
+      "${config.xdg.configHome}/${configDir}/User";
 
   jsonFormat = pkgs.formats.json { };
   writePrettyJSON = jsonFormat.generate;
@@ -145,7 +146,8 @@ let
     skellock.just
   ];
 
-in {
+in
+{
   imports = [ ./settings.nix ];
   options.nix-polyglot.vscode = {
     enable = mkOption {

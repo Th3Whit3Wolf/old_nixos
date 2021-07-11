@@ -7,7 +7,6 @@
         fullHostConfig = config;
       })
     ).config.system.build.isoImage;
-
     homes = (config.lib.digga.mkBuild
       ({ config, ... }: {
         home-manager.useUserPackages = lib.mkForce false;

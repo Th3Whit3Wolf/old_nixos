@@ -12,12 +12,15 @@ let
       (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir)
     else
       (builtins.substring (builtins.stringLength homeDirectory)
-        (builtins.stringLength xdgDir) xdgDir);
-  data = if config.xdg.enable then
-    (relToHome config.xdg.dataHome)
-  else
-    ".local/share";
-in {
+        (builtins.stringLength xdgDir)
+        xdgDir);
+  data =
+    if config.xdg.enable then
+      (relToHome config.xdg.dataHome)
+    else
+      ".local/share";
+in
+{
   programs.direnv = {
     enable = true;
     nix-direnv = {
@@ -27,5 +30,5 @@ in {
   };
   home.persistence."/persist/${homeDirectory}".directories =
     mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
-    [ "${data}/direnv" ];
+      [ "${data}/direnv" ];
 }

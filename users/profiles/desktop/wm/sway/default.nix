@@ -6,7 +6,8 @@ let
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   lockCommand =
     "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
-in {
+in
+{
   home.packages = with pkgs; [
     alacritty
     wofi
@@ -21,7 +22,7 @@ in {
     nwg-launchers
     mpv
   ];
-  
+
   systemd.user.sessionVariables = {
     # Wayland Settings
     _JAVA_AWT_WM_NONREPARENTING = "1";
@@ -48,10 +49,11 @@ in {
       }];
       output = {
         eDP-1 = {
-          bg = if (config.home.theme.wallpaper != null) then
-            "${config.home.theme.wallpaper} fill"
-          else
-            "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
+          bg =
+            if (config.home.theme.wallpaper != null) then
+              "${config.home.theme.wallpaper} fill"
+            else
+              "${homeDirectory}/Pics/wallpaper/flower_dark.jpg fill";
         };
       };
       left = "h";

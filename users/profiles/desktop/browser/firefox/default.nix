@@ -2,10 +2,11 @@
 
 with lib;
 let inherit (config.home) homeDirectory username;
-in {
+in
+{
   home.persistence."/persist/${homeDirectory}".directories =
     mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
-    [ ".mozilla/firefox" ];
+      [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
     extensions = with pkgs.nur.repos; [
@@ -34,7 +35,7 @@ in {
         "devtools.theme" = "dark";
 
         # Disables annoying prompt to reset firefox addons and settings
-        "browser.disableResetPrompt" = true; 
+        "browser.disableResetPrompt" = true;
         # Enable userContent.css and userChrome.css for our theme modules
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Stop creating ~/Downloads!

@@ -5,7 +5,8 @@ let
   cfp = config.programs;
   cfs = config.services;
   cfg = config.home.theme;
-in {
+in
+{
   config = mkIf (cfg.name == "Space Dark") (mkMerge [
     {
       home.theme = {

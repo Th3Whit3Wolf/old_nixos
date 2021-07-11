@@ -16,11 +16,13 @@ let
       (builtins.substring 6 (builtins.stringLength xdgDir) xdgDir)
     else
       (builtins.substring (builtins.stringLength homeDirectory)
-        (builtins.stringLength xdgDir) xdgDir);
-  data = if config.xdg.enable then
-    (relToHome config.xdg.dataHome)
-  else
-    ".local/share";
+        (builtins.stringLength xdgDir)
+        xdgDir);
+  data =
+    if config.xdg.enable then
+      (relToHome config.xdg.dataHome)
+    else
+      ".local/share";
 
   pluginWithConfigType = types.submodule {
     options = {
@@ -73,7 +75,8 @@ let
     }
   ];
 
-in {
+in
+{
   options.nix-polyglot.neovim = {
     enable = mkOption {
       type = types.bool;
@@ -113,7 +116,7 @@ in {
         packages = with pkgs; [ (cfg.package) neovim-remote tree-sitter ];
         persistence."/persist/${homeDirectory}".directories =
           mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
-          [ "${data}/nvim" ];
+            [ "${data}/nvim" ];
       };
 
       programs.neovim = {

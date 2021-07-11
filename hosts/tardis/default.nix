@@ -4,7 +4,8 @@ let
   inherit (lib) fileContents mkForce;
 
   accessToken = "github.com=" + (fileContents ./secrets/access_token);
-in {
+in
+{
   imports = [ ./users ./hardware-configuration.nix ] ++ suites.tardis;
 
   hardware = {

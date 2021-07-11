@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let inherit (lib) fileContents;
-in {
+in
+{
   imports = [ ../cachix ];
 
   env = { ZDOTDIR = "$HOME/.config/zsh"; };
@@ -15,7 +16,7 @@ in {
           case \$( /usr/bin/tty ) in /dev/tty[0-9]*) 
             export TMOUT;;
           esac
-            '';
+      '';
     };
     pathsToLink = [ "/share/zsh" ];
 

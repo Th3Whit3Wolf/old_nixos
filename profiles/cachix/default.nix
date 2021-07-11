@@ -6,7 +6,8 @@ let
     value == "regular" && lib.hasSuffix ".nix" key && key != "default.nix";
   imports = lib.mapAttrsToList toImport
     (lib.filterAttrs filterCaches (builtins.readDir folder));
-in {
+in
+{
   inherit imports;
   nix.binaryCaches = [ "https://cache.nixos.org/" ];
 }

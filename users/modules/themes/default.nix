@@ -4,7 +4,8 @@ let
 
   inherit (lib) mkDefault mkIf mkOption mkOpt types;
 
-in {
+in
+{
   imports = [ ./spaceDark ];
 
   #   TODO

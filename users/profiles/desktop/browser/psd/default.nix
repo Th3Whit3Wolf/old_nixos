@@ -3,7 +3,8 @@
 with lib;
 
 let firefox = config.programs.firefox.enable;
-in {
+in
+{
   xdg.configFile."psd/psd.conf".text = ''
     # $XDG_CONFIG_HOME/psd/psd.conf
     #
