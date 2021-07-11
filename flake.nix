@@ -33,7 +33,7 @@
 
     darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "latest";
+      inputs.nixpkgs.follows = "nixos";
     };
 
     home = {
@@ -43,11 +43,16 @@
 
     agenix = {
       url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "latest";
+      inputs.nixpkgs.follows = "nixos";
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
+    nur = {
+      url ="github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixos";
+    };
+    
     impermanence = {
       url = "github:nix-community/impermanence";
       flake = false;
@@ -55,7 +60,7 @@
 
     rust = {
       url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "latest";
+      inputs.nixpkgs.follows = "nixos";
     };
 
     nvfetcher = {
