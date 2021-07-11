@@ -1,9 +1,7 @@
-{ lib, stdenv, srcs }:
-let src = srcs.spacemacs-theme;
-in stdenv.mkDerivation {
-  inherit src;
-  inherit (src) pname version;
+{ lib, stdenv, sources }:
 
+stdenv.mkDerivation rec {
+  inherit (sources.spacemacs-theme) src pname version;
   buildPhase = "true";
 
   installPhase = ''

@@ -1,0 +1,32 @@
+[any-nix-shell]
+src.github = "haslersn/any-nix-shell"
+fetch.github = "haslersn/any-nix-shell"
+
+[manix]
+src.github = "mlvzk/manix"
+fetch.github = "mlvzk/manix"
+
+[spacemacs-theme]
+src.github = "Th3Whit3Wolf/Space-Theme"
+fetch.github = "Th3Whit3Wolf/Space-Theme"
+
+[sanFrancisco-font]
+src.github = "supermarin/YosemiteSanFranciscoFont"
+fetch.github = "supermarin/YosemiteSanFranciscoFont"
+
+[sanFranciscoMono-font]
+src.github = "supercomputra/SF-Mono-Font"
+fetch.github = "supercomputra/SF-Mono-Font"
+
+[vimPlugins-ron-vim]
+src.github = "ron-rs/ron.vim"
+fetch.github = "ron-rs/ron.vim"
+
+[vimPlugins-vim-cargo-make]
+src.github = "nastevens/vim-cargo-make"
+fetch.github = "nastevens/vim-cargo-make"
+
+[vimPlugins-vim-duckscript]
+src.github = "nastevens/vim-duckscript"
+fetch.github = "nastevens/vim-duckscript"
+
