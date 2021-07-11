@@ -23,6 +23,12 @@ in
     * NVIM   - Started
     * EMACS  - Not Started 
     * HELIX  - Not Started 
+
+    Browser extension:
+    * Github: https://github.com/stefanbuck/awesome-browser-extensions-for-github
+    * react devtools - nur.repos.rycee.firefox-addons.react-devtools
+    * vue devtools - https://github.com/vuejs/devtools
+    * https://github.com/huhu/rust-search-extension
   */
 
   options.nix-polyglot = {
