@@ -58,14 +58,14 @@
     "/" = {
       device = "tmpfs";
       fsType = "tmpfs";
-      options = [ "defaults" "size=3G" "mode=755" "nodev" "nosuid" "noexec" ];
+      options = [ "defaults" "size=3G" "mode=755" "noatime" "nodev" "nosuid" "noexec"  ];
     };
 
     "/tmp" = {
       device = "tmpfs";
       fsType = "tmpfs";
       # Note: insufficient size may cause nixos-rebuild to fail (nixos builds on /tmp)
-      options = [ "defaults" "size=8G" "mode=755" "nodev" "nosuid" ];
+      options = [ "defaults" "size=8G" "mode=755" "noatime" "nodev" "nosuid" ];
     };
 
     "/nix" = {
@@ -140,7 +140,7 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/1A6A-41C8";
       fsType = "vfat";
-      options = [ "nodev" "noexec" "nosuid" "nodev" "nosuid" "noexec" ];
+      options = [ "nodev" "noexec" "nosuid" "nodev" "noatime" "noexec" ];
     };
   };
 
