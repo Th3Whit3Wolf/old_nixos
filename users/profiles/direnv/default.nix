@@ -20,7 +20,10 @@ let
 in {
   programs.direnv = {
     enable = true;
-    nix-direnv.enable = true;
+    nix-direnv = {
+      enable = true;
+      enableFlakes = true;
+    };
   };
   home.persistence."/persist/${homeDirectory}".directories =
     mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
