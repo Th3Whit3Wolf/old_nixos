@@ -2,11 +2,11 @@
 let
   /*
     cfg = cfg = config.nix-polyglot;
-    editors = [ 
+    editors = [
     lib.optionalString cfg.vscode.enable "vscode"
     lib.optionalString cfg.neovim.enable "neovim"
     ];
-    editorFilter = key: value: 
+    editorFilter = key: value:
     if (editors != []) then (value == "directory" && (elem key editors || key == "default") || value == "file" && (elem (removeSuffix ".nix" key) editors))
     else [];
     folder = ./.;
@@ -20,7 +20,7 @@ let
     getImports = lang: lib.mapAttrsToList toImportEditor lang
     (lib.filterAttrs editorFilter (builtins.readDir (toImportLang langList)));
     optional cfg.${editor}.enable ++ (lib.optionalString [isPath / + "${lang}/default.nix"] lang)
-  
+
     imports = [./default] ++ (flatten (forEach langList (lang: lib.mapAttrsToList toImportEditor lang
     (lib.filterAttrs editorFilter (builtins.readDir (toImportLang langList)));
     optional cfg.${editor}.enable ++ (lib.optionalString [isPath / + "${lang}/default.nix"] lang)) );
@@ -33,10 +33,10 @@ let
 in
 { inherit imports; }
 
-/* 
+/*
   New Folder structure
   lang/${programmingLanguage}/${editor}
   lang/${programmingLanguage}/${editor}.nix
 
-  ${editor} settings for a ${programmingLanguage} and/or settings for plugins/extensions 
+  ${editor} settings for a ${programmingLanguage} and/or settings for plugins/extensions
 */

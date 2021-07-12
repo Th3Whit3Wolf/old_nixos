@@ -49,10 +49,10 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     nur = {
-      url ="github:nix-community/NUR";
+      url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixos";
     };
-    
+
     impermanence = {
       url = "github:nix-community/impermanence";
       flake = false;

@@ -58,7 +58,7 @@
     "/" = {
       device = "tmpfs";
       fsType = "tmpfs";
-      options = [ "defaults" "size=3G" "mode=755" "noatime" "nodev" "nosuid" "noexec"  ];
+      options = [ "defaults" "size=3G" "mode=755" "noatime" "nodev" "nosuid" "noexec" ];
     };
 
     "/tmp" = {

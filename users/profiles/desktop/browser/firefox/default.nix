@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-let 
+let
   inherit (config.home) homeDirectory username;
   ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
     auto-tab-discard
@@ -31,7 +31,7 @@ in
       [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
-    extensions =  [
+    extensions = [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
     profiles.${username} = {

@@ -4,9 +4,9 @@
   config = {
     services.psd.enable = true;
     environment.systemPackages =
-      [ 
+      [
         pkgs.fuse-overlayfs
-        #pkgs.profile-sync-daemon 
+        #pkgs.profile-sync-daemon
       ];
   };
 }

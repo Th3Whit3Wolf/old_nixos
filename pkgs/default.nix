@@ -1,7 +1,7 @@
 /*
   {libs, ...}:
 
-  let 
+  let
   toImport = name: value: folder + ("/" + name);
   src = (import ./_sources/generated.nix);
   filterCaches = key: value: value == "directory" && key != "_sources" && key != "bud" && elem key ;

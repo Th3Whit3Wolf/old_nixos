@@ -1805,7 +1805,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Controls whether an editor is revealed in any of the visible groups if opened. If disabled, an editor will prefer to open in the currently active editor group. 
+            Controls whether an editor is revealed in any of the visible groups if opened. If disabled, an editor will prefer to open in the currently active editor group.
             If enabled, an already opened editor will be revealed instead of opened again in the currently active editor group. Note that there are some cases where this setting is ignored, e.g. when forcing an editor to open in a specific group or to the side of the currently active group.
           '';
         };
@@ -1813,7 +1813,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Controls whether scrolling over tabs will open them or not. By default tabs will only reveal upon scrolling, but not open. 
+            Controls whether scrolling over tabs will open them or not. By default tabs will only reveal upon scrolling, but not open.
             You can press and hold the Shift-key while scrolling to change this behavior for that duration. This value is ignored when `workbench.editor.showTabs` is disabled.
           '';
         };
@@ -1894,7 +1894,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Controls whether tabs should be wrapped over multiple lines when exceeding available space or whether a scrollbar should appear instead. 
+            Controls whether tabs should be wrapped over multiple lines when exceeding available space or whether a scrollbar should appear instead.
             This value is ignored when `workbench.editor.showTabs` is disabled.
           '';
         };
@@ -1949,7 +1949,7 @@ with types;
           type = bool;
           default = true;
           description = ''
-            Controls whether keyboard navigation in lists and trees is automatically triggered simply by typing. 
+            Controls whether keyboard navigation in lists and trees is automatically triggered simply by typing.
             If set to `false`, keyboard navigation is only triggered when executing the `list.toggleKeyboardNavigation` command, for which you can assign a keyboard shortcut.
           '';
         };
@@ -1983,7 +1983,7 @@ with types;
           type = enum [ "singleClick" "doubleClick" ];
           default = "singleClick";
           description = ''
-            Controls how to open items in trees and lists using the mouse (if supported). 
+            Controls how to open items in trees and lists using the mouse (if supported).
             Note that some trees and lists might choose to ignore this setting if it is not applicable.
           '';
         };
@@ -2000,7 +2000,7 @@ with types;
           type = enum [ "left" "bottom" "right" ];
           default = "bottom";
           description = ''
-            Controls the default location of the panel (terminal, debug console, output, problems). 
+            Controls the default location of the panel (terminal, debug console, output, problems).
             It can either show at the bottom, right, or left of the workbench.
           '';
         };
@@ -2203,7 +2203,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Controls the visibility of view header actions. 
+            Controls the visibility of view header actions.
             View header actions may either be always visible, or only visible when that view is focused or hovered over.
           '';
         };
@@ -2214,7 +2214,7 @@ with types;
             type = bool;
             default = true;
             description = ''
-              When enabled, an extension's walkthrough will open upon install the extension. 
+              When enabled, an extension's walkthrough will open upon install the extension.
               Walkthroughs are the items contributed the the 'Getting Started' section of the welcome page.
             '';
           };
@@ -2226,7 +2226,7 @@ with types;
         type = bool;
         default = false;
         description = ''
-          If set, automatically switch to the preferred color theme based on the OS appearance. 
+          If set, automatically switch to the preferred color theme based on the OS appearance.
           If the OS appearance is dark, the theme specified at `workbench.preferredDarkColorTheme` is used, for light `workbench.preferredLightColorTheme`.
         '';
       };
@@ -2234,7 +2234,7 @@ with types;
         type = bool;
         default = true;
         description = ''
-          If enabled, will automatically change to high contrast theme if the OS is using a high contrast theme. 
+          If enabled, will automatically change to high contrast theme if the OS is using a high contrast theme.
           The high contrast theme to use is specified by `workbench.preferredHighContrastColorTheme`.
         '';
       };
@@ -2273,7 +2273,7 @@ with types;
         type = bool;
         default = false;
         description = ''
-          If enabled, double clicking the application icon in the title bar will close the window and the window cannot be dragged by the icon. 
+          If enabled, double clicking the application icon in the title bar will close the window and the window cannot be dragged by the icon.
           This setting only has an effect when `window.titleBarStyle` is set to `custom`.
         '';
       };
@@ -2295,7 +2295,7 @@ with types;
         type = bool;
         default = true;
         description = ''
-          Controls whether the main menus can be opened via Alt-key shortcuts. 
+          Controls whether the main menus can be opened via Alt-key shortcuts.
           Disabling mnemonics allows to bind these Alt-key shortcuts to editor commands instead.
         '';
       };
@@ -2458,7 +2458,7 @@ with types;
         type = str;
         default = "";
         description = ''
-          The default language mode that is assigned to new files. 
+          The default language mode that is assigned to new files.
           If configured to `$\{activeEditorLanguage}`, will use the language mode of the currently active text editor if any.
         '';
       };
@@ -2546,8 +2546,8 @@ with types;
           " * */.DS_Store " = true;
         };
         description = ''
-          Configure glob patterns for excluding files and folders. 
-          For example, the file Explorer decides which files and folders to show or hide based on this setting. 
+          Configure glob patterns for excluding files and folders.
+          For example, the file Explorer decides which files and folders to show or hide based on this setting.
           Refer to the `search.exclude` setting to define search specific excludes.
         '';
       };
@@ -2557,9 +2557,9 @@ with types;
         description = ''
           Controls whether unsaved files are remembered between sessions, allowing the save prompt when exiting the editor to be skipped.
             - off: Disable hot exit. A prompt will show when attempting to close a window with dirty files.
-            - onExit: Hot exit will be triggered when the last window is closed on Windows/Linux or when the `workbench.action.quit` command is triggered (command palette, keybinding, menu). 
+            - onExit: Hot exit will be triggered when the last window is closed on Windows/Linux or when the `workbench.action.quit` command is triggered (command palette, keybinding, menu).
               All windows without folders opened will be restored upon next launch. A list of previously opened windows with unsaved files can be accessed via `File > Open Recent > More...`
-            - onExitAndWindowClose: Hot exit will be triggered when the last window is closed on Windows/Linux or when the `workbench.action.quit` command is triggered (command palette, keybinding, menu), and also for any window with a folder opened regardless of whether it's the last window. 
+            - onExitAndWindowClose: Hot exit will be triggered when the last window is closed on Windows/Linux or when the `workbench.action.quit` command is triggered (command palette, keybinding, menu), and also for any window with a folder opened regardless of whether it's the last window.
               All windows without folders opened will be restored upon next launch. A list of previously opened windows with unsaved files can be accessed via `File > Open Recent > More...`
         '';
       };
@@ -2574,7 +2574,7 @@ with types;
         type = int;
         default = 4096;
         description = ''
-          Controls the memory available to VS Code after restart when trying to open large files. 
+          Controls the memory available to VS Code after restart when trying to open large files.
           Same effect as specifying `--max-memory=NEWSIZE` on the command line.
         '';
       };
@@ -2608,7 +2608,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Enables the simple file dialog. 
+            Enables the simple file dialog.
             The simple file dialog replaces the system file dialog when enabled.
           '';
         };
@@ -2884,7 +2884,7 @@ with types;
           "**/*.code-search" = true;
         };
         description = ''
-          Configure glob patterns for excluding files and folders in fulltext searches and quick open. 
+          Configure glob patterns for excluding files and folders in fulltext searches and quick open.
           Inherits all glob patterns from the `files.exclude` setting.
         '';
       };
@@ -2987,7 +2987,7 @@ with types;
         type = bool;
         default = false;
         description = ''
-          Update the search query to the editor's selected text when focusing the search view. 
+          Update the search query to the editor's selected text when focusing the search view.
           This happens either on click or when triggering the `workbench.views.search.focus` command.
         '';
       };
@@ -3091,7 +3091,7 @@ with types;
         type = bool;
         default = true;
         description = ''
-          Controls whether CA certificates should be loaded from the OS. 
+          Controls whether CA certificates should be loaded from the OS.
           (On Windows and macOS, a reload of the window is required after turning this off.)
         '';
       };
@@ -3140,7 +3140,7 @@ with types;
         type = bool;
         default = true;
         description = ''
-          Show Release Notes after an update. 
+          Show Release Notes after an update.
           The Release Notes are fetched from a Microsoft online service.
         '';
       };

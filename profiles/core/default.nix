@@ -13,7 +13,7 @@ in
         # Log user out in 30 minutes
         "TMOUT="\$(( 60*30 ))";
         [ -z "\$DISPLAY" ] && export TMOUT;
-          case \$( /usr/bin/tty ) in /dev/tty[0-9]*) 
+          case \$( /usr/bin/tty ) in /dev/tty[0-9]*)
             export TMOUT;;
           esac
       '';

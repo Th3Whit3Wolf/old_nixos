@@ -21,8 +21,8 @@ in
     * Should have strong integrations with many editors
     * VSCODE - In Progress
     * NVIM   - Started
-    * EMACS  - Not Started 
-    * HELIX  - Not Started 
+    * EMACS  - Not Started
+    * HELIX  - Not Started
 
     Browser extension:
     * Github: https://github.com/stefanbuck/awesome-browser-extensions-for-github
@@ -58,6 +58,6 @@ in
   config = mkIf cfg.enable { home.packages = nix-polyglot.packages; };
 }
 
-/* 
+/*
   "dashboard.projectData": null
 */
