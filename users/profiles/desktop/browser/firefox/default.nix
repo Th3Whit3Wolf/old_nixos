@@ -15,7 +15,8 @@ let
     netflix-1080p
     octotree
     refined-github
-    tabcenter-reborn
+    multi-account-containers
+    sidebery
     temporary-containers
     terms-of-service-didnt-read
     ublock-origin
