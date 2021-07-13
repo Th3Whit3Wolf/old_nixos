@@ -65,10 +65,10 @@ let
       plugin = nvim-treesitter;
       optional = true;
     }
-    #{
-    #    plugin = ron-vim;
-    #    optional = true;
-    #}
+    {
+      plugin = ron-vim;
+      optional = true;
+    }
     {
       plugin = vim-yaml;
       optional = true;
