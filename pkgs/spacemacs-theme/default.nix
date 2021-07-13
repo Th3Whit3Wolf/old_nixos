@@ -1,7 +1,7 @@
-{ lib, stdenv, sources }:
+{ lib, stdenv, source }:
 
 stdenv.mkDerivation rec {
-  inherit (sources.spacemacs-theme) src pname version;
+  inherit (source) src pname version;
   buildPhase = "true";
 
   installPhase = ''

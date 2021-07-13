@@ -1,7 +1,6 @@
-{ lib, stdenv, sources, ... }:
-
+{ lib, stdenv, source }:
 stdenv.mkDerivation rec {
-  inherit (sources.sanFrancisco-font) src pname version;
+  inherit (source) src pname version;
 
   buildPhase = "true";
 

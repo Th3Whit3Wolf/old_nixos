@@ -86,6 +86,7 @@
     }@inputs:
     let
       bud' = bud self; # rebind to access self.budModules
+      packs = import ./pkgs;
     in
     digga.lib.mkFlake
       {
@@ -97,11 +98,11 @@
           nixos = {
             imports = [ (digga.lib.importers.overlays ./overlays) ];
             overlays = [
-              ./pkgs/default.nix
               nur.overlay
               agenix.overlay
               rust.overlay
               nvfetcher.overlay
+              packs.overlay
               deploy.overlay
             ];
           };
