@@ -32,7 +32,7 @@ let
       Example output:
       ```
       {
-      "a.b.c" = <path>;
+      "a.b.c" = <value>;
       }
       ```
       **/
