@@ -17,6 +17,16 @@ rec {
     lenContent >= lenSuffix &&
     substring (lenContent - lenSuffix) lenContent content == suffix;
 
+  removePrefix = prefix: str: with builtins;
+    let
+      preLen = stringLength prefix;
+      sLen = stringLength str;
+    in
+    if hasPrefix prefix str then
+      substring preLen (sLen - preLen) str
+    else
+      str;
+
   removeSuffix = suffix: str: with builtins;
     let
       sufLen = stringLength suffix;
@@ -133,6 +143,31 @@ rec {
     mapAttrs' (name: value: nameValuePair (last (splitString "." name)) (value)) (flattenTree (filterAttrs sieve (rakeLeaves dir))
     );
 
+  mapPkgSets = sources: pkgSet: pkgSetName: buildTool:
+    let
+      prefix = pkgSetName + "-";
+      newPkgs = mapAttrs' (name: value: nameValuePair (removePrefix prefix name) (value)) (filterAttrs (n: v: hasPrefix prefix n) sources);
+      createNewPkgs = pname: version: src: buildTool { inherit pname version src; };
+      overridePkgVersionSrc = pkg: version: src: pkg.overrideAttrs (_: { inherit version src; });
+      overrideOrCreatePkg = pkgFromSet:
+        let
+          pname = removePrefix prefix pkgFromSet.pname;
+          pkg = pkgSet.${pname} or { };
+          version = pkgFromSet.version;
+          src = pkgFromSet.src;
+        in
+        if pkg ? overrideAttrs
+        then overridePkgVersionSrc pkg version src
+        else createNewPkgs pname version src;
+
+      mapPackages = set: mapAttrs'
+        (name: src: nameValuePair name (overrideOrCreatePkg set.${name}))
+        set;
+    in
+    pkgSet // mapPackages newPkgs;
+
+  pkgsSetLists = [ "vimPlugins" ];
+
   overlaySrc = final: prev: {
     sources = (import ./_sources/generated.nix) { inherit (final) fetchurl fetchgit; };
   };
@@ -150,31 +185,9 @@ rec {
 
   overlayPkgsSets = final: prev: {
     sources = (import ./_sources/generated.nix);
-    vimPlugins = with final.vimUtils;
-      let
-        plugs = prev.lib.mapAttrs' (name: value: nameValuePair (prev.lib.removePrefix "vimPlugins-" name) (value)) (prev.lib.filterAttrs (n: v: prev.lib.hasPrefix "vimPlugins-" n) prev.sources);
-        createVimPlugin = pname: version: src: prev.vimUtils.buildVimPluginFrom2Nix { inherit pname version src; };
 
-        overridePkgVersionSrc = pkg: version: src: pkg.overrideAttrs (_: { inherit version src; });
-        overrideOrCreateVimPlugin = plugin:
-          let
-            pname = prev.lib.removePrefix "vimPlugins-" plugin.pname;
-            pkg = prev.vimPlugins.${pname} or { };
-            version = plugin.version;
-            src = plugin.src;
-          in
-          if pkg ? overrideAttrs
-          then overridePkgVersionSrc pkg version src
-          else createVimPlugin pname version src;
-
-        mapVimPlugins = pluginsSet: prev.lib.mapAttrs'
-          (name: src: prev.lib.nameValuePair name (overrideOrCreateVimPlugin pluginsSet.${name}))
-          pluginsSet;
-      in
-
-      prev.vimPlugins // mapVimPlugins plugs;
+    vimPlugins = mapPkgSets prev.sources prev.vimPlugins "vimPlugins" prev.vimUtils.buildVimPluginFrom2Nix;
   };
-
 
   overlay = [ overlaySrc overlayLocal overlayPkgsSets ];
 }
