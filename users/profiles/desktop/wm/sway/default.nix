@@ -20,6 +20,7 @@ in
     slurp
     qt5.qtwayland
     nwg-launchers
+    wl-clipboard
     mpv
   ];
 
