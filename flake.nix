@@ -157,7 +157,7 @@
             suites = with profiles; rec {
               base = [ cachix core ];
               psd = [ desktop.browser.psd ];
-              sway = [ desktop.browser.wm.sway ];
+              sway = [ desktop.wm.sway ];
 
               tardis = [ base laptop psd eraseYourDarlings sway ];
             };
