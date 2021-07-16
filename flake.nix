@@ -4,10 +4,20 @@
   inputs = {
     nixos.url = "nixpkgs/release-21.05";
     latest.url = "nixpkgs";
+
+    flake-utils.url = "github:numtide/flake-utils";
+    utils.url = "github:gytis-ivaskevicius/flake-utils-plus/staging";
+    utils.inputs.flake-utils.follows = "flake-utils";
     digga = {
       url = "github:divnix/digga/develop";
-      inputs.nipxkgs.follows = "latest";
-      inputs.deploy.follows = "deploy";
+      inputs = {
+        nipxkgs.follows = "latest";
+        nixlib.follows = "nixos";
+        deploy.follows = "deploy";
+        nixos-generators.follows = "latest";
+        utils.follows = "utils";
+        home-manager.follows = "home";
+      };
     };
 
     bud = {
@@ -86,7 +96,6 @@
     }@inputs:
     let
       bud' = bud self; # rebind to access self.budModules
-      packs = import ./pkgs;
     in
     digga.lib.mkFlake
       {
@@ -102,7 +111,7 @@
               agenix.overlay
               rust.overlay
               nvfetcher.overlay
-              packs.overlay
+              (import ./pkgs).overlay
               deploy.overlay
             ];
           };
@@ -148,7 +157,9 @@
             suites = with profiles; rec {
               base = [ cachix core ];
               psd = [ desktop.browser.psd ];
-              tardis = [ base laptop psd eraseYourDarlings ];
+              sway = [ desktop.browser.wm.sway ];
+
+              tardis = [ base laptop psd eraseYourDarlings sway ];
             };
           };
         };
