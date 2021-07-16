@@ -153,11 +153,8 @@ in
       };
     })
     (mkIf cfp.waybar.enable {
+      programs.waybar.style = builtins.readFile ./static/config/waybar/style.css;
       xdg.configFile = {
-        "waybar" = {
-          source = ./static/config/waybar;
-          recursive = true;
-        };
         "nwg-launchers" = {
           source = ./static/config/nwg-launchers;
           recursive = true;
