@@ -159,7 +159,7 @@ window#waybar.hidden {
   margin: 0 4px;
   min-width: 40px;
   color: @dark_fg_color;
-  font-family: "SFNS Display Bold", "Font Awesome 5 Free", "SauceCodePro Nerd Font Reular", Arial, sans-serif;
+  font-family: "SFNS Display Bold", "SauceCodePro Nerd Font Reular", Arial, sans-serif;
 }
 
 #clock {
