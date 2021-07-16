@@ -166,8 +166,6 @@ rec {
     in
     pkgSet // mapPackages newPkgs;
 
-  pkgsSetLists = [ "vimPlugins" ];
-
   overlaySrc = final: prev: {
     sources = (import ./_sources/generated.nix) { inherit (final) fetchurl fetchgit; };
   };
