@@ -15,9 +15,11 @@ all_files=($($diff))
 
 # Format staged nix files.
 if [[ -n "${nix_files[@]}" ]]; then
-  nixpkgs-fmt "${nix_files[@]}" \
-  && sed -i 's/[ \t]*$//' "${nix_files[@]}" \  # Remove trailing whitespace
-  && git add "${nix_files[@]}"
+  for file in ${nix_files[@]}; do
+    nixpkgs-fmt $file
+    sed -i 's/[[:space:]]*$//' $file \  # Remove trailing whitespace
+    git add $file
+  done
 fi
 
 # check editorconfig
