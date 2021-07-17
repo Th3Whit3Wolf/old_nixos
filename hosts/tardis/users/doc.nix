@@ -45,12 +45,9 @@ in
         gnome3.nautilus-python
         gnome3.sushi
         mesa
-        sway
         river
-        firefox-wayland
-        brightnessctl
-        nvfetcher-bin
-        nixpkgs-fmt
+        #firefox-wayland
+
       ] ++ themePackages;
   };
 
