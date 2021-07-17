@@ -395,8 +395,7 @@ with types;
         '';
       };
       fontWeight = mkOption {
-        type =
-          enum [ "normal" "bold" 100 200 300 400 500 600 700 800 900 1000 ];
+        type = enum ["normal" "bold" (range 1 1000)];
         default = "normal";
         description = ''
           Controls the font weight. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
@@ -2142,10 +2141,8 @@ with types;
           "readme"
           "newUntitledFile"
           "welcomePageInEmptyWorkbench"
-          "gettingStarted"
-          "gettingStartedInEmptyWorkbench"
         ];
-        default = "gettingStarted";
+        default = "welcomePage";
         description = ''
           Controls which editor is shown at startup, if none are restored from the previous session.
             - none: Start without an editor.
@@ -3873,6 +3870,7 @@ with types;
             Preferred quote style to use for quick fixes: `single` quotes, `double` quotes, or `auto` infer quote type from existing imports.
           '';
         };
+        /*
         renameShorthandProperties = mkOption {
           type = bool;
           default = true;
@@ -3881,6 +3879,7 @@ with types;
             Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
           '';
         };
+        */
         useAliasesForRenames = mkOption {
           type = bool;
           default = true;
@@ -5341,7 +5340,7 @@ with types;
           '';
         };
       };
-      lineNumbers = mkOption {
+      showCellStatusBar = mkOption {
         type = enum [ "hidden" "visible" "visibleAfterExecute" ];
         default = "visible";
         description = ''
@@ -5366,241 +5365,478 @@ with types;
         '';
       };
     };
+    terminal = {
+      explorerKind = mkOption {
+        type = enum [ "integrated" "external" ];
+        default = "integrated";
+        description = ''
+          Customizes what kind of terminal to launch.
+            - integrated: Use VS Code's integrated terminal.
+            - external: Use the configured external terminal.
+        '';
+      };
+      external = {
+        linuxExec = mkOption {
+          type = str;
+          default = "xterm";
+          description = ''
+            Customizes which terminal to run on Linux.
+          '';
+        };
+        osxExec = mkOption {
+          type = str;
+          default = "Terminal.app";
+          description = ''
+            Customizes which terminal application to run on macOS.
+          '';
+        };
+      };
+      integrated = {
+        allowChords = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether or not to allow chord keybindings in the terminal.
+            Note that when this is true and the keystroke results in a chord it will bypass `terminal.integrated.commandsToSkipShell`, setting this to false is particularly useful when you want ctrl+k to go to your shell (not VS Code).
+          '';
+        };
+        allowMnemonics = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Whether to allow menubar mnemonics (eg. alt+f) to trigger the open the menubar. 
+            Note that this will cause all alt keystrokes to skip the shell when true. 
+            This does nothing on macOS.
+          '';
+        };
+        altClickMovesCursor = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            If enabled, alt/option + click will reposition the prompt cursor to underneath the mouse when `editor.multiCursorModifier` is set to `'alt'` (the default value). 
+            This may not work reliably depending on your shell.
+          '';
+        };
+        automationShell = {
+          linux = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              A path that when set will override `terminal.integrated.shell.linux` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
+            '';
+          };
+          osx = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              A path that when set will override `terminal.integrated.shell.osx` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
+            '';
+          };
+        };
+        bellDuration = mkOption {
+          type = int;
+          default = 1000;
+          description = ''
+            The number of milliseconds to show the bell within a terminal tab when triggered.
+          '';
+        };
+        commandsToSkipShell = mkOption {
+          type = listOf str;
+          default = [];
+          description = ''
+            A set of command IDs whose keybindings will not be sent to the shell but instead always be handled by VS Code. This allows keybindings that would normally be consumed by the shell to act instead the same as when the terminal is not focused, for example `Ctrl+P` to launch Quick Open.
+          '';
+        };
+        confirmOnExit = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether to confirm on exit if there are active terminal sessions.
+          '';
+        };
+        copyOnSelection = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether text selected in the terminal will be copied to the clipboard.Controls whether to confirm on exit if there are active terminal sessions.
+          '';
+        };
+        cursorBlinking = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether the terminal cursor blinks.
+          '';
+        };
+        cursorStyle = mkOption {
+          type = enum [ "block" "line" "underline" ];
+          default = "block";
+          description = ''
+            Controls whether the terminal cursor blinks.
+          '';
+        };
+        cursorWidth = mkOption {
+          type = int;
+          default = 1;
+          description = ''
+            Controls the width of the cursor when `terminal.integrated.cursorStyle` is set to `line`.
+          '';
+        };
+        cwd = mkOption {
+          type = str;
+          default = "";
+          description = ''
+            An explicit start path where the terminal will be launched, this is used as the current working directory (cwd) for the shell process.
+            This may be particularly useful in workspace settings if the root directory is not a convenient cwd.
+          '';
+        };
+        defaultProfile = {
+          linux = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              The default profile used on Linux.
+              This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
+            '';
+          };
+          osx = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              The default profile used on macOS.
+              This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
+            '';
+          };
+        };
+        detectLocale = mkOption {
+          type = enum [ "auto" "off" "on" ];
+          default = "auto";
+          description = ''
+            Controls whether to detect and set the `$LANG` environment variable to a UTF-8 compliant option since VS Code's terminal only supports UTF-8 encoded data coming from the shell.
+            - auto: Set the `$LANG` environment variable if the existing variable does not exist or it does not end in `'.UTF-8'`.
+            - off: Do not set the `$LANG` environment variable.
+            - on: Always set the `$LANG` environment variable.
+          '';
+        };
+        drawBoldTextInBrightColors = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether bold text in the terminal will always use the "bright" ANSI color variant.
+          '';
+        };
+        enableBell = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether the terminal bell is enabled, this shows up as a visual bell next to the terminal's name.
+          '';
+        };
+        enableFileLinks = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to enable file links in the terminal.
+            Links can be slow when working on a network drive in particular because each file link is verified against the file system.
+            Changing this will take effect only in new terminals.
+          '';
+        };
+        enablePersistentSessions = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Persist terminal sessions for the workspace across window reloads.
+          '';
+        };
+        env = {
+          linux = mkOption {
+            type = attrsOf str;
+            default = {};
+            description = ''
+              Object with environment variables that will be added to the VS Code process to be used by the terminal on Linux. 
+              Set to `null` to delete the environment variable.
+            '';
+          };
+          osx = mkOption {
+            type = attrsOf str;
+            default = {};
+            description = ''
+              Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS. 
+              Set to `null` to delete the environment variable.
+            '';
+          };
+        };
+        environmentChangesIndicator = mkOption {
+          type = enum ["off" "on" "warnonly"];
+          default = "warnonly";
+          description = ''
+            Whether to display the environment changes indicator on each terminal which explains whether extensions have made, or want to make changes to the terminal's environment.
+            - off: Disable the indicator.
+            - on: Enable the indicator.
+            - warnonly: Only show the warning indicator when a terminal's environment is 'stale', not the information indicator that shows a terminal has had its environment modified by an extension.
+          '';
+        };
+        environmentChangesRelaunch = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to relaunch terminals automatically if extension want to contribute to their environment and have not been interacted with yet.
+          '';
+        };
+        fastScrollSensitivity = mkOption {
+          type = int;
+          default = 5;
+          description = ''
+            Scrolling speed multiplier when pressing `Alt`.
+          '';
+        };
+        fontFamily = mkOption {
+          type = str;
+          default = "";
+          description = ''
+            Controls the font family of the terminal, this defaults to `editor.fontFamily`'s value.
+          '';
+        };
+        fontSize = mkOption {
+          type = int;
+          default = 14;
+          description = ''
+            Controls the font family of the terminal, this defaults to `editor.fontFamily`'s value.
+          '';
+        };
+        fontWeight = mkOption {
+          type = enum ["normal" "bold" (range 1 1000)];
+          default = "normal";
+          description = ''
+            The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
+          '';
+        };
+        fontWeightBold = mkOption {
+          type = enum ["normal" "bold" (range 1 1000)];
+          default = "bold";
+          description = ''
+            The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
+          '';
+        };
+        gpuAcceleration = mkOption {
+          type = enum ["auto" "on" "off"];
+          default = "auto";
+          description = ''
+            Controls whether the terminal will leverage the GPU to do its rendering.
+            - auto: Let VS Code detect which renderer will give the best experience.
+            - on: Enable GPU acceleration within the terminal.
+            - off: Disable GPU acceleration within the terminal.
+          '';
+        };
+        inheritEnv = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether new shells should inherit their environment from VS Code, which may source a login shell to ensure $PATH and other development variables are initialized.
+            This has no effect on Windows.
+          '';
+        };
+        letterSpacing = mkOption {
+          type = int;
+          default = 0;
+          description = ''
+            Controls the letter spacing of the terminal, this is an integer value which represents the amount of additional pixels to add between characters.
+          '';
+        };
+        lineHeight = mkOption {
+          type = int;
+          default = 1;
+          description = ''
+            Controls the line height of the terminal, this number is multiplied by the terminal font size to get the actual line-height in pixels.
+          '';
+        };
+        macOptionClickForcesSelection = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether to force selection when using Option+click on macOS. This will force a regular (line) selection and disallow the use of column selection mode.
+            This enables copying and pasting using the regular terminal selection, for example, when mouse mode is enabled in tmux.
+          '';
+        };
+        macOptionIsMeta = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether to treat the option key as the meta key in the terminal on macOS.
+          '';
+        };
+        minimumContrastRatio = mkOption {
+          type = enum [ 1 4.5 7 21];
+          default = 1;
+          description = ''
+            When set the foreground color of each cell will change to try meet the contrast ratio specified. Example values:
+            - 1: The default, do nothing.
+            - 4.5: WCAG AA compliance (minimum).
+            - 7: WCAG AAA compliance (enhanced).
+            - 21: White on black or black on white.
+          '';
+        };
+        mouseWheelScrollSensitivity = mkOption {
+          type = int;
+          default = 1;
+          description = ''
+            A multiplier to be used on the `deltaY` of mouse wheel scroll events.
+          '';
+        };
+        profiles = {
+          linux = mkOption {
+            type = attrsOf str;
+            default = {};
+            description = ''
+              The Linux profiles to present when creating a new terminal via the terminal dropdown. 
+              When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
+            '';
+          };
+          osx = mkOption {
+            type = attrsOf str;
+            default = {};
+            description = ''
+              The macOS profiles to present when creating a new terminal via the terminal dropdown. 
+              When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
+            '';
+          };
+        };
+        rightClickBehavior = mkOption {
+          type = enum [ "default" "copyPaste" "paste" "selectWord" ];
+          default = "copyPaste";
+          description = ''
+            Controls how terminal reacts to right click.
+            - default: Show the context menu.
+            - copyPaste: Copy when there is a selection, otherwise paste.
+            - paste: Paste on right click.
+            - selectWord: Select the word under the cursor and show the context menu.
+          '';
+        };
+        scrollback = mkOption {
+          type = int;
+          default = 1000;
+          description = ''
+            Controls the maximum amount of lines the terminal keeps in its buffer.
+          '';
+        };
+        sendKeybindingsToShell = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Dispatches most keybindings to the terminal instead of the workbench, overriding `terminal.integrated.commandsToSkipShell`, which can be used alternatively for fine tuning.
+          '';
+        };
+        showExitAlert = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether to show the alert "The terminal process terminated with exit code" when exit code is non-zero.
+          '';
+        };
+        splitCwd = mkOption {
+          type = enum [ "workspaceRoot" "initial" "inherited"  ];
+          default = "inherited";
+          description = ''
+            Controls the working directory a split terminal starts with.
+            - workspaceRoot: A new split terminal will use the workspace root as the working directory. In a multi-root workspace a choice for which root folder to use is offered.
+            - initial: A new split terminal will use the working directory that the parent terminal started with.
+            - inherited: On macOS and Linux, a new split terminal will use the working directory of the parent terminal. On Windows, this behaves the same as initial.
+          '';
+        };
+        tabs = {
+          enabled = mkOption {
+            type = bool;
+            default = false;
+            description = ''
+              Controls whether terminal tabs display as a list to the side of the terminal.
+              When this is disabled a dropdown will display instead.
+            '';
+          };
+          focusMode = mkOption {
+            type = enum [ "singleClick" "doubleClick" ];
+            default = "doubleClick";
+            description = ''
+              Controls whether focusing the terminal of a tab happens on double or single click.
+              - singleClick: Focus the terminal when clicking a terminal tab
+              - doubleClick: Focus the terminal when double clicking a terminal tab
+            '';
+          };
+          hideCondition = mkOption {
+            type = enum [ "never" "singleTerminal" "singleGroup" ];
+            default = "singleTerminal";
+            description = ''
+              Controls whether the terminal tabs view will hide under certain conditions.
+              - never: Never hide the terminal tabs view
+              - singleTerminal: Hide the terminal tabs view when there is only a single terminal opened
+              - singleGroup: Hide the terminal tabs view when there is only a single terminal group opened
+            '';
+          };
+          location = mkOption {
+            type = enum [ "left" "right" ];
+            default = "right";
+            description = ''
+              Controls the location of the terminal tabs, either to the left or right of the actual terminal(s).
+              - left: Show the terminal tabs view to the left of the terminal
+              - right: Show the terminal tabs view to the right of the terminal
+            '';
+          };
+          showActiveTerminal = mkOption {
+            type = enum [ "always" "singleTerminal" "singleTerminalOrNarrow" "never" ];
+            default = "singleTerminalOrNarrow";
+            description = ''
+              Shows the active terminal information in the view, this is particularly useful when the title within the tabs aren't visible.
+              - always: Always show the active terminal
+              - singleTerminal: Show the active terminal when it is the only terminal opened
+              - singleTerminalOrNarrow: Show the active terminal when it is the only terminal opened or when the tabs view is in its narrow textless state
+              - never: Never show the active terminal
+            '';
+          };
+        };
+        titleMode = mkOption {
+          type = enum [ "executable" "sequence" ];
+          default = "executable";
+          description = ''
+            Determines how the terminal's title is set, this shows up in the terminal's tab or dropdown entry.
+            - executable: The title is set by the terminal, the name of the detected foreground process will be used.
+            - sequence: The title is set by the process via an escape sequence, this is useful if your shell dynamically sets the title.
+          '';
+        };
+        unicodeVersion = mkOption {
+          type = enum [ "6" "11" ];
+          default = "11";
+          description = ''
+            Controls what version of unicode to use when evaluating the width of characters in the terminal. If you experience emoji or other wide characters not taking up the right amount of space or backspace either deleting too much or too little then you may want to try tweaking this setting.
+            - 6: Version 6 of unicode, this is an older version which should work better on older systems.
+            - 11: Version 11 of unicode, this version provides better support on modern systems that use modern versions of unicode.
+          '';
+        };
+        useWslProfiles = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether or not WSL distros are shown in the terminal dropdown
+          '';
+        };
+        windowsEnableConpty = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to use ConPTY for Windows terminal process communication (requires Windows 10 build number 18309+). Winpty will be used if this is false.
+          '';
+        };
+        wordSeparators = mkOption {
+          type = str;
+          default = " ()[]{}',\"`─";
+          description = ''
+            A string containing all characters to be considered word separators by the double click to select word feature.
+          '';
+        };
+      };
+    };
   };
 }
 
-/* // Notebooks
-
-  // Terminal
-
-  // Customizes what kind of terminal to launch.
-  //  - integrated: Use VS Code's integrated terminal.
-  //  - external: Use the configured external terminal.
-  "terminal.explorerKind": "integrated",
-
-  // External Terminal
-
-  // Customizes which terminal to run on Linux.
-  "terminal.external.linuxExec": "xterm",
-
-  // Customizes which terminal application to run on macOS.
-  "terminal.external.osxExec": "Terminal.app",
-
-  // Customizes which terminal to run on Windows.
-  "terminal.external.windowsExec": "C:\\Windows\\System32\\cmd.exe",
-
-  // Integrated Terminal
-
-  // Whether or not to allow chord keybindings in the terminal. Note that when this is true and the keystroke results in a chord it will bypass `terminal.integrated.commandsToSkipShell`, setting this to false is particularly useful when you want ctrl+k to go to your shell (not VS Code).
-  "terminal.integrated.allowChords": true,
-
-  // Whether to allow menubar mnemonics (eg. alt+f) to trigger the open the menubar. Note that this will cause all alt keystrokes to skip the shell when true. This does nothing on macOS.
-  "terminal.integrated.allowMnemonics": false,
-
-  // If enabled, alt/option + click will reposition the prompt cursor to underneath the mouse when `editor.multiCursorModifier` is set to `'alt'` (the default value). This may not work reliably depending on your shell.
-  "terminal.integrated.altClickMovesCursor": true,
-
-  // A path that when set will override `terminal.integrated.shell.linux` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-  "terminal.integrated.automationShell.linux": null,
-
-  // A path that when set will override `terminal.integrated.shell.osx` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-  "terminal.integrated.automationShell.osx": null,
-
-  // A path that when set will override `terminal.integrated.shell.windows` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
-  "terminal.integrated.automationShell.windows": null,
-
-  // The number of milliseconds to show the bell within a terminal tab when triggered.
-  "terminal.integrated.bellDuration": 1000,
-
-  // A set of command IDs whose keybindings will not be sent to the shell but instead always be handled by VS Code. This allows keybindings that would normally be consumed by the shell to act instead the same as when the terminal is not focused, for example `Ctrl+P` to launch Quick Open.
-  "terminal.integrated.commandsToSkipShell": [],
-
-  // Controls whether to confirm on exit if there are active terminal sessions.
-  "terminal.integrated.confirmOnExit": false,
-
-  // Controls whether text selected in the terminal will be copied to the clipboard.
-  "terminal.integrated.copyOnSelection": false,
-
-  // Controls whether the terminal cursor blinks.
-  "terminal.integrated.cursorBlinking": false,
-
-  // Controls the style of terminal cursor.
-  "terminal.integrated.cursorStyle": "block",
-
-  // Controls the width of the cursor when `terminal.integrated.cursorStyle` is set to `line`.
-  "terminal.integrated.cursorWidth": 1,
-
-  // An explicit start path where the terminal will be launched, this is used as the current working directory (cwd) for the shell process. This may be particularly useful in workspace settings if the root directory is not a convenient cwd.
-  "terminal.integrated.cwd": "",
-
-  // The default profile used on Linux. This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
-  "terminal.integrated.defaultProfile.linux": null,
-
-  // The default profile used on macOS. This setting will currently be ignored if either `terminal.integrated.shell.osx` or `terminal.integrated.shellArgs.osx` are set.
-  "terminal.integrated.defaultProfile.osx": null,
-
-  // The default profile used on Windows. This setting will currently be ignored if either `terminal.integrated.shell.windows#` or `#terminal.integrated.shellArgs.windows` are set.
-  "terminal.integrated.defaultProfile.windows": null,
-
-  // Controls whether to detect and set the `$LANG` environment variable to a UTF-8 compliant option since VS Code's terminal only supports UTF-8 encoded data coming from the shell.
-  //  - auto: Set the `$LANG` environment variable if the existing variable does not exist or it does not end in `'.UTF-8'`.
-  //  - off: Do not set the `$LANG` environment variable.
-  //  - on: Always set the `$LANG` environment variable.
-  "terminal.integrated.detectLocale": "auto",
-
-  // Controls whether bold text in the terminal will always use the "bright" ANSI color variant.
-  "terminal.integrated.drawBoldTextInBrightColors": true,
-
-  // Controls whether the terminal bell is enabled, this shows up as a visual bell next to the terminal's name.
-  "terminal.integrated.enableBell": false,
-
-  // Whether to enable file links in the terminal. Links can be slow when working on a network drive in particular because each file link is verified against the file system. Changing this will take effect only in new terminals.
-  "terminal.integrated.enableFileLinks": true,
-
-  // Persist terminal sessions for the workspace across window reloads.
-  "terminal.integrated.enablePersistentSessions": true,
-
-  // Object with environment variables that will be added to the VS Code process to be used by the terminal on Linux. Set to `null` to delete the environment variable.
-  "terminal.integrated.env.linux": {},
-
-  // Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS. Set to `null` to delete the environment variable.
-  "terminal.integrated.env.osx": {},
-
-  // Object with environment variables that will be added to the VS Code process to be used by the terminal on Windows. Set to `null` to delete the environment variable.
-  "terminal.integrated.env.windows": {},
-
-  // Whether to display the environment changes indicator on each terminal which explains whether extensions have made, or want to make changes to the terminal's environment.
-  //  - off: Disable the indicator.
-  //  - on: Enable the indicator.
-  //  - warnonly: Only show the warning indicator when a terminal's environment is 'stale', not the information indicator that shows a terminal has had its environment modified by an extension.
-  "terminal.integrated.environmentChangesIndicator": "warnonly",
-
-  // Whether to relaunch terminals automatically if extension want to contribute to their environment and have not been interacted with yet.
-  "terminal.integrated.environmentChangesRelaunch": true,
-
-  // Scrolling speed multiplier when pressing `Alt`.
-  "terminal.integrated.fastScrollSensitivity": 5,
-
-  // Controls the font family of the terminal, this defaults to `editor.fontFamily`'s value.
-  "terminal.integrated.fontFamily": "",
-
-  // Controls the font size in pixels of the terminal.
-  "terminal.integrated.fontSize": 14,
-
-  // The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
-  "terminal.integrated.fontWeight": "normal",
-
-  // The font weight to use within the terminal for bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
-  "terminal.integrated.fontWeightBold": "bold",
-
-  // Controls whether the terminal will leverage the GPU to do its rendering.
-  //  - auto: Let VS Code detect which renderer will give the best experience.
-  //  - on: Enable GPU acceleration within the terminal.
-  //  - off: Disable GPU acceleration within the terminal.
-  "terminal.integrated.gpuAcceleration": "auto",
-
-  // Whether new shells should inherit their environment from VS Code, which may source a login shell to ensure $PATH and other development variables are initialized. This has no effect on Windows.
-  "terminal.integrated.inheritEnv": true,
-
-  // Controls the letter spacing of the terminal, this is an integer value which represents the amount of additional pixels to add between characters.
-  "terminal.integrated.letterSpacing": 0,
-
-  // Controls the line height of the terminal, this number is multiplied by the terminal font size to get the actual line-height in pixels.
-  "terminal.integrated.lineHeight": 1,
-
-  // Controls whether to force selection when using Option+click on macOS. This will force a regular (line) selection and disallow the use of column selection mode. This enables copying and pasting using the regular terminal selection, for example, when mouse mode is enabled in tmux.
-  "terminal.integrated.macOptionClickForcesSelection": false,
-
-  // Controls whether to treat the option key as the meta key in the terminal on macOS.
-  "terminal.integrated.macOptionIsMeta": false,
-
-  // When set the foreground color of each cell will change to try meet the contrast ratio specified. Example values:
-  //
-  // - 1: The default, do nothing.
-  // - 4.5: WCAG AA compliance (minimum).
-  // - 7: WCAG AAA compliance (enhanced).
-  // - 21: White on black or black on white.
-  "terminal.integrated.minimumContrastRatio": 1,
-
-  // A multiplier to be used on the `deltaY` of mouse wheel scroll events.
-  "terminal.integrated.mouseWheelScrollSensitivity": 1,
-
-  // The Linux profiles to present when creating a new terminal via the terminal dropdown. When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
-  "terminal.integrated.profiles.linux": {},
-
-  // The macOS profiles to present when creating a new terminal via the terminal dropdown. When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
-  "terminal.integrated.profiles.osx": {},
-
-  // The Windows profiles to present when creating a new terminal via the terminal dropdown. Set to null to exclude them, use the `source` property to use the default detected configuration. Or, set the `path` and optional `args`.
-  "terminal.integrated.profiles.windows": {},
-
-  // Controls how terminal reacts to right click.
-  //  - default: Show the context menu.
-  //  - copyPaste: Copy when there is a selection, otherwise paste.
-  //  - paste: Paste on right click.
-  //  - selectWord: Select the word under the cursor and show the context menu.
-  "terminal.integrated.rightClickBehavior": "copyPaste",
-
-  // Controls the maximum amount of lines the terminal keeps in its buffer.
-  "terminal.integrated.scrollback": 1000,
-
-  // Dispatches most keybindings to the terminal instead of the workbench, overriding `terminal.integrated.commandsToSkipShell`, which can be used alternatively for fine tuning.
-  "terminal.integrated.sendKeybindingsToShell": false,
-
-  // Controls whether to show the alert "The terminal process terminated with exit code" when exit code is non-zero.
-  "terminal.integrated.showExitAlert": true,
-
-  // Controls the working directory a split terminal starts with.
-  //  - workspaceRoot: A new split terminal will use the workspace root as the working directory. In a multi-root workspace a choice for which root folder to use is offered.
-  //  - initial: A new split terminal will use the working directory that the parent terminal started with.
-  //  - inherited: On macOS and Linux, a new split terminal will use the working directory of the parent terminal. On Windows, this behaves the same as initial.
-  "terminal.integrated.splitCwd": "inherited",
-
-  // Controls whether terminal tabs display as a list to the side of the terminal. When this is disabled a dropdown will display instead.
-  "terminal.integrated.tabs.enabled": true,
-
-  // Controls whether focusing the terminal of a tab happens on double or single click.
-  //  - singleClick: Focus the terminal when clicking a terminal tab
-  //  - doubleClick: Focus the terminal when double clicking a terminal tab
-  "terminal.integrated.tabs.focusMode": "doubleClick",
-
-  // Controls whether the terminal tabs view will hide under certain conditions.
-  //  - never: Never hide the terminal tabs view
-  //  - singleTerminal: Hide the terminal tabs view when there is only a single terminal opened
-  //  - singleGroup: Hide the terminal tabs view when there is only a single terminal group opened
-  "terminal.integrated.tabs.hideCondition": "singleTerminal",
-
-  // Controls the location of the terminal tabs, either to the left or right of the actual terminal(s).
-  //  - left: Show the terminal tabs view to the left of the terminal
-  //  - right: Show the terminal tabs view to the right of the terminal
-  "terminal.integrated.tabs.location": "right",
-
-  // Shows the active terminal information in the view, this is particularly useful when the title within the tabs aren't visible.
-  //  - always: Always show the active terminal
-  //  - singleTerminal: Show the active terminal when it is the only terminal opened
-  //  - singleTerminalOrNarrow: Show the active terminal when it is the only terminal opened or when the tabs view is in its narrow textless state
-  //  - never: Never show the active terminal
-  "terminal.integrated.tabs.showActiveTerminal": "singleTerminalOrNarrow",
-
-  // Determines how the terminal's title is set, this shows up in the terminal's tab or dropdown entry.
-  //  - executable: The title is set by the terminal, the name of the detected foreground process will be used.
-  //  - sequence: The title is set by the process via an escape sequence, this is useful if your shell dynamically sets the title.
-  "terminal.integrated.titleMode": "executable",
-
-  // Controls what version of unicode to use when evaluating the width of characters in the terminal. If you experience emoji or other wide characters not taking up the right amount of space or backspace either deleting too much or too little then you may want to try tweaking this setting.
-  //  - 6: Version 6 of unicode, this is an older version which should work better on older systems.
-  //  - 11: Version 11 of unicode, this version provides better support on modern systems that use modern versions of unicode.
-  "terminal.integrated.unicodeVersion": "11",
-
-  // Controls whether or not WSL distros are shown in the terminal dropdown
-  "terminal.integrated.useWslProfiles": true,
-
-  // Whether to use ConPTY for Windows terminal process communication (requires Windows 10 build number 18309+). Winpty will be used if this is false.
-  "terminal.integrated.windowsEnableConpty": true,
-
-  // A string containing all characters to be considered word separators by the double click to select word feature.
-  "terminal.integrated.wordSeparators": " ()[]{}',\"`─",
-
+/*
   // Tasks
 
   // Controls enablement of `provideTasks` for all task provider extension. If the Tasks: Run Task command is slow, disabling auto detect for task providers may help. Individual extensions may also provide settings that disable auto detection.
