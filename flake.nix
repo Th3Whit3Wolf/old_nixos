@@ -2,6 +2,7 @@
   description = "A highly structured configuration database.";
 
   inputs = {
+
     nixos.url = "nixpkgs/release-21.05";
     latest.url = "nixpkgs";
 
@@ -13,9 +14,6 @@
       inputs = {
         nipxkgs.follows = "latest";
         nixlib.follows = "nixos";
-        #deploy.follows = "deploy";
-        #nixos-generators.follows = "latest";
-        #utils.follows = "utils";
         home-manager.follows = "home";
       };
     };
