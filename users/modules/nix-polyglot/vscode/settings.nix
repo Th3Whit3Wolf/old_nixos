@@ -5833,35 +5833,80 @@ with types;
         };
       };
     };
+    task = {
+      autoDetect = mkOption {
+        type = enum ["on" "off"];
+        default = "on";
+        description = ''
+          Controls enablement of `provideTasks` for all task provider extension.
+          If the Tasks: Run Task command is slow, disabling auto detect for task providers may help. 
+          Individual extensions may also provide settings that disable auto detection.
+        '';
+      };
+      problemMatchers = {
+        neverPrompt = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Configures whether to show the problem matcher prompt when running a task. 
+            Set to `true` to never prompt, or use a dictionary of task types to turn off prompting only for specific task types.
+          '';
+        };
+      };
+      quickOpen = {
+        detail = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether to show the task detail for tasks that have a detail in task quick picks, such as Run Task.
+          '';
+        };
+        history = mkOption {
+          type = int;
+          default = 30;
+          description = ''
+            Controls the number of recent items tracked in task quick open dialog.
+          '';
+        };
+        showAll = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Causes the Tasks: Run Task command to use the slower "show all" behavior instead of the faster two level picker where tasks are grouped by provider.
+          '';
+        };
+        skip = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Controls whether the task quick pick is skipped when there is only one task to pick from.
+          '';
+        };
+      };
+      saveBeforeRun = mkOption {
+        type = enum [ "always" "never" "prompt"];
+        default = "always";
+        description = ''
+          Save all dirty editors before running a task.
+          - always: Always saves all editors before running.
+          - never: Never saves editors before running.
+          - prompt: Prompts whether to save editors before running.
+        '';
+      };
+      slowProviderWarning = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Configures whether a warning is shown when a provider is slow
+        '';
+      };
+    };
   };
 }
 
 /*
   // Tasks
 
-  // Controls enablement of `provideTasks` for all task provider extension. If the Tasks: Run Task command is slow, disabling auto detect for task providers may help. Individual extensions may also provide settings that disable auto detection.
-  "task.autoDetect": "on",
-
-  // Configures whether to show the problem matcher prompt when running a task. Set to `true` to never prompt, or use a dictionary of task types to turn off prompting only for specific task types.
-  "task.problemMatchers.neverPrompt": false,
-
-  // Controls whether to show the task detail for tasks that have a detail in task quick picks, such as Run Task.
-  "task.quickOpen.detail": true,
-
-  // Controls the number of recent items tracked in task quick open dialog.
-  "task.quickOpen.history": 30,
-
-  // Causes the Tasks: Run Task command to use the slower "show all" behavior instead of the faster two level picker where tasks are grouped by provider.
-  "task.quickOpen.showAll": false,
-
-  // Controls whether the task quick pick is skipped when there is only one task to pick from.
-  "task.quickOpen.skip": false,
-
-  // Save all dirty editors before running a task.
-  //  - always: Always saves all editors before running.
-  //  - never: Never saves editors before running.
-  //  - prompt: Prompts whether to save editors before running.
-  "task.saveBeforeRun": "always",
 
   // Configures whether a warning is shown when a provider is slow
   "task.slowProviderWarning": true,
