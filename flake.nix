@@ -13,9 +13,9 @@
       inputs = {
         nipxkgs.follows = "latest";
         nixlib.follows = "nixos";
-        deploy.follows = "deploy";
-        nixos-generators.follows = "latest";
-        utils.follows = "utils";
+        #deploy.follows = "deploy";
+        #nixos-generators.follows = "latest";
+        #utils.follows = "utils";
         home-manager.follows = "home";
       };
     };
@@ -24,13 +24,7 @@
       url = "github:divnix/bud"; # no need to follow nixpkgs: it never materialises
     };
 
-    deploy = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixos";
-    };
-
-    # remove after https://github.com/NixOS/nix/pull/4641
-    nixpkgs.follows = "nixos";
+    deploy.follows = "digga/deploy";
 
     ci-agent = {
       url = "github:hercules-ci/hercules-ci-agent";
@@ -38,12 +32,13 @@
         nix-darwin.follows = "darwin";
         nixos-20_09.follows = "nixos";
         nixos-unstable.follows = "latest";
+        flake-compat.follows = "digga/deploy/flake-compat";
       };
     };
 
     darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixos";
+      inputs.nixpkgs.follows = "latest";
     };
 
     home = {
@@ -73,10 +68,28 @@
       inputs.nixpkgs.follows = "nixos";
     };
 
-    nvfetcher = {
-      url = "github:berberman/nvfetcher";
+    naersk = {
+      url = "github:nmattia/naersk";
       inputs.nixpkgs.follows = "latest";
     };
+
+    nvfetcher = {
+      url = "github:berberman/nvfetcher";
+      inputs = {
+        nixpkgs.follows = "latest";
+        flake-compat.follows = "digga/deploy/flake-compat";
+        flake-utils.follows = "digga/utils/flake-utils";
+      };
+    };
+
+    # start ANTI CORRUPTION LAYER
+    # remove after https://github.com/NixOS/nix/pull/4641
+    nixpkgs.follows = "nixos";
+    nixlib.follows = "digga/nixlib";
+    blank.follows = "digga/blank";
+    utils.follows = "digga/utils";
+    flake-utils.follows = "digga/flake-utils";
+    # end ANTI CORRUPTION LAYER
   };
 
   outputs =
