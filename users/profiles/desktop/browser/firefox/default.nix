@@ -22,6 +22,7 @@ let
     ublock-origin
     unpaywall
   ];
+  ffox = if (config.wayland.windowManager.sway.enable) then pkgs.firefox-wayland else pkgs.firefox;
 in
 
 
@@ -31,10 +32,22 @@ in
       [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
+    package = ffox;
     extensions = [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
     profiles.${username} = {
+      userContent = ''
+        /* Hide scrollbar in FF Quantum */
+        *{scrollbar-width:none !important}
+        /*
+         *  Hide tabs if only one tab
+         */
+        #titlebar .tabbrowser-tab[first-visible-tab="true"][last-visible-tab="true"]{
+            display: none !important;
+        }
+      '';
+      isDefault = true;
       settings = {
         "devtools.theme" = "dark";
 
@@ -1367,17 +1380,7 @@ in
         # [-] https://bugzilla.mozilla.org/1689405
         # "browser.library.activity-stream.enabled" = false;
       };
-      userContent = ''
-        /* Hide scrollbar in FF Quantum */
-        *{scrollbar-width:none !important}
-        /*
-         *  Hide tabs if only one tab
-         */
-        #titlebar .tabbrowser-tab[first-visible-tab="true"][last-visible-tab="true"]{
-            display: none !important;
-        }
-      '';
-      isDefault = true;
+
     };
   };
 }
