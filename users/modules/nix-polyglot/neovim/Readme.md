@@ -199,3 +199,4 @@
 ## Addtional Items
 
 * [Reddit Post on Lazy Loading](https://www.reddit.com/r/neovim/comments/n8a094/a_simple_trick_to_load_source_code_with_neovimvim/)
+
