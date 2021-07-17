@@ -10,6 +10,7 @@ in
 {
   home.packages = with pkgs; [
     alacritty
+    #brightnessctl
     wofi
     kanshi
     swaylock-effects
