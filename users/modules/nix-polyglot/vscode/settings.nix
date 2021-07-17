@@ -5197,81 +5197,179 @@ with types;
         '';
       };
     };
+    notebook = {
+      breadcrumbs = {
+        showCodeCells = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            When enabled notebook breadcrumbs contain code cells.
+          '';
+        };
+      };
+      cellFocusIndicator = mkOption {
+        type = enum [ "gutter" "border" ];
+        default = "border";
+        description = ''
+          Control whether to render the focus indicator as cell borders or a highlight bar on the left gutter.
+        '';
+      };
+      cellToolbarLocation = mkOption {
+        type = enum [ "right" "left" "hidden" ];
+        default = "right";
+        description = ''
+          Where the cell toolbar should be shown, or whether it should be hidden.
+        '';
+      };
+      cellToolbarVisibility = mkOption {
+        type = enum [ "click" "hover" ];
+        default = "click";
+        description = ''
+          Whether the cell toolbar should appear on hover or click.
+        '';
+      };
+      compactView = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Control whether the notebook editor should be rendered in a compact form.
+        '';
+      };
+      consolidatedOutputButton = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Control whether outputs action should be rendered in the output toolbar.
+        '';
+      };
+      consolidatedRunButton = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Control whether extra actions are shown in a dropdown next to the run button.
+        '';
+      };
+      diff = {
+        enablePreview = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to use the enhanced text diff editor for notebook.
+          '';
+        };
+        ignoreMetadata = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Hide Metadata Differences
+          '';
+        };
+        ignoreOutputs = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Hide Outputs Differences
+          '';
+        };
+      };
+      displayOrder = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          Priority list for output mime types
+        '';
+      };
+      dragAndDropEnabled = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Control whether the notebook editor should allow moving cells through drag and drop.
+        '';
+      };
+      editorOptionsCustomizations = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Settings for code editors used in notebooks. This can be used to customize most editor.* settings.
+        '';
+      };
+      experimental = {
+        useMarkdownRenderer = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Enable/disable using the new extensible Markdown renderer.
+          '';
+        };
+      };
+      globalToolbar = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Control whether to render a global toolbar inside the notebook editor.
+        '';
+      };
+      insertToolbarLocation = mkOption {
+        type = enum [ "betweenCells" "notebookToolbar" "both" "hidden" ];
+        default = "both";
+        description = ''
+          Control where the insert cell actions should be rendered.
+        '';
+      };
+      lineNumbers = mkOption {
+        type = enum [ "off" "on" ];
+        default = "off";
+        description = ''
+          Controls the display of line numbers in the cell editor.
+        '';
+      };
+      navigation = {
+        allowNavigateToSurroundingCells = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            When enabled cursor can navigate to the next/previous cell when the current cursor in the cell editor is at the first/last line.
+          '';
+        };
+      };
+      outline = {
+        showCodeCells = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            When enabled notebook outline shows code cells.
+          '';
+        };
+      };
+      lineNumbers = mkOption {
+        type = enum [ "hidden" "visible" "visibleAfterExecute" ];
+        default = "visible";
+        description = ''
+          Whether the cell status bar should be shown.
+            - hidden: The cell Status bar is always hidden.
+            - visible: The cell Status bar is always visible.
+            - visibleAfterExecute: The cell Status bar is hidden until the cell has executed. Then it becomes visible to show the execution status.
+        '';
+      };
+      showFoldingControls = mkOption {
+        type = enum [ "always" "mouseover" ];
+        default = "always";
+        description = ''
+          Controls when the folding controls are shown.
+        '';
+      };
+      undoRedoPerCell = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Whether to use separate undo/redo stack for each cell.
+        '';
+      };
+    };
   };
 }
 
 /* // Notebooks
-
-  // When enabled notebook breadcrumbs contain code cells.
-  "notebook.breadcrumbs.showCodeCells": true,
-
-  // Control whether to render the focus indicator as cell borders or a highlight bar on the left gutter
-  "notebook.cellFocusIndicator": "border",
-
-  // Where the cell toolbar should be shown, or whether it should be hidden.
-  "notebook.cellToolbarLocation": {
-  "default": "right"
-  },
-
-  // Whether the cell toolbar should appear on hover or click.
-  "notebook.cellToolbarVisibility": "click",
-
-  // Control whether the notebook editor should be rendered in a compact form.
-  "notebook.compactView": true,
-
-  // Control whether outputs action should be rendered in the output toolbar.
-  "notebook.consolidatedOutputButton": true,
-
-  // Control whether extra actions are shown in a dropdown next to the run button.
-  "notebook.consolidatedRunButton": true,
-
-  // Whether to use the enhanced text diff editor for notebook.
-  "notebook.diff.enablePreview": true,
-
-  // Hide Metadata Differences
-  "notebook.diff.ignoreMetadata": false,
-
-  // Hide Outputs Differences
-  "notebook.diff.ignoreOutputs": false,
-
-  // Priority list for output mime types
-  "notebook.displayOrder": [],
-
-  // Control whether the notebook editor should allow moving cells through drag and drop.
-  "notebook.dragAndDropEnabled": true,
-
-  // Settings for code editors used in notebooks. This can be used to customize most editor.* settings.
-  "notebook.editorOptionsCustomizations": {},
-
-  // Enable/disable using the new extensible Markdown renderer.
-  "notebook.experimental.useMarkdownRenderer": true,
-
-  // Control whether to render a global toolbar inside the notebook editor.
-  "notebook.globalToolbar": false,
-
-  // Control where the insert cell actions should be rendered.
-  "notebook.insertToolbarLocation": "both",
-
-  // Controls the display of line numbers in the cell editor.
-  "notebook.lineNumbers": "off",
-
-  // When enabled cursor can navigate to the next/previous cell when the current cursor in the cell editor is at the first/last line.
-  "notebook.navigation.allowNavigateToSurroundingCells": true,
-
-  // When enabled notebook outline shows code cells.
-  "notebook.outline.showCodeCells": false,
-
-  // Whether the cell status bar should be shown.
-  //  - hidden: The cell Status bar is always hidden.
-  //  - visible: The cell Status bar is always visible.
-  //  - visibleAfterExecute: The cell Status bar is hidden until the cell has executed. Then it becomes visible to show the execution status.
-  "notebook.showCellStatusBar": true,
-
-  // Controls when the folding controls are shown.
-  "notebook.showFoldingControls": "always",
-
-  // Whether to use separate undo/redo stack for each cell.
-  "notebook.undoRedoPerCell": false,
 
   // Terminal
 
