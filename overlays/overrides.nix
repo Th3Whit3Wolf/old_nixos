@@ -9,6 +9,7 @@ channels: final: prev: {
     rage
     nixpkgs-fmt
     starship
+    river
     #sway
     #river
     #mesa
