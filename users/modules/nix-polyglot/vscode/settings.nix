@@ -6452,7 +6452,7 @@ with types;
           Set properties that are applied when a specific port number is forwarded.
         '';
       };
-      portsAttributes = mkOption {
+      restoreForwardedPorts = mkOption {
         type = bool;
         default = true;
         description = ''
@@ -6476,7 +6476,7 @@ with types;
           In case of conflicts, the profiles/snippets of later paths will override those of earlier paths.
         '';
       };
-      extensionsPath = mkOption {
+      includeLanguages = mkOption {
         type = attrsOf str;
         default = { };
         description = ''
@@ -6506,7 +6506,7 @@ with types;
           Shows possible Emmet abbreviations as suggestions. Not applicable in stylesheets or when emmet.showExpandedAbbreviation is set to `"never"`.
         '';
       };
-      showAbbreviationSuggestions = mkOption {
+      showExpandedAbbreviation = mkOption {
         type = enum [ "inMarkupAndStylesheetFilesOnly" "always" ];
         default = "always";
         description = ''
@@ -6544,224 +6544,483 @@ with types;
         '';
       };
     };
+    git = {
+      allowForcePush = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether force push (with or without lease) is enabled.
+        '';
+      };
+      allowNoVerifyCommit = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether commits without running pre-commit and commit-msg hooks are allowed.
+        '';
+      };
+      alwaysShowStagedChangesResourceGroup = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Always show the Staged Changes resource group.
+        '';
+      };
+      alwaysSignOff = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls the signoff flag for all commits.
+        '';
+      };
+      autofetch = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When set to true, commits will automatically be fetched from the default remote of the current Git repository. Setting to `all` will fetch from all remotes.
+        '';
+      };
+      autofetchPeriod = mkOption {
+        type = int;
+        default = 180;
+        description = ''
+          Duration in seconds between each automatic git fetch, when `git.autofetch` is enabled.
+        '';
+      };
+      autorefresh = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Whether auto refreshing is enabled.
+        '';
+      };
+      autoRepositoryDetection = mkOption {
+        type = enum [ true false "subFolders" "openEditors" ];
+        default = true;
+        description = ''
+          Configures when repositories should be automatically detected.
+          - true: Scan for both subfolders of the current opened folder and parent folders of open files.
+          - false: Disable automatic repository scanning.
+          - subFolders: Scan for subfolders of the currently opened folder.
+          - openEditors: Scan for parent folders of open files.
+        '';
+      };
+      autoStash = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Stash any changes before pulling and restore them after successful pull.
+        '';
+      };
+      branchSortOrder = mkOption {
+        type = enum [ "committerdate" "alphabetically" ];
+        default = "committerdate";
+        description = ''
+          Controls the sort order for branches.
+        '';
+      };
+      branchValidationRegex = mkOption {
+        type = str;
+        default = "";
+        description = ''
+          A regular expression to validate new branch names.
+        '';
+      };
+      branchWhitespaceChar = mkOption {
+        type = str;
+        default = "-";
+        description = ''
+          The character to replace whitespace in new branch names.
+        '';
+      };
+      checkoutType = mkOption {
+        type = listOf str;
+        default = [ "local" "remote" "tags" ];
+        description = ''
+          Controls what type of git refs are listed when running `Checkout to...`.
+        '';
+      };
+      confirmEmptyCommits = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Always confirm the creation of empty commits for the 'Git: Commit Empty' command.
+        '';
+      };
+      confirmForcePush = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to ask for confirmation before force-pushing.
+        '';
+      };
+      confirmNoVerifyCommit = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to ask for confirmation before commiting without verification.
+        '';
+      };
+      confirmSync = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Confirm before synchronizing git repositories.
+        '';
+      };
+      countBadge = mkOption {
+        type = enum [ "all" "tracked" "off" ];
+        default = "all";
+        description = ''
+          Controls the Git count badge.
+          - all: Count all changes.
+          - tracked: Count only tracked changes.
+          - off: Turn off counter.
+        '';
+      };
+      decorations = {
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether Git contributes colors and badges to the Explorer and the Open Editors view.
+          '';
+        };
+      };
+      defaultCloneDirectory = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          The default location to clone a git repository.
+        '';
+      };
+      detectSubmodules = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to automatically detect git submodules.
+        '';
+      };
+      detectSubmodulesLimit = mkOption {
+        type = int;
+        default = 10;
+        description = ''
+          Controls the limit of git submodules detected.
+        '';
+      };
+      enableCommitSigning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Enables commit signing with GPG or X.509.
+        '';
+      };
+      enabled = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Whether git is enabled.
+        '';
+      };
+      enableSmartCommit = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Commit all changes when there are no staged changes.
+        '';
+      };
+      enableStatusBarSync = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether the Git Sync command appears in the status bar.
+        '';
+      };
+      fetchOnPull = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled, fetch all branches when pulling.
+          Otherwise, fetch just the current one.
+        '';
+      };
+      followTagsWhenSync = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Follow push all tags when running the sync command.
+        '';
+      };
+      ignoredRepositories = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          List of git repositories to ignore.
+        '';
+      };
+      ignoreLegacyWarning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignores the legacy Git warning.
+        '';
+      };
+      ignoreLimitWarning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignores the warning when there are too many changes in a repository.
+        '';
+      };
+      ignoreMissingGitWarning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignores the warning when Git is missing.
+        '';
+      };
+      ignoreRebaseWarning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignores the warning when it looks like the branch might have been rebased when pulling.
+        '';
+      };
+      ignoreSubmodules = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignore modifications to submodules in the file tree.
+        '';
+      };
+      ignoreWindowsGit27Warning = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Ignores the warning when Git 2.25 - 2.26 is installed on Windows.
+        '';
+      };
+      inputValidation = mkOption {
+        type = enum [ "warn" "always" "off" ];
+        default = "warn";
+        description = ''
+          Controls when to show commit message input validation.
+        '';
+      };
+      inputValidationLength = mkOption {
+        type = int;
+        default = 72;
+        description = ''
+          Controls the commit message length threshold for showing a warning.
+        '';
+      };
+      inputValidationSubjectLength = mkOption {
+        type = int;
+        default = 50;
+        description = ''
+          Controls the commit message subject length threshold for showing a warning.
+          Unset it to inherit the value of `config.inputValidationLength`.
+        '';
+      };
+      openAfterClone = mkOption {
+        type = enum [ "always" "alwaysNewWindow" "whenNoFolderOpen" "prompt" ];
+        default = "prompt";
+        description = ''
+          Controls whether to open a repository automatically after cloning.
+          - always: Always open in current window.
+          - alwaysNewWindow: Always open in a new window.
+          - whenNoFolderOpen: Only open in current window when no folder is opened.
+          - prompt: Always prompt for action.
+        '';
+      };
+      openDiffOnClick = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether the diff editor should be opened when clicking a change.
+          Otherwise the regular editor will be opened.
+        '';
+      };
+      path = mkOption {
+        type = nullOr str;
+        default = null;
+        description = ''
+          Path and filename of the git executable, e.g. `C:\Program Files\Git\bin\git.exe` (Windows).
+          This can also be an array of string values containing multiple paths to look up.
+        '';
+      };
+      postCommitCommand = mkOption {
+        type = enum [ "none" "push" "sync" ];
+        default = "none";
+        description = ''
+          Runs a git command after a successful commit.
+          - none: Don't run any command after a commit.
+          - push: Run 'Git Push' after a successful commit.
+          - sync: Run 'Git Sync' after a successful commit.
+        '';
+      };
+      promptToSaveFilesBeforeCommit = mkOption {
+        type = enum [ "always" "staged" "never" ];
+        default = "always";
+        description = ''
+          Controls whether Git should check for unsaved files before committing.
+          - always: Check for any unsaved files.
+          - staged: Check only for unsaved staged files.
+          - never: Disable this check.
+        '';
+      };
+      promptToSaveFilesBeforeStash = mkOption {
+        type = enum [ "always" "staged" "never" ];
+        default = "always";
+        description = ''
+          Controls whether Git should check for unsaved files before stashing changes.
+          - always: Check for any unsaved files.
+          - staged: Check only for unsaved staged files.
+          - never: Disable this check.
+        '';
+      };
+      pruneOnFetch = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Prune when fetching.
+        '';
+      };
+      pullTags = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Fetch all tags when pulling.
+        '';
+      };
+      rebaseWhenSync = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Force git to use rebase when running the sync command.
+        '';
+      };
+      requireGitUserConfig = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to require explicit Git user configuration or allow Git to guess if missing.
+        '';
+      };
+      scanRepositories = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          List of paths to search for git repositories in.
+        '';
+      };
+      showCommitInput = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to show the commit input in the Git source control panel.
+        '';
+      };
+      showInlineOpenFileAction = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to show an inline Open File action in the Git changes view.
+        '';
+      };
+      showProgress = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether git actions should show progress.
+        '';
+      };
+      showPushSuccessNotification = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether to show a notification when a push is successful.
+        '';
+      };
+      smartCommitChanges = mkOption {
+        type = enum [ "all" "tracked" ];
+        default = "all";
+        description = ''
+          Control which changes are automatically staged by Smart Commit.
+          - all: Automatically stage all changes.
+          - tracked: Automatically stage tracked changes only.
+        '';
+      };
+      suggestSmartCommit = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Suggests to enable smart commit (commit all changes when there are no staged changes).
+        '';
+      };
+      supportCancellation = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether a notification comes up when running the Sync action, which allows the user to cancel the operation.
+        '';
+      };
+      terminalAuthentication = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to enable VS Code to be the authentication handler for git processes spawned in the integrated terminal.
+          Note: terminals need to be restarted to pick up a change in this setting.
+        '';
+      };
+      timeline = {
+        date = mkOption {
+          type = enum [ "committed" "authored" ];
+          default = "committed";
+          description = ''
+            Controls which date to use for items in the Timeline view.
+            - committed: Use the committed date
+            - authored: Use the authored date
+          '';
+        };
+        showAuthor = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether to show the commit author in the Timeline view.
+          '';
+        };
+      };
+      untrackedChanges = mkOption {
+        type = enum [ "mixed" "separate" "hidden" ];
+        default = "mixed";
+        description = ''
+          Controls how untracked changes behave.
+          - mixed: All changes, tracked and untracked, appear together and behave equally.
+          - separate: Untracked changes appear separately in the Source Control view. They are also excluded from several actions.
+          - hidden: Untracked changes are hidden and excluded from several actions.
+        '';
+      };
+      useCommitInputAsStashMessage = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Controls whether to use the message from the commit input box as the default stash message.
+        '';
+      };
+      useForcePushWithLease = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether force pushing uses the safer force-with-lease variant.
+        '';
+      };
+    };
   };
 }
 
 /*
   // Git
-
-  // Controls whether force push (with or without lease) is enabled.
-  "git.allowForcePush": false,
-
-  // Controls whether commits without running pre-commit and commit-msg hooks are allowed.
-  "git.allowNoVerifyCommit": false,
-
-  // Always show the Staged Changes resource group.
-  "git.alwaysShowStagedChangesResourceGroup": false,
-
-  // Controls the signoff flag for all commits.
-  "git.alwaysSignOff": false,
-
-  // When set to true, commits will automatically be fetched from the default remote of the current Git repository. Setting to `all` will fetch from all remotes.
-  "git.autofetch": false,
-
-  // Duration in seconds between each automatic git fetch, when `git.autofetch` is enabled.
-  "git.autofetchPeriod": 180,
-
-  // Whether auto refreshing is enabled.
-  "git.autorefresh": true,
-
-  // Configures when repositories should be automatically detected.
-  //  - true: Scan for both subfolders of the current opened folder and parent folders of open files.
-  //  - false: Disable automatic repository scanning.
-  //  - subFolders: Scan for subfolders of the currently opened folder.
-  //  - openEditors: Scan for parent folders of open files.
-  "git.autoRepositoryDetection": true,
-
-  // Stash any changes before pulling and restore them after successful pull.
-  "git.autoStash": false,
-
-  // Controls the sort order for branches.
-  "git.branchSortOrder": "committerdate",
-
-  // A regular expression to validate new branch names.
-  "git.branchValidationRegex": "",
-
-  // The character to replace whitespace in new branch names.
-  "git.branchWhitespaceChar": "-",
-
-  // Controls what type of git refs are listed when running `Checkout to...`.
-  "git.checkoutType": ["local", "remote", "tags"],
-
-  // Always confirm the creation of empty commits for the 'Git: Commit Empty' command.
-  "git.confirmEmptyCommits": true,
-
-  // Controls whether to ask for confirmation before force-pushing.
-  "git.confirmForcePush": true,
-
-  // Controls whether to ask for confirmation before commiting without verification.
-  "git.confirmNoVerifyCommit": true,
-
-  // Confirm before synchronizing git repositories.
-  "git.confirmSync": true,
-
-  // Controls the Git count badge.
-  //  - all: Count all changes.
-  //  - tracked: Count only tracked changes.
-  //  - off: Turn off counter.
-  "git.countBadge": "all",
-
-  // Controls whether Git contributes colors and badges to the Explorer and the Open Editors view.
-  "git.decorations.enabled": true,
-
-  // The default location to clone a git repository.
-  "git.defaultCloneDirectory": null,
-
-  // Controls whether to automatically detect git submodules.
-  "git.detectSubmodules": true,
-
-  // Controls the limit of git submodules detected.
-  "git.detectSubmodulesLimit": 10,
-
-  // Enables commit signing with GPG or X.509.
-  "git.enableCommitSigning": false,
-
-  // Whether git is enabled.
-  "git.enabled": true,
-
-  // Commit all changes when there are no staged changes.
-  "git.enableSmartCommit": false,
-
-  // Controls whether the Git Sync command appears in the status bar.
-  "git.enableStatusBarSync": true,
-
-  // When enabled, fetch all branches when pulling. Otherwise, fetch just the current one.
-  "git.fetchOnPull": false,
-
-  // Follow push all tags when running the sync command.
-  "git.followTagsWhenSync": false,
-
-  // List of git repositories to ignore.
-  "git.ignoredRepositories": [],
-
-  // Ignores the legacy Git warning.
-  "git.ignoreLegacyWarning": false,
-
-  // Ignores the warning when there are too many changes in a repository.
-  "git.ignoreLimitWarning": false,
-
-  // Ignores the warning when Git is missing.
-  "git.ignoreMissingGitWarning": false,
-
-  // Ignores the warning when it looks like the branch might have been rebased when pulling.
-  "git.ignoreRebaseWarning": false,
-
-  // Ignore modifications to submodules in the file tree.
-  "git.ignoreSubmodules": false,
-
-  // Ignores the warning when Git 2.25 - 2.26 is installed on Windows.
-  "git.ignoreWindowsGit27Warning": false,
-
-  // Controls when to show commit message input validation.
-  "git.inputValidation": "warn",
-
-  // Controls the commit message length threshold for showing a warning.
-  "git.inputValidationLength": 72,
-
-  // Controls the commit message subject length threshold for showing a warning. Unset it to inherit the value of `config.inputValidationLength`.
-  "git.inputValidationSubjectLength": 50,
-
-  // Controls whether to open a repository automatically after cloning.
-  //  - always: Always open in current window.
-  //  - alwaysNewWindow: Always open in a new window.
-  //  - whenNoFolderOpen: Only open in current window when no folder is opened.
-  //  - prompt: Always prompt for action.
-  "git.openAfterClone": "prompt",
-
-  // Controls whether the diff editor should be opened when clicking a change. Otherwise the regular editor will be opened.
-  "git.openDiffOnClick": true,
-
-  // Path and filename of the git executable, e.g. `C:\Program Files\Git\bin\git.exe` (Windows). This can also be an array of string values containing multiple paths to look up.
-  "git.path": null,
-
-  // Runs a git command after a successful commit.
-  //  - none: Don't run any command after a commit.
-  //  - push: Run 'Git Push' after a successful commit.
-  //  - sync: Run 'Git Sync' after a successful commit.
-  "git.postCommitCommand": "none",
-
-  // Controls whether Git should check for unsaved files before committing.
-  //  - always: Check for any unsaved files.
-  //  - staged: Check only for unsaved staged files.
-  //  - never: Disable this check.
-  "git.promptToSaveFilesBeforeCommit": "always",
-
-  // Controls whether Git should check for unsaved files before stashing changes.
-  //  - always: Check for any unsaved files.
-  //  - staged: Check only for unsaved staged files.
-  //  - never: Disable this check.
-  "git.promptToSaveFilesBeforeStash": "always",
-
-  // Prune when fetching.
-  "git.pruneOnFetch": false,
-
-  // Fetch all tags when pulling.
-  "git.pullTags": true,
-
-  // Force git to use rebase when running the sync command.
-  "git.rebaseWhenSync": false,
-
-  // Controls whether to require explicit Git user configuration or allow Git to guess if missing.
-  "git.requireGitUserConfig": true,
-
-  // List of paths to search for git repositories in.
-  "git.scanRepositories": [],
-
-  // Controls whether to show the commit input in the Git source control panel.
-  "git.showCommitInput": true,
-
-  // Controls whether to show an inline Open File action in the Git changes view.
-  "git.showInlineOpenFileAction": true,
-
-  // Controls whether git actions should show progress.
-  "git.showProgress": true,
-
-  // Controls whether to show a notification when a push is successful.
-  "git.showPushSuccessNotification": false,
-
-  // Control which changes are automatically staged by Smart Commit.
-  //  - all: Automatically stage all changes.
-  //  - tracked: Automatically stage tracked changes only.
-  "git.smartCommitChanges": "all",
-
-  // Suggests to enable smart commit (commit all changes when there are no staged changes).
-  "git.suggestSmartCommit": true,
-
-  // Controls whether a notification comes up when running the Sync action, which allows the user to cancel the operation.
-  "git.supportCancellation": false,
-
-  // Controls whether to enable VS Code to be the authentication handler for git processes spawned in the integrated terminal. Note: terminals need to be restarted to pick up a change in this setting.
-  "git.terminalAuthentication": true,
-
-  // Controls which date to use for items in the Timeline view.
-  //  - committed: Use the committed date
-  //  - authored: Use the authored date
-  "git.timeline.date": "committed",
-
-  // Controls whether to show the commit author in the Timeline view.
-  "git.timeline.showAuthor": true,
-
-  // Controls how untracked changes behave.
-  //  - mixed: All changes, tracked and untracked, appear together and behave equally.
-  //  - separate: Untracked changes appear separately in the Source Control view. They are also excluded from several actions.
-  //  - hidden: Untracked changes are hidden and excluded from several actions.
-  "git.untrackedChanges": "mixed",
-
-  // Controls whether to use the message from the commit input box as the default stash message.
-  "git.useCommitInputAsStashMessage": false,
-
-  // Controls whether force pushing uses the safer force-with-lease variant.
-  "git.useForcePushWithLease": true,
 
   // Controls whether to enable automatic GitHub authentication for git commands within VS Code.
   "github.gitAuthentication": true,
