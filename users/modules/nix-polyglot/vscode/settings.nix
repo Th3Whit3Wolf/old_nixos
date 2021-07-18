@@ -6154,18 +6154,27 @@ with types;
         '';
       };
     };
+    telemetry = {
+      enableCrashReporter = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable crash reports to be sent to a Microsoft online service.
+          This option requires restart to take effect.
+        '';
+      };
+      enableTelemetry = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable usage data and errors to be sent to a Microsoft online service.
+        '';
+      };
+    };
   };
 }
 
 /*
-  // Telemetry
-
-  // Enable crash reports to be sent to a Microsoft online service.
-  // This option requires restart to take effect.
-  "telemetry.enableCrashReporter": true,
-
-  // Enable usage data and errors to be sent to a Microsoft online service.
-  "telemetry.enableTelemetry": true,
 
   // Outline
 
