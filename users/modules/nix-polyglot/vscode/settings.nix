@@ -6402,171 +6402,152 @@ with types;
         };
       };
     };
+    remote = {
+      autoForwardPorts = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled, new running processes are detected and ports that they listen on are automatically forwarded.
+        '';
+      };
+      autoForwardPortsSource = mkOption {
+        type = enum [ "process" "output" ];
+        default = "process";
+        description = ''
+          Sets the source from which ports are automatically forwarded when `remote.autoForwardPorts` is true. On Windows and Mac remotes, the `process` option has no effect and `output` will be used. Requires a reload to take effect.
+          - process: Ports will be automatically forwarded when discovered by watching for processes that are started and include a port.
+          - output: Ports will be automatically forwarded when discovered by reading terminal and debug output.
+            Not all processes that use ports will print to the integrated terminal or debug console, so some ports will be missed. Ports forwarded based on output will not be "un-forwarded" until reload or until the port is closed by the user in the Ports view.
+        '';
+      };
+      downloadExtensionsLocally = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled extensions are downloaded locally and installed on remote.
+        '';
+      };
+      extensionKind = mkOption {
+        type = attrsOf (listOf str);
+        default = {
+          "pub.name" = [ "ui" ];
+        };
+        description = ''
+          Override the kind of an extension.
+          `ui` extensions are installed and run on the local machine while `workspace` extensions are run on the remote.
+          By overriding an extension's default kind using this setting, you specify if that extension should be installed and enabled locally or remotely.
+        '';
+      };
+      otherPortsAttributes = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Set default properties that are applied to all ports that don't get properties from the setting `remote.portsAttributes`.
+        '';
+      };
+      portsAttributes = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Set properties that are applied when a specific port number is forwarded.
+        '';
+      };
+      portsAttributes = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Restores the ports you forwarded in a workspace.
+        '';
+      };
+    };
+    emmet = {
+      excludeLanguages = mkOption {
+        type = listOf str;
+        default = [ "markdown" ];
+        description = ''
+          An array of languages where Emmet abbreviations should not be expanded.
+        '';
+      };
+      extensionsPath = mkOption {
+        type = listOf str;
+        default = [ ];
+        description = ''
+          An array of paths, where each path can contain Emmet syntaxProfiles and/or snippet files.
+          In case of conflicts, the profiles/snippets of later paths will override those of earlier paths.
+        '';
+      };
+      extensionsPath = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Enable Emmet abbreviations in languages that are not supported by default. Add a mapping here between the language and Emmet supported language.
+          For example: `{"vue-html": "html", "javascript": "javascriptreact"}`
+        '';
+      };
+      optimizeStylesheetParsing = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When set to `false`, the whole file is parsed to determine if current position is valid for expanding Emmet abbreviations.
+          When set to `true`, only the content around the current position in CSS/SCSS/Less files is parsed.
+        '';
+      };
+      preferences = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Preferences used to modify behavior of some actions and resolvers of Emmet.
+        '';
+      };
+      showAbbreviationSuggestions = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Shows possible Emmet abbreviations as suggestions. Not applicable in stylesheets or when emmet.showExpandedAbbreviation is set to `"never"`.
+        '';
+      };
+      showAbbreviationSuggestions = mkOption {
+        type = enum [ "inMarkupAndStylesheetFilesOnly" "always" ];
+        default = "always";
+        description = ''
+          Shows expanded Emmet abbreviations as suggestions.
+          The option `"inMarkupAndStylesheetFilesOnly"` applies to html, haml, jade, slim, xml, xsl, css, scss, sass, less and stylus.
+          The option `"always"` applies to all parts of the file regardless of markup/css.
+        '';
+      };
+      showSuggestionsAsSnippets = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          If `true`, then Emmet suggestions will show up as snippets allowing you to order them as per `editor.snippetSuggestions` setting.
+        '';
+      };
+      syntaxProfiles = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Define profile for specified syntax or use your own profile with specific rules.
+        '';
+      };
+      triggerExpansionOnTab = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled, Emmet abbreviations are expanded when pressing TAB.
+        '';
+      };
+      variables = mkOption {
+        type = attrsOf str;
+        default = { };
+        description = ''
+          Variables to be used in Emmet snippets.
+        '';
+      };
+    };
   };
 }
 
 /*
-
-  // Default Configuration Overrides
-
-  // Configure settings to be overridden for [css] language.
-  "[css]": {
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [dockerfile] language.
-  "[dockerfile]": {
-  "editor.quickSuggestions": {
-  "strings": true
-  }
-  },
-
-  // Configure settings to be overridden for [git-commit] language.
-  "[git-commit]": {
-  "editor.rulers": [72],
-  "workbench.editor.restoreViewState": false
-  },
-
-  // Configure settings to be overridden for [git-rebase] language.
-  "[git-rebase]": {
-  "workbench.editor.restoreViewState": false
-  },
-
-  // Configure settings to be overridden for [go] language.
-  "[go]": {
-  "editor.insertSpaces": false
-  },
-
-  // Configure settings to be overridden for [handlebars] language.
-  "[handlebars]": {
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [html] language.
-  "[html]": {
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [json] language.
-  "[json]": {
-  "editor.quickSuggestions": {
-  "strings": true
-  },
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [jsonc] language.
-  "[jsonc]": {
-  "editor.quickSuggestions": {
-  "strings": true
-  },
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [less] language.
-  "[less]": {
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [makefile] language.
-  "[makefile]": {
-  "editor.insertSpaces": false
-  },
-
-  // Configure settings to be overridden for [markdown] language.
-  "[markdown]": {
-  "editor.wordWrap": "on",
-  "editor.quickSuggestions": false
-  },
-
-  // Configure settings to be overridden for [scss] language.
-  "[scss]": {
-  "editor.suggest.insertMode": "replace"
-  },
-
-  // Configure settings to be overridden for [search-result] language.
-  "[search-result]": {
-  "editor.lineNumbers": "off"
-  },
-
-  // Configure settings to be overridden for [shellscript] language.
-  "[shellscript]": {
-  "files.eol": "\n"
-  },
-
-  // Configure settings to be overridden for [yaml] language.
-  "[yaml]": {
-  "editor.insertSpaces": true,
-  "editor.tabSize": 2,
-  "editor.autoIndent": "advanced"
-  },
-
-  // Remote
-
-  // When enabled, new running processes are detected and ports that they listen on are automatically forwarded.
-  "remote.autoForwardPorts": true,
-
-  // Sets the source from which ports are automatically forwarded when `remote.autoForwardPorts` is true. On Windows and Mac remotes, the `process` option has no effect and `output` will be used. Requires a reload to take effect.
-  //  - process: Ports will be automatically forwarded when discovered by watching for processes that are started and include a port.
-  //  - output: Ports will be automatically forwarded when discovered by reading terminal and debug output. Not all processes that use ports will print to the integrated terminal or debug console, so some ports will be missed. Ports forwarded based on output will not be "un-forwarded" until reload or until the port is closed by the user in the Ports view.
-  "remote.autoForwardPortsSource": "process",
-
-  // When enabled extensions are downloaded locally and installed on remote.
-  "remote.downloadExtensionsLocally": false,
-
-  // Override the kind of an extension. `ui` extensions are installed and run on the local machine while `workspace` extensions are run on the remote. By overriding an extension's default kind using this setting, you specify if that extension should be installed and enabled locally or remotely.
-  "remote.extensionKind": {
-  "pub.name": ["ui"]
-  },
-
-  // Set default properties that are applied to all ports that don't get properties from the setting `remote.portsAttributes`.
-  "remote.otherPortsAttributes": {},
-
-  // Set properties that are applied when a specific port number is forwarded.
-  "remote.portsAttributes": {},
-
-  // Restores the ports you forwarded in a workspace.
-  "remote.restoreForwardedPorts": true,
-
-  // Emmet
-
-  // An array of languages where Emmet abbreviations should not be expanded.
-  "emmet.excludeLanguages": ["markdown"],
-
-  // An array of paths, where each path can contain Emmet syntaxProfiles and/or snippet files.
-  // In case of conflicts, the profiles/snippets of later paths will override those of earlier paths.
-  "emmet.extensionsPath": [],
-
-  // Enable Emmet abbreviations in languages that are not supported by default. Add a mapping here between the language and Emmet supported language.
-  //  For example: `{"vue-html": "html", "javascript": "javascriptreact"}`
-  "emmet.includeLanguages": {},
-
-  // When set to `false`, the whole file is parsed to determine if current position is valid for expanding Emmet abbreviations. When set to `true`, only the content around the current position in CSS/SCSS/Less files is parsed.
-  "emmet.optimizeStylesheetParsing": true,
-
-  // Preferences used to modify behavior of some actions and resolvers of Emmet.
-  "emmet.preferences": {},
-
-  // Shows possible Emmet abbreviations as suggestions. Not applicable in stylesheets or when emmet.showExpandedAbbreviation is set to `"never"`.
-  "emmet.showAbbreviationSuggestions": true,
-
-  // Shows expanded Emmet abbreviations as suggestions.
-  // The option `"inMarkupAndStylesheetFilesOnly"` applies to html, haml, jade, slim, xml, xsl, css, scss, sass, less and stylus.
-  // The option `"always"` applies to all parts of the file regardless of markup/css.
-  "emmet.showExpandedAbbreviation": "always",
-
-  // If `true`, then Emmet suggestions will show up as snippets allowing you to order them as per `editor.snippetSuggestions` setting.
-  "emmet.showSuggestionsAsSnippets": false,
-
-  // Define profile for specified syntax or use your own profile with specific rules.
-  "emmet.syntaxProfiles": {},
-
-  // When enabled, Emmet abbreviations are expanded when pressing TAB.
-  "emmet.triggerExpansionOnTab": false,
-
-  // Variables to be used in Emmet snippets.
-  "emmet.variables": {},
-
   // Git
 
   // Controls whether force push (with or without lease) is enabled.
@@ -6919,3 +6900,99 @@ with types;
 #    "!**/node_modules/**",
 #    "**/$KNOWN_TOOLS$/**"
 #],
+
+/*
+  // Default Configuration Overrides
+
+  // Configure settings to be overridden for [css] language.
+  "[css]": {
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [dockerfile] language.
+  "[dockerfile]": {
+  "editor.quickSuggestions": {
+  "strings": true
+  }
+  },
+
+  // Configure settings to be overridden for [git-commit] language.
+  "[git-commit]": {
+  "editor.rulers": [72],
+  "workbench.editor.restoreViewState": false
+  },
+
+  // Configure settings to be overridden for [git-rebase] language.
+  "[git-rebase]": {
+  "workbench.editor.restoreViewState": false
+  },
+
+  // Configure settings to be overridden for [go] language.
+  "[go]": {
+  "editor.insertSpaces": false
+  },
+
+  // Configure settings to be overridden for [handlebars] language.
+  "[handlebars]": {
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [html] language.
+  "[html]": {
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [json] language.
+  "[json]": {
+  "editor.quickSuggestions": {
+  "strings": true
+  },
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [jsonc] language.
+  "[jsonc]": {
+  "editor.quickSuggestions": {
+  "strings": true
+  },
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [less] language.
+  "[less]": {
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [makefile] language.
+  "[makefile]": {
+  "editor.insertSpaces": false
+  },
+
+  // Configure settings to be overridden for [markdown] language.
+  "[markdown]": {
+  "editor.wordWrap": "on",
+  "editor.quickSuggestions": false
+  },
+
+  // Configure settings to be overridden for [scss] language.
+  "[scss]": {
+  "editor.suggest.insertMode": "replace"
+  },
+
+  // Configure settings to be overridden for [search-result] language.
+  "[search-result]": {
+  "editor.lineNumbers": "off"
+  },
+
+  // Configure settings to be overridden for [shellscript] language.
+  "[shellscript]": {
+  "files.eol": "\n"
+  },
+
+  // Configure settings to be overridden for [yaml] language.
+  "[yaml]": {
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.autoIndent": "advanced"
+  },
+*/
