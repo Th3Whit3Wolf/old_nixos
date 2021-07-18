@@ -75,9 +75,19 @@ let
     in
     recurse { } [ ] tree;
 
+  languageOverride = name:
+    if hasPrefix "languageOverride." name then
+      let
+        lang = last (splitString "." name);
+      in
+      "[${lang}]"
+    else
+      name;
+  mkUserSettingsPrime = mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings);
+
   mkUserSettings = ''
     {
-      ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (flattenTree cfg.userSettings))}
+      ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") mkUserSettingsPrime)}
     }
   '';
 
