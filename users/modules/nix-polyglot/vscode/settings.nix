@@ -327,13 +327,16 @@ with types;
             Controls whether the cursor should jump to find matches while typing.
           '';
         };
-        globalFindClipboard = mkOption {
+        /*
+          MacOS Only
+          globalFindClipboard = mkOption {
           type = bool;
           default = false;
           description = ''
-            Controls whether the Find Widget should read or modify the shared find clipboard on macOS.
+          Controls whether the Find Widget should read or modify the shared find clipboard on macOS.
           '';
-        };
+          };
+        */
         loop = mkOption {
           type = bool;
           default = true;
@@ -1559,7 +1562,7 @@ with types;
         '';
       };
       repositories = {
-        inputFontSize = mkOption {
+        visible = mkOption {
           type = int;
           default = 10;
           description = ''
@@ -1875,7 +1878,7 @@ with types;
         untitled = {
           hint = mkOption {
             type = enum [ "default" "hidden" "text" ];
-            default = "default";
+            default = "text";
             description = ''
               Controls if the untitled hint should be inline text in the editor or a floating button or hidden.
             '';
@@ -1913,17 +1916,20 @@ with types;
           Configure the opener to use for external URIs (http, https).
         '';
       };
-      fontAliasing = mkOption {
+      /*
+        In docs but does not appear to be an option
+        fontAliasing = mkOption {
         type = enum [ "default" "antialiased" "none" "auto" ];
         default = "default";
         description = ''
-          Controls font aliasing method in the workbench.
-            - default: Sub-pixel font smoothing. On most non-retina displays this will give the sharpest text.
-            - antialiased: Smooth the font on the level of the pixel, as opposed to the subpixel. Can make the font appear lighter overall.
-            - none: Disables font smoothing. Text will show with jagged sharp edges.
-            - auto: Applies `default` or `antialiased` automatically based on the DPI of displays.
+        Controls font aliasing method in the workbench.
+        - default: Sub-pixel font smoothing. On most non-retina displays this will give the sharpest text.
+        - antialiased: Smooth the font on the level of the pixel, as opposed to the subpixel. Can make the font appear lighter overall.
+        - none: Disables font smoothing. Text will show with jagged sharp edges.
+        - auto: Applies `default` or `antialiased` automatically based on the DPI of displays.
         '';
-      };
+        };
+      */
       hover = {
         delay = mkOption {
           type = int;
@@ -2022,13 +2028,16 @@ with types;
           Specifies the preferred color theme for dark OS appearance when `window.autoDetectColorScheme` is enabled.
         '';
       };
-      preferredHighContrastColorTheme = mkOption {
+      /*
+        Setting no longer exists
+        preferredHighContrastColorTheme = mkOption {
         type = str;
         default = "Default High Contrast";
         description = ''
-          Specifies the preferred color theme used in high contrast mode when `window.autoDetectHighContrast` is enabled.
+        Specifies the preferred color theme used in high contrast mode when `window.autoDetectHighContrast` is enabled.
         '';
-      };
+        };
+      */
       preferredLightColorTheme = mkOption {
         type = str;
         default = "Default Light+";
@@ -2061,7 +2070,7 @@ with types;
         };
       };
       sash = {
-        preserveInput = mkOption {
+        hoverDelay = mkOption {
           type = int;
           default = 300;
           description = ''
@@ -2078,7 +2087,7 @@ with types;
         };
       };
       settings = {
-        opensMaximized = mkOption {
+        editor = mkOption {
           type = enum [ "ui" "json" ];
           default = "json";
           description = ''
@@ -2236,14 +2245,17 @@ with types;
           The high contrast theme to use is specified by `workbench.preferredHighContrastColorTheme`.
         '';
       };
-      clickThroughInactive = mkOption {
+      /*
+        In docs but does not appear to exist
+        clickThroughInactive = mkOption {
         type = bool;
         default = true;
         description = ''
-          If enabled, clicking on an inactive window will both activate the window and trigger the element under the mouse if it is clickable.
-          If disabled, clicking anywhere on an inactive window will activate it only and a second click is required on the element.
+        If enabled, clicking on an inactive window will both activate the window and trigger the element under the mouse if it is clickable.
+        If disabled, clicking anywhere on an inactive window will activate it only and a second click is required on the element.
         '';
-      };
+        };
+      */
       closeWhenEmpty = mkOption {
         type = bool;
         default = false;
@@ -2275,20 +2287,23 @@ with types;
           This setting only has an effect when `window.titleBarStyle` is set to `custom`.
         '';
       };
-      nativeFullScreen = mkOption {
+      /*
+        In docs but does not appear to exist
+        nativeFullScreen = mkOption {
         type = bool;
         default = true;
         description = ''
-          Controls if native full-screen should be used on macOS. Disable this option to prevent macOS from creating a new space when going full-screen.
+        Controls if native full-screen should be used on macOS. Disable this option to prevent macOS from creating a new space when going full-screen.
         '';
-      };
-      nativeTabs = mkOption {
+        };
+        nativeTabs = mkOption {
         type = bool;
         default = false;
         description = ''
-          Enables macOS Sierra window tabs. Note that changes require a full restart to apply and that native tabs will disable a custom title bar style if configured.
+        Enables macOS Sierra window tabs. Note that changes require a full restart to apply and that native tabs will disable a custom title bar style if configured.
         '';
-      };
+        };
+      */
       enableMenuBarMnemonics = mkOption {
         type = bool;
         default = true;
@@ -2602,7 +2617,7 @@ with types;
         '';
       };
       simpleDialog = {
-        restoreUndoStack = mkOption {
+        enable = mkOption {
           type = bool;
           default = false;
           description = ''
@@ -2895,13 +2910,16 @@ with types;
       };
     };
     search = {
-      globalFindClipboard = mkOption {
+      /*
+        MacOS Only
+        globalFindClipboard = mkOption {
         type = bool;
         default = true;
         description = ''
-          Controls whether the search view should read or modify the shared find clipboard on macOS.
+        Controls whether the search view should read or modify the shared find clipboard on macOS.
         '';
-      };
+        };
+      */
       mode = mkOption {
         type = enum [ "view" "reuseEditor" "newEditor" ];
         default = "view";
@@ -3103,30 +3121,27 @@ with types;
         '';
       };
       touchbar = {
-        enabled = mkOption {
+        /*
+          macOs Only
+
+          enabled = mkOption {
           type = bool;
           default = true;
           description = ''
-            Enables the macOS touchbar buttons on the keyboard if available.
+          Enables the macOS touchbar buttons on the keyboard if available.
           '';
-        };
-        ignored = mkOption {
+          };
+          ignored = mkOption {
           type = listOf str;
           default = [ ];
           description = ''
-            A set of identifiers for entries in the touchbar that should not show up (for example `workbench.action.navigateBack`).
+          A set of identifiers for entries in the touchbar that should not show up (for example `workbench.action.navigateBack`).
           '';
-        };
+          };
+        */
       };
     };
     update = {
-      enableWindowsBackgroundUpdates = mkOption {
-        type = bool;
-        default = true;
-        description = ''
-          Enable to download and install new VS Code versions in the background on Windows.
-        '';
-      };
       mode = mkOption {
         type = enum [ "none" "manual" "start" "default" ];
         default = "default";
@@ -3305,12 +3320,14 @@ with types;
           When this setting is false the stop command on a sub-session will also stop the parent session.
         '';
       };
-      clearBeforeReusing = mkOption {
-        type = bool;
-        default = false;
-        description = ''
-          Before starting a new debug session in an integrated or external terminal, clear the terminal.
-        '';
+      terminal = {
+        clearBeforeReusing = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Before starting a new debug session in an integrated or external terminal, clear the terminal.
+          '';
+        };
       };
       toolBarLocation = mkOption {
         type = enum [ "floating" "docked" "hidden" ];
@@ -3625,7 +3642,7 @@ with types;
             Mark the current editor selection in the Markdown preview.
           '';
         };
-        openLocation = mkOption {
+        openMarkdownLinks = mkOption {
           type = enum [ "inPreview" "inEditor" ];
           default = "inPreview";
           description = ''
@@ -4068,7 +4085,7 @@ with types;
         '';
       };
       format = {
-        enablePromptUseWorkspaceTsdk = mkOption {
+        enable = mkOption {
           type = bool;
           default = true;
           description = ''
@@ -4477,7 +4494,7 @@ with types;
         };
       };
       workspaceSymbols = {
-        enabled = mkOption {
+        scope = mkOption {
           type = enum [ "allOpenProjects" "currentProject" ];
           default = "allOpenProjects";
           description = ''
@@ -4506,7 +4523,7 @@ with types;
           '';
         };
       };
-      triggerPropertyValueCompletion = mkOption {
+      customData = mkOption {
         type = listOf str;
         default = [ ];
         description = ''
@@ -4711,15 +4728,6 @@ with types;
           '';
         };
       };
-      triggerPropertyValueCompletion = mkOption {
-        type = listOf str;
-        default = [ ];
-        description = ''
-          A list of relative file paths pointing to JSON files following the custom data format.
-          VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
-          The file paths are relative to workspace and only workspace folder settings are considered.
-        '';
-      };
       hover = {
         documentation = mkOption {
           type = bool;
@@ -4881,15 +4889,6 @@ with types;
           '';
         };
       };
-      trace = {
-        server = mkOption {
-          type = enum [ "off" "messages" "verbose" ];
-          default = "off";
-          description = ''
-            Traces the communication between VS Code and the LESS language server.
-          '';
-        };
-      };
       validate = mkOption {
         type = bool;
         default = true;
@@ -4915,15 +4914,6 @@ with types;
             Use this setting to disable this behavior.
           '';
         };
-      };
-      triggerPropertyValueCompletion = mkOption {
-        type = listOf str;
-        default = [ ];
-        description = ''
-          A list of relative file paths pointing to JSON files following the custom data format.
-          VS Code loads custom data on startup to enhance its CSS support for the custom CSS properties, at directives, pseudo classes and pseudo elements you specify in the JSON files.
-          The file paths are relative to workspace and only workspace folder settings are considered.
-        '';
       };
       hover = {
         documentation = mkOption {
@@ -5086,15 +5076,6 @@ with types;
           '';
         };
       };
-      trace = {
-        server = mkOption {
-          type = enum [ "off" "messages" "verbose" ];
-          default = "off";
-          description = ''
-            Traces the communication between VS Code and the SCSS language server.
-          '';
-        };
-      };
       validate = mkOption {
         type = bool;
         default = true;
@@ -5173,30 +5154,33 @@ with types;
         };
       };
     };
-    settingsSync = {
+    /*
+      In docs but does not appear to be an option
+      settingsSync = {
       ignoredExtensions = mkOption {
-        type = listOf str;
-        default = [ ];
-        description = ''
-          List of extensions to be ignored while synchronizing.
-          The identifier of an extension is always `$\{publisher}.$\{name}`. For example: `vscode.csharp`.
-        '';
+      type = listOf str;
+      default = [ ];
+      description = ''
+      List of extensions to be ignored while synchronizing.
+      The identifier of an extension is always `$\{publisher}.$\{name}`. For example: `vscode.csharp`.
+      '';
       };
       ignoredSettings = mkOption {
-        type = listOf str;
-        default = [ ];
-        description = ''
-          Configure settings to be ignored while synchronizing.
-        '';
+      type = listOf str;
+      default = [ ];
+      description = ''
+      Configure settings to be ignored while synchronizing.
+      '';
       };
       keybindingsPerPlatform = mkOption {
-        type = bool;
-        default = true;
-        description = ''
-          Synchronize keybindings for each platform.
-        '';
+      type = bool;
+      default = true;
+      description = ''
+      Synchronize keybindings for each platform.
+      '';
       };
-    };
+      };
+    */
     notebook = {
       breadcrumbs = {
         showCodeCells = mkOption {
@@ -5215,8 +5199,10 @@ with types;
         '';
       };
       cellToolbarLocation = mkOption {
-        type = enum [ "right" "left" "hidden" ];
-        default = "right";
+        type = attrsOf (enum [ "right" "left" "hidden" ]);
+        default = {
+          default = "right";
+        };
         description = ''
           Where the cell toolbar should be shown, or whether it should be hidden.
         '';
@@ -5384,13 +5370,16 @@ with types;
             Customizes which terminal to run on Linux.
           '';
         };
-        osxExec = mkOption {
+        /*
+          MacOS
+          osxExec = mkOption {
           type = str;
           default = "Terminal.app";
           description = ''
-            Customizes which terminal application to run on macOS.
+          Customizes which terminal application to run on macOS.
           '';
-        };
+          };
+        */
       };
       integrated = {
         allowChords = mkOption {
@@ -5426,13 +5415,16 @@ with types;
               A path that when set will override `terminal.integrated.shell.linux` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
             '';
           };
-          osx = mkOption {
+          /*
+            MacOS
+            osx = mkOption {
             type = nullOr str;
             default = null;
             description = ''
-              A path that when set will override `terminal.integrated.shell.osx` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
+            A path that when set will override `terminal.integrated.shell.osx` and ignore `shellArgs` values for automation-related terminal usage like tasks and debug.
             '';
-          };
+            };
+          */
         };
         bellDuration = mkOption {
           type = int;
@@ -5493,21 +5485,24 @@ with types;
         };
         defaultProfile = {
           linux = mkOption {
-            type = nullOr str;
-            default = null;
+            type = enum [ "bash" "zsh" ];
+            default = "zsh";
             description = ''
               The default profile used on Linux.
               This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
             '';
           };
-          osx = mkOption {
+          /*
+            MacOS
+            osx = mkOption {
             type = nullOr str;
             default = null;
             description = ''
-              The default profile used on macOS.
-              This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
+            The default profile used on macOS.
+            This setting will currently be ignored if either `terminal.integrated.shell.linux` or `terminal.integrated.shellArgs.linux` are set.
             '';
-          };
+            };
+          */
         };
         detectLocale = mkOption {
           type = enum [ "auto" "off" "on" ];
@@ -5558,14 +5553,17 @@ with types;
               Set to `null` to delete the environment variable.
             '';
           };
-          osx = mkOption {
+          /*
+            MacOS
+            osx = mkOption {
             type = attrsOf str;
             default = { };
             description = ''
-              Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS.
-              Set to `null` to delete the environment variable.
+            Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS.
+            Set to `null` to delete the environment variable.
             '';
-          };
+            };
+          */
         };
         environmentChangesIndicator = mkOption {
           type = enum [ "off" "on" "warnonly" ];
@@ -5693,14 +5691,17 @@ with types;
               When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
             '';
           };
-          osx = mkOption {
+          /*
+            MacOS
+            osx = mkOption {
             type = attrsOf str;
             default = { };
             description = ''
-              The macOS profiles to present when creating a new terminal via the terminal dropdown.
-              When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
+            The macOS profiles to present when creating a new terminal via the terminal dropdown.
+            When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
             '';
-          };
+            };
+          */
         };
         rightClickBehavior = mkOption {
           type = enum [ "default" "copyPaste" "paste" "selectWord" ];
@@ -6385,22 +6386,22 @@ with types;
           When enabled outline show `variable`-symbols.
         '';
       };
-      timeline = {
-        excludeSources = mkOption {
-          type = nullOr (listOf str);
-          default = null;
-          description = ''
-            An array of Timeline sources that should be excluded from the Timeline view.
-          '';
-        };
-        pageSize = mkOption {
-          type = nullOr int;
-          default = null;
-          description = ''
-            The number of items to show in the Timeline view by default and when loading more items.
-            Setting to `null` (the default) will automatically choose a page size based on the visible area of the Timeline view.
-          '';
-        };
+    };
+    timeline = {
+      excludeSources = mkOption {
+        type = nullOr (listOf str);
+        default = null;
+        description = ''
+          An array of Timeline sources that should be excluded from the Timeline view.
+        '';
+      };
+      pageSize = mkOption {
+        type = nullOr int;
+        default = null;
+        description = ''
+          The number of items to show in the Timeline view by default and when loading more items.
+          Setting to `null` (the default) will automatically choose a page size based on the visible area of the Timeline view.
+        '';
       };
     };
     remote = {
@@ -7229,6 +7230,8 @@ with types;
             Use the new in-preview JavaScript debugger for Node.js and Chrome.
           '';
         };
+      };
+      node = {
         showUseWslIsDeprecatedWarning = mkOption {
           type = bool;
           default = true;
@@ -7264,14 +7267,17 @@ with types;
           Enable running npm scripts contained in a folder from the Explorer context menu.
         '';
       };
-      enableScriptExplorer = mkOption {
+      /*
+        The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
+        enableScriptExplorer = mkOption {
         type = bool;
         default = false;
         description = ''
-          The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
-          Enable an explorer view for npm scripts when there is no top-level 'package.json' file.
+        The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
+        Enable an explorer view for npm scripts when there is no top-level 'package.json' file.
         '';
-      };
+        };
+      */
       exclude = mkOption {
         type = str;
         default = "";
