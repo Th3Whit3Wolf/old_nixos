@@ -203,7 +203,6 @@ in
           "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
       };
       update = {
-        enableWindowsBackgroundUpdates = false;
         mode = "none";
         showReleaseNotes = false;
       };
