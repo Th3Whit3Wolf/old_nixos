@@ -7103,66 +7103,145 @@ with types;
         '';
       };
     };
+    debug = {
+      javascript = {
+        autoAttachFilter = mkOption {
+          type = enum [ "always" "smart" "onlyWithFlag" "disabled" ];
+          default = "disabled";
+          description = ''
+            Configures which processes to automatically attach and debug when `debug.node.autoAttach` is on. A Node process launched with the `--inspect` flag will always be attached to, regardless of this setting.
+            - always: Auto attach to every Node.js process launched in the terminal.
+            - smart: Auto attach when running scripts that aren't in a node_modules folder.
+            - onlyWithFlag: Only auto attach when the `--inspect` is given.
+            - disabled: Auto attach is disabled and not shown in status bar.
+          '';
+        };
+        autoAttachSmartPattern = mkOption {
+          type = listOf str;
+          default = [
+            "\${workspaceFolder}/**"
+            "!**/node_modules/**"
+            "**/$KNOWN_TOOLS$/**"
+          ];
+          description = ''
+            Configures which processes to automatically attach and debug when `debug.node.autoAttach` is on. A Node process launched with the `--inspect` flag will always be attached to, regardless of this setting.
+            - always: Auto attach to every Node.js process launched in the terminal.
+            - smart: Auto attach when running scripts that aren't in a node_modules folder.
+            - onlyWithFlag: Only auto attach when the `--inspect` is given.
+            - disabled: Auto attach is disabled and not shown in status bar.
+          '';
+        };
+        autoExpandGetters = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Configures whether property getters will be expanded automatically.
+            If this is false, the getter will appear as `get propertyName` and will only be evaluated when you click on it.
+          '';
+        };
+        automaticallyTunnelRemoteServer = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            When debugging a remote web app, configures whether to automatically tunnel the remote server to your local machine.
+          '';
+        };
+        breakOnConditionalError = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Whether to stop when conditional breakpoints throw an error.
+            Note: your launch.json `type` must be prefixed with `pwa-` to use this, such as `pwa-node`.
+          '';
+        };
+        codelens = {
+          npmScripts = mkOption {
+            type = enum [ "all" "top" "never" ];
+            default = "top";
+            description = ''
+              Where a "Run" and "Debug" code lens should be shown in your npm scripts.
+              It may be on "all", scripts, on "top" of the script section, or "never".
+            '';
+          };
+        };
+        debugByLinkOptions = mkOption {
+          type = enum [ "on" "off" "always" ];
+          default = "on";
+          description = ''
+            Options used when debugging open links clicked from inside the JavaScript Debug Terminal.
+            Can be set to "off" to disable this behavior, or "always" to enable debugging in all terminals.
+          '';
+        };
+        defaultRuntimeExecutable = mkOption {
+          type = attrsOf str;
+          default = {
+            "pwa-node" = "node";
+          };
+          description = ''
+            The default `runtimeExecutable` used for launch configurations, if unspecified.
+            This can be used to config custom paths to Node.js or browser installations.
+          '';
+        };
+        pickAndAttachOptions = mkOption {
+          type = attrsOf str;
+          default = { };
+          description = ''
+            Default options used when debugging a process through the `Debug: Attach to Node.js Process` command.
+          '';
+        };
+        resourceRequestOptions = mkOption {
+          type = attrsOf (attrsOf bool);
+          default = { };
+          description = ''
+            Request options to use when loading resources, such as source maps, in the debugger.
+            You may need to configure this if your sourcemaps require authentication or use a self-signed certificate, for instance.
+            Options are used to create a request using the `got`library.
+            A common case to disable certificate verification can be done by passing `{ "https": { "rejectUnauthorized": false } }`.
+          '';
+        };
+        suggestPrettyPrinting = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Whether to suggest pretty printing JavaScript code that looks minified when you step into it.
+          '';
+        };
+        terminalOptions = mkOption {
+          type = attrsOf str;
+          default = { };
+          description = ''
+            Default launch options for the JavaScript debug terminal and npm scripts.
+          '';
+        };
+        unmapMissingSources = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Configures whether sourcemapped file where the original file can't be read will automatically be unmapped.
+            If this is false (default), a prompt is shown.
+          '';
+        };
+        usePreview = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Use the new in-preview JavaScript debugger for Node.js and Chrome.
+          '';
+        };
+        showUseWslIsDeprecatedWarning = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Controls whether to show a warning when the 'useWSL' attribute is used.
+          '';
+        };
+      };
+    };
   };
 }
 
+
 /*
-
-  // JavaScript Debugger
-
-  // Configures which processes to automatically attach and debug when `debug.node.autoAttach` is on. A Node process launched with the `--inspect` flag will always be attached to, regardless of this setting.
-  //  - always: Auto attach to every Node.js process launched in the terminal.
-  //  - smart: Auto attach when running scripts that aren't in a node_modules folder.
-  //  - onlyWithFlag: Only auto attach when the `--inspect` is given.
-  //  - disabled: Auto attach is disabled and not shown in status bar.
-  "debug.javascript.autoAttachFilter": "disabled",
-
-  #############
-  ## SEE BOTTOM
-  #############
-
-  // Configures whether property getters will be expanded automatically. If this is false, the getter will appear as `get propertyName` and will only be evaluated when you click on it.
-  "debug.javascript.autoExpandGetters": false,
-
-  // When debugging a remote web app, configures whether to automatically tunnel the remote server to your local machine.
-  "debug.javascript.automaticallyTunnelRemoteServer": true,
-
-  // Whether to stop when conditional breakpoints throw an error. Note: your launch.json `type` must be prefixed with `pwa-` to use this, such as `pwa-node`.
-  "debug.javascript.breakOnConditionalError": false,
-
-  // Where a "Run" and "Debug" code lens should be shown in your npm scripts. It may be on "all", scripts, on "top" of the script section, or "never".
-  "debug.javascript.codelens.npmScripts": "top",
-
-  // Options used when debugging open links clicked from inside the JavaScript Debug Terminal. Can be set to "off" to disable this behavior, or "always" to enable debugging in all terminals.
-  "debug.javascript.debugByLinkOptions": "on",
-
-  // The default `runtimeExecutable` used for launch configurations, if unspecified. This can be used to config custom paths to Node.js or browser installations.
-  "debug.javascript.defaultRuntimeExecutable": {
-  "pwa-node": "node"
-  },
-
-  // Default options used when debugging a process through the `Debug: Attach to Node.js Process` command.
-  "debug.javascript.pickAndAttachOptions": {},
-
-  // Request options to use when loading resources, such as source maps, in the debugger. You may need to configure this if your sourcemaps require authentication or use a self-signed certificate, for instance. Options are used to create a request using the `got`library.
-  // A common case to disable certificate verification can be done by passing `{ "https": { "rejectUnauthorized": false } }`.
-  "debug.javascript.resourceRequestOptions": {},
-
-  // Whether to suggest pretty printing JavaScript code that looks minified when you step into it.
-  "debug.javascript.suggestPrettyPrinting": true,
-
-  // Default launch options for the JavaScript debug terminal and npm scripts.
-  "debug.javascript.terminalOptions": {},
-
-  // Configures whether sourcemapped file where the original file can't be read will automatically be unmapped. If this is false (default), a prompt is shown.
-  "debug.javascript.unmapMissingSources": false,
-
-  // Use the new in-preview JavaScript debugger for Node.js and Chrome.
-  "debug.javascript.usePreview": true,
-
-  // Controls whether to show a warning when the 'useWSL' attribute is used.
-  "debug.node.showUseWslIsDeprecatedWarning": true,
-
   // References Search View
 
   // Controls whether 'Peek References' or 'Find References' is invoked when selecting CodeLens references.
@@ -7203,12 +7282,7 @@ with types;
   }
 */
 
-# Configures glob patterns for determining when to attach in "smart" `debug.javascript.autoAttachFilter` mode. `$KNOWN_TOOLS$` is replaced with a list of names of common test and code runners.
-#  "debug.javascript.autoAttachSmartPattern": [
-#    "${workspaceFolder}/**",
-#    "!**/node_modules/**",
-#    "**/$KNOWN_TOOLS$/**"
-#],
+
 
 /*
   // Default Configuration Overrides
