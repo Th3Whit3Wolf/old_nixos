@@ -7034,23 +7034,40 @@ with types;
         '';
       };
     };
+    grunt = {
+      autoDetect = mkOption {
+        type = enum [ "on" "off" ];
+        default = "off";
+        description = ''
+          Controls enablement of Grunt task detection.
+          Grunt task detection can cause files in any open workspace to be executed.
+        '';
+      };
+    };
+    gulp = {
+      autoDetect = mkOption {
+        type = enum [ "on" "off" ];
+        default = "off";
+        description = ''
+          Controls enablement of Gulp task detection.
+          Gulp task detection can cause files in any open workspace to be executed.
+        '';
+      };
+    };
+    jake = {
+      autoDetect = mkOption {
+        type = enum [ "on" "off" ];
+        default = "off";
+        description = ''
+          Controls enablement of Jake task detection.
+          Jake task detection can cause files in any open workspace to be executed.
+        '';
+      };
+    };
   };
 }
 
 /*
-
-  // Grunt
-  // Controls enablement of Grunt task detection. Grunt task detection can cause files in any open workspace to be executed.
-  "grunt.autoDetect": "off",
-
-  // Gulp
-
-  // Controls enablement of Gulp task detection. Gulp task detection can cause files in any open workspace to be executed.
-  "gulp.autoDetect": "off",
-
-  // Jake
-  // Controls enablement of Jake task detection. Jake task detection can cause files in any open workspace to be executed.
-  "jake.autoDetect": "off",
 
   // Merge Conflict
 
