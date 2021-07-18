@@ -9,6 +9,11 @@ let
   polyglot = config.nix-polyglot;
   cfg = polyglot.lang.rust;
 
+  imports = [
+    ./vscode.nix
+    ./neovim.nix
+  ];
+
   # For persistence
   inherit (config.home) homeDirectory username;
   startWithHome = xdgDir:
@@ -90,46 +95,9 @@ let
     cs = "cargo search";
     cfa = "cargo fmt; cargo fix --allow-dirty --allow-staged";
   };
-
-  neovimPlugins = mkOption {
-    type = with types; listOf (either package pluginWithConfigType);
-    default = with pkgs.vimPlugins; [
-      {
-        plugin = rust-vim;
-        optional = true;
-      }
-      {
-        plugin = vim-crates;
-        optional = true;
-      }
-      {
-        plugin = vim-cargo-make;
-        optional = true;
-      }
-      {
-        plugin = vim-duckscript;
-        optional = true;
-      }
-    ];
-  };
-
-  vscodeExtensions = with pkgs.vscode-extensions; [
-    serayuzgur.crates
-    matklad.rust-analyzer
-    belfz.search-crates-io
-  ];
-
-  vscodeSettings = {
-    rust-analyzer = {
-      cargo.allFeatures = true;
-      checkOnSave.command = "clippy";
-      procMacro.enable = true;
-      rustcSource = "${pkgs.rust-analyzer}";
-    };
-  };
-
 in
 {
+  inherit imports;
   options.nix-polyglot.lang.rust = {
     enable = mkOption {
       type = types.bool;
@@ -167,13 +135,6 @@ in
         name = "cargo";
         src = ./zsh/cargo;
       }];
-    };
-    nix-polyglot = {
-      neovim = { plugins = neovimPlugins; };
-      vscode = {
-        #userSettings = vscodeSettings;
-        extensions = vscodeExtensions;
-      };
     };
   };
 }
