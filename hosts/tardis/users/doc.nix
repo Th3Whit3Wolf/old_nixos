@@ -46,7 +46,10 @@ in
         gnome3.sushi
         mesa
         river
-        #firefox-wayland
+
+        # Required
+        firefox-wayland
+        brightnessctl
 
       ] ++ themePackages;
   };

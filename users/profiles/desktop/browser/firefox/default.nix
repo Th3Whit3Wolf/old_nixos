@@ -22,7 +22,6 @@ let
     ublock-origin
     unpaywall
   ];
-  ffox = if (config.wayland.windowManager.sway.enable) then pkgs.firefox-wayland else pkgs.firefox;
 in
 
 
@@ -32,7 +31,6 @@ in
       [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
-    package = ffox;
     extensions = [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
