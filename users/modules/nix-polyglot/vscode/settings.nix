@@ -6171,6 +6171,220 @@ with types;
         '';
       };
     };
+    outline = {
+      icons = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Render Outline Elements with Icons.
+        '';
+      };
+      problems = {
+        badges = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Use badges for Errors & Warnings.
+          '';
+        };
+        colors = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Use colors for Errors & Warnings.
+          '';
+        };
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show Errors & Warnings on Outline Elements.
+          '';
+        };
+      };
+      showArrays = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline shows `array`-symbols.
+        '';
+      };
+      showBooleans = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline shows `boolean`-symbols.
+        '';
+      };
+      showClasses = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline shows `class`-symbols.
+        '';
+      };
+      showConstants = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline shows `constant`-symbols.
+        '';
+      };
+      showConstructors = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline shows `constructor`-symbols.
+        '';
+      };
+      showEnumMembers = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `enumMember`-symbols.
+        '';
+      };
+      showEnums = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `enum`-symbols.
+        '';
+      };
+      showEvents = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `event`-symbols.
+        '';
+      };
+      showFields = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `field`-symbols.
+        '';
+      };
+      showFiles = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `file`-symbols.
+        '';
+      };
+      showFunctions = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `function`-symbols.
+        '';
+      };
+      showInterfaces = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `interface`-symbols.
+        '';
+      };
+      showKeys = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `key`-symbols.
+        '';
+      };
+      showMethods = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `method`-symbols.
+        '';
+      };
+      showModules = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `module`-symbols.
+        '';
+      };
+      showNamespaces = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `namespace`-symbols.
+        '';
+      };
+      showNull = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `null`-symbols.
+        '';
+      };
+      showNumbers = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `number`-symbols.
+        '';
+      };
+      showObjects = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `object`-symbols.
+        '';
+      };
+      showOperators = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `operator`-symbols.
+        '';
+      };
+      showPackages = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `package`-symbols.
+        '';
+      };
+      showProperties = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `property`-symbols.
+        '';
+      };
+      showStrings = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `string`-symbols.
+        '';
+      };
+      showStructs = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `struct`-symbols.
+        '';
+      };
+      showTypeParameters = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `typeParameter`-symbols.
+        '';
+      };
+      showVariables = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled outline show `variable`-symbols.
+        '';
+      };
+    };
   };
 }
 
@@ -6178,95 +6392,8 @@ with types;
 
   // Outline
 
-  // Render Outline Elements with Icons.
-  "outline.icons": true,
 
-  // Use badges for Errors & Warnings.
-  "outline.problems.badges": true,
 
-  // Use colors for Errors & Warnings.
-  "outline.problems.colors": true,
-
-  // Show Errors & Warnings on Outline Elements.
-  "outline.problems.enabled": true,
-
-  // When enabled outline shows `array`-symbols.
-  "outline.showArrays": true,
-
-  // When enabled outline shows `boolean`-symbols.
-  "outline.showBooleans": true,
-
-  // When enabled outline shows `class`-symbols.
-  "outline.showClasses": true,
-
-  // When enabled outline shows `constant`-symbols.
-  "outline.showConstants": true,
-
-  // When enabled outline shows `constructor`-symbols.
-  "outline.showConstructors": true,
-
-  // When enabled outline shows `enumMember`-symbols.
-  "outline.showEnumMembers": true,
-
-  // When enabled outline shows `enum`-symbols.
-  "outline.showEnums": true,
-
-  // When enabled outline shows `event`-symbols.
-  "outline.showEvents": true,
-
-  // When enabled outline shows `field`-symbols.
-  "outline.showFields": true,
-
-  // When enabled outline shows `file`-symbols.
-  "outline.showFiles": true,
-
-  // When enabled outline shows `function`-symbols.
-  "outline.showFunctions": true,
-
-  // When enabled outline shows `interface`-symbols.
-  "outline.showInterfaces": true,
-
-  // When enabled outline shows `key`-symbols.
-  "outline.showKeys": true,
-
-  // When enabled outline shows `method`-symbols.
-  "outline.showMethods": true,
-
-  // When enabled outline shows `module`-symbols.
-  "outline.showModules": true,
-
-  // When enabled outline shows `namespace`-symbols.
-  "outline.showNamespaces": true,
-
-  // When enabled outline shows `null`-symbols.
-  "outline.showNull": true,
-
-  // When enabled outline shows `number`-symbols.
-  "outline.showNumbers": true,
-
-  // When enabled outline shows `object`-symbols.
-  "outline.showObjects": true,
-
-  // When enabled outline shows `operator`-symbols.
-  "outline.showOperators": true,
-
-  // When enabled outline shows `package`-symbols.
-  "outline.showPackages": true,
-
-  // When enabled outline shows `property`-symbols.
-  "outline.showProperties": true,
-
-  // When enabled outline shows `string`-symbols.
-  "outline.showStrings": true,
-
-  // When enabled outline shows `struct`-symbols.
-  "outline.showStructs": true,
-
-  // When enabled outline shows `typeParameter`-symbols.
-  "outline.showTypeParameters": true,
-
-  // When enabled outline shows `variable`-symbols.
-  "outline.showVariables": true,
 
   // Timeline
 
