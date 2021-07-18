@@ -7016,17 +7016,28 @@ with types;
         '';
       };
     };
+    github = {
+      gitAuthentication = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether to enable automatic GitHub authentication for git commands within VS Code.
+        '';
+      };
+    };
+    github-enterprise = {
+      uri = mkOption {
+        type = str;
+        default = "";
+        description = ''
+          URI of your GitHub Enterprise Instance
+        '';
+      };
+    };
   };
 }
 
 /*
-  // Git
-
-  // Controls whether to enable automatic GitHub authentication for git commands within VS Code.
-  "github.gitAuthentication": true,
-
-  // URI of your GitHub Enterprise Instance
-  "github-enterprise.uri": "",
 
   // Grunt
   // Controls enablement of Grunt task detection. Grunt task detection can cause files in any open workspace to be executed.
