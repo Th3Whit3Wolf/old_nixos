@@ -7064,27 +7064,49 @@ with types;
         '';
       };
     };
+    merge-conflict = {
+      autoNavigateNextConflict = {
+        enabled = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Whether to automatically navigate to the next merge conflict after resolving a merge conflict.
+          '';
+        };
+      };
+      codeLens = {
+        enabled = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Create a CodeLens for merge conflict blocks within editor.
+          '';
+        };
+      };
+      decorators = {
+        enabled = mkOption {
+          type = bool;
+          default = false;
+          description = ''
+            Create decorators for merge conflict blocks within editor.
+          '';
+        };
+      };
+      diffViewPosition = mkOption {
+        type = enum [ "Current" "Beside" "Below" ];
+        default = "Current";
+        description = ''
+          Controls where the diff view should be opened when comparing changes in merge conflicts.
+          - Current: Open the diff view in the current editor group.
+          - Beside: Open the diff view next to the current editor group.
+          - Below: Open the diff view below the current editor group.
+        '';
+      };
+    };
   };
 }
 
 /*
-
-  // Merge Conflict
-
-  // Whether to automatically navigate to the next merge conflict after resolving a merge conflict.
-  "merge-conflict.autoNavigateNextConflict.enabled": false,
-
-  // Create a CodeLens for merge conflict blocks within editor.
-  "merge-conflict.codeLens.enabled": true,
-
-  // Create decorators for merge conflict blocks within editor.
-  "merge-conflict.decorators.enabled": true,
-
-  // Controls where the diff view should be opened when comparing changes in merge conflicts.
-  //  - Current: Open the diff view in the current editor group.
-  //  - Beside: Open the diff view next to the current editor group.
-  //  - Below: Open the diff view below the current editor group.
-  "merge-conflict.diffViewPosition": "Current",
 
   // JavaScript Debugger
 
