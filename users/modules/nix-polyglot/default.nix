@@ -19,10 +19,11 @@ in
 
   /*
     * Should have strong integrations with many editors
-    * VSCODE - In Progress
-    * NVIM   - Started
-    * EMACS  - Not Started
-    * HELIX  - Not Started
+    * VSCODE   - In Progress
+    * NVIM     - Started
+    * EMACS    - Not Started
+    * KAKOUNE  - Not Started
+    * HELIX    - Not Started
 
     Browser extension:
     * Github: https://github.com/stefanbuck/awesome-browser-extensions-for-github
