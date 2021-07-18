@@ -6384,24 +6384,28 @@ with types;
           When enabled outline show `variable`-symbols.
         '';
       };
+      timeline = {
+        excludeSources = mkOption {
+          type = nullOr (listOf str);
+          default = null;
+          description = ''
+            An array of Timeline sources that should be excluded from the Timeline view.
+          '';
+        };
+        pageSize = mkOption {
+          type = nullOr int;
+          default = null;
+          description = ''
+            The number of items to show in the Timeline view by default and when loading more items.
+            Setting to `null` (the default) will automatically choose a page size based on the visible area of the Timeline view.
+          '';
+        };
+      };
     };
   };
 }
 
 /*
-
-  // Outline
-
-
-
-
-  // Timeline
-
-  // An array of Timeline sources that should be excluded from the Timeline view.
-  "timeline.excludeSources": null,
-
-  // The number of items to show in the Timeline view by default and when loading more items. Setting to `null` (the default) will automatically choose a page size based on the visible area of the Timeline view.
-  "timeline.pageSize": null,
 
   // Default Configuration Overrides
 
