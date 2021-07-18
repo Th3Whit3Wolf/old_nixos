@@ -7237,51 +7237,82 @@ with types;
         };
       };
     };
+    references = {
+      preferredLocation = mkOption {
+        type = enum [ "peek" "view" ];
+        default = "peek";
+        description = ''
+          Controls whether 'Peek References' or 'Find References' is invoked when selecting CodeLens references.
+          - peek: Show references in peek editor.
+          - view: Show references in separate view.
+        '';
+      };
+    };
+    npm = {
+      autoDetect = mkOption {
+        type = enum [ "on" "off" ];
+        default = "on";
+        description = ''
+          Controls whether npm scripts should be automatically detected.
+        '';
+      };
+      enableRunFromFolder = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Enable running npm scripts contained in a folder from the Explorer context menu.
+        '';
+      };
+      enableScriptExplorer = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
+          Enable an explorer view for npm scripts when there is no top-level 'package.json' file.
+        '';
+      };
+      exclude = mkOption {
+        type = str;
+        default = "";
+        description = ''
+          Configure glob patterns for folders that should be excluded from automatic script detection.
+        '';
+      };
+      fetchOnlinePackageInfo = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Fetch data from https://registry.npmjs.org and https://registry.bower.io to provide auto-completion and information on hover features on npm dependencies.
+        '';
+      };
+      packageManager = mkOption {
+        type = enum [ "auto" "npm" "yarn" "pnpm" ];
+        default = "auto";
+        description = ''
+          The package manager used to run scripts.
+          - auto: Auto-detect which package manager to use for running scripts based on lock files and installed package managers.
+          - npm: Use npm as the package manager for running scripts.
+          - yarn: Use yarn as the package manager for running scripts.
+          - pnpm: Use pnpm as the package manager for running scripts.
+        '';
+      };
+      runSilent = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          Run npm commands with the `--silent` option.
+        '';
+      };
+      scriptExplorerAction = mkOption {
+        type = enum [ "open" "run" ];
+        default = "open";
+        description = ''
+          The default click action used in the npm scripts explorer: `open` or `run`, the default is `open`.
+        '';
+      };
+    };
   };
 }
-
-
-/*
-  // References Search View
-
-  // Controls whether 'Peek References' or 'Find References' is invoked when selecting CodeLens references.
-  //  - peek: Show references in peek editor.
-  //  - view: Show references in separate view.
-  "references.preferredLocation": "peek",
-
-  // Npm
-
-  // Controls whether npm scripts should be automatically detected.
-  "npm.autoDetect": "on",
-
-  // Enable running npm scripts contained in a folder from the Explorer context menu.
-  "npm.enableRunFromFolder": false,
-
-  // The NPM Script Explorer is now available in 'Views' menu in the Explorer in all folders.
-  // Enable an explorer view for npm scripts when there is no top-level 'package.json' file.
-  "npm.enableScriptExplorer": false,
-
-  // Configure glob patterns for folders that should be excluded from automatic script detection.
-  "npm.exclude": "",
-
-  // Fetch data from https://registry.npmjs.org and https://registry.bower.io to provide auto-completion and information on hover features on npm dependencies.
-  "npm.fetchOnlinePackageInfo": true,
-
-  // The package manager used to run scripts.
-  //  - auto: Auto-detect which package manager to use for running scripts based on lock files and installed package managers.
-  //  - npm: Use npm as the package manager for running scripts.
-  //  - yarn: Use yarn as the package manager for running scripts.
-  //  - pnpm: Use pnpm as the package manager for running scripts.
-  "npm.packageManager": "auto",
-
-  // Run npm commands with the `--silent` option.
-  "npm.runSilent": false,
-
-  // The default click action used in the npm scripts explorer: `open` or `run`, the default is `open`.
-  "npm.scriptExplorerAction": "open"
-  }
-*/
-
 
 
 /*
