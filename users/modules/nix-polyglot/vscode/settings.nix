@@ -395,7 +395,7 @@ with types;
         '';
       };
       fontWeight = mkOption {
-        type = enum ["normal" "bold" (range 1 1000)];
+        type = enum [ "normal" "bold" (range 1 1000) ];
         default = "normal";
         description = ''
           Controls the font weight. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
@@ -3871,14 +3871,14 @@ with types;
           '';
         };
         /*
-        renameShorthandProperties = mkOption {
+          renameShorthandProperties = mkOption {
           type = bool;
           default = true;
           description = ''
-            The setting 'typescript.preferences.renameShorthandProperties' has been deprecated in favor of 'typescript.preferences.useAliasesForRenames'
-            Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
+          The setting 'typescript.preferences.renameShorthandProperties' has been deprecated in favor of 'typescript.preferences.useAliasesForRenames'
+          Enable/disable introducing aliases for object shorthand properties during renames. Requires using TypeScript 3.4 or newer in the workspace.
           '';
-        };
+          };
         */
         useAliasesForRenames = mkOption {
           type = bool;
@@ -5404,8 +5404,8 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Whether to allow menubar mnemonics (eg. alt+f) to trigger the open the menubar. 
-            Note that this will cause all alt keystrokes to skip the shell when true. 
+            Whether to allow menubar mnemonics (eg. alt+f) to trigger the open the menubar.
+            Note that this will cause all alt keystrokes to skip the shell when true.
             This does nothing on macOS.
           '';
         };
@@ -5413,7 +5413,7 @@ with types;
           type = bool;
           default = true;
           description = ''
-            If enabled, alt/option + click will reposition the prompt cursor to underneath the mouse when `editor.multiCursorModifier` is set to `'alt'` (the default value). 
+            If enabled, alt/option + click will reposition the prompt cursor to underneath the mouse when `editor.multiCursorModifier` is set to `'alt'` (the default value).
             This may not work reliably depending on your shell.
           '';
         };
@@ -5442,7 +5442,7 @@ with types;
         };
         commandsToSkipShell = mkOption {
           type = listOf str;
-          default = [];
+          default = [ ];
           description = ''
             A set of command IDs whose keybindings will not be sent to the shell but instead always be handled by VS Code. This allows keybindings that would normally be consumed by the shell to act instead the same as when the terminal is not focused, for example `Ctrl+P` to launch Quick Open.
           '';
@@ -5551,23 +5551,23 @@ with types;
         env = {
           linux = mkOption {
             type = attrsOf str;
-            default = {};
+            default = { };
             description = ''
-              Object with environment variables that will be added to the VS Code process to be used by the terminal on Linux. 
+              Object with environment variables that will be added to the VS Code process to be used by the terminal on Linux.
               Set to `null` to delete the environment variable.
             '';
           };
           osx = mkOption {
             type = attrsOf str;
-            default = {};
+            default = { };
             description = ''
-              Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS. 
+              Object with environment variables that will be added to the VS Code process to be used by the terminal on macOS.
               Set to `null` to delete the environment variable.
             '';
           };
         };
         environmentChangesIndicator = mkOption {
-          type = enum ["off" "on" "warnonly"];
+          type = enum [ "off" "on" "warnonly" ];
           default = "warnonly";
           description = ''
             Whether to display the environment changes indicator on each terminal which explains whether extensions have made, or want to make changes to the terminal's environment.
@@ -5605,21 +5605,21 @@ with types;
           '';
         };
         fontWeight = mkOption {
-          type = enum ["normal" "bold" (range 1 1000)];
+          type = enum [ "normal" "bold" (range 1 1000) ];
           default = "normal";
           description = ''
             The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
           '';
         };
         fontWeightBold = mkOption {
-          type = enum ["normal" "bold" (range 1 1000)];
+          type = enum [ "normal" "bold" (range 1 1000) ];
           default = "bold";
           description = ''
             The font weight to use within the terminal for non-bold text. Accepts "normal" and "bold" keywords or numbers between 1 and 1000.
           '';
         };
         gpuAcceleration = mkOption {
-          type = enum ["auto" "on" "off"];
+          type = enum [ "auto" "on" "off" ];
           default = "auto";
           description = ''
             Controls whether the terminal will leverage the GPU to do its rendering.
@@ -5666,7 +5666,7 @@ with types;
           '';
         };
         minimumContrastRatio = mkOption {
-          type = enum [ 1 4.5 7 21];
+          type = enum [ 1 4.5 7 21 ];
           default = 1;
           description = ''
             When set the foreground color of each cell will change to try meet the contrast ratio specified. Example values:
@@ -5686,17 +5686,17 @@ with types;
         profiles = {
           linux = mkOption {
             type = attrsOf str;
-            default = {};
+            default = { };
             description = ''
-              The Linux profiles to present when creating a new terminal via the terminal dropdown. 
+              The Linux profiles to present when creating a new terminal via the terminal dropdown.
               When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
             '';
           };
           osx = mkOption {
             type = attrsOf str;
-            default = {};
+            default = { };
             description = ''
-              The macOS profiles to present when creating a new terminal via the terminal dropdown. 
+              The macOS profiles to present when creating a new terminal via the terminal dropdown.
               When set, these will override the default detected profiles. They are comprised of a `path` and optional `args`.
             '';
           };
@@ -5734,7 +5734,7 @@ with types;
           '';
         };
         splitCwd = mkOption {
-          type = enum [ "workspaceRoot" "initial" "inherited"  ];
+          type = enum [ "workspaceRoot" "initial" "inherited" ];
           default = "inherited";
           description = ''
             Controls the working directory a split terminal starts with.
@@ -5835,11 +5835,11 @@ with types;
     };
     task = {
       autoDetect = mkOption {
-        type = enum ["on" "off"];
+        type = enum [ "on" "off" ];
         default = "on";
         description = ''
           Controls enablement of `provideTasks` for all task provider extension.
-          If the Tasks: Run Task command is slow, disabling auto detect for task providers may help. 
+          If the Tasks: Run Task command is slow, disabling auto detect for task providers may help.
           Individual extensions may also provide settings that disable auto detection.
         '';
       };
@@ -5848,7 +5848,7 @@ with types;
           type = bool;
           default = false;
           description = ''
-            Configures whether to show the problem matcher prompt when running a task. 
+            Configures whether to show the problem matcher prompt when running a task.
             Set to `true` to never prompt, or use a dictionary of task types to turn off prompting only for specific task types.
           '';
         };
@@ -5884,7 +5884,7 @@ with types;
         };
       };
       saveBeforeRun = mkOption {
-        type = enum [ "always" "never" "prompt"];
+        type = enum [ "always" "never" "prompt" ];
         default = "always";
         description = ''
           Save all dirty editors before running a task.
@@ -5897,7 +5897,260 @@ with types;
         type = bool;
         default = true;
         description = ''
-          Configures whether a warning is shown when a provider is slow
+          Configures whether a warning is shown when a provider is slow.
+        '';
+      };
+    };
+    problems = {
+      autoReveal = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Controls whether Problems view should automatically reveal files when opening them.
+        '';
+      };
+      decorations = {
+        enabled = mkOption {
+          type = bool;
+          default = true;
+          description = ''
+            Show Errors & Warnings on files and folder.
+          '';
+        };
+      };
+      showCurrentInStatus = mkOption {
+        type = bool;
+        default = false;
+        description = ''
+          When enabled shows the current problem in the status bar.
+        '';
+      };
+    };
+    breadcrumbs = {
+      enabled = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Enable/disable navigation breadcrumbs.
+        '';
+      };
+      filePath = mkOption {
+        type = enum [ "on" "off" "last" ];
+        default = "on";
+        description = ''
+          Controls whether and how file paths are shown in the breadcrumbs view.
+          - on: Show the file path in the breadcrumbs view.
+          - off: Do not show the file path in the breadcrumbs view.
+          - last: Only show the last element of the file path in the breadcrumbs view.
+        '';
+      };
+      icons = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          Render breadcrumb items with icons.
+        '';
+      };
+      showArrays = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `array`-symbols.
+        '';
+      };
+      showBooleans = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `boolean`-symbols.
+        '';
+      };
+      showClasses = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `class`-symbols.
+        '';
+      };
+      showConstants = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `constant`-symbols.
+        '';
+      };
+      showConstructors = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `constructor`-symbols.
+        '';
+      };
+      showEnumMembers = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `enumMember`-symbols.
+        '';
+      };
+      showEnums = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `enum`-symbols.
+        '';
+      };
+      showEvents = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `event`-symbols.
+        '';
+      };
+      showFields = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `field`-symbols.
+        '';
+      };
+      showFiles = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `file`-symbols.
+        '';
+      };
+      showFunctions = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `function`-symbols.
+        '';
+      };
+      showInterfaces = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `interface`-symbols.
+        '';
+      };
+      showKeys = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `key`-symbols.
+        '';
+      };
+      showMethods = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `method`-symbols.
+        '';
+      };
+      showModules = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `module`-symbols.
+        '';
+      };
+      showNamespaces = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `namespace`-symbols.
+        '';
+      };
+      showNull = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `null`-symbols.
+        '';
+      };
+      showNumbers = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `number`-symbols.
+        '';
+      };
+      showObjects = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `object`-symbols.
+        '';
+      };
+      showOperators = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `operator`-symbols.
+        '';
+      };
+      showPackages = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `package`-symbols.
+        '';
+      };
+      showProperties = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `property`-symbols.
+        '';
+      };
+      showStrings = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `string`-symbols.
+        '';
+      };
+      showStructs = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `struct`-symbols.
+        '';
+      };
+      showTypeParameters = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `typeParameter`-symbols.
+        '';
+      };
+      showVariables = mkOption {
+        type = bool;
+        default = true;
+        description = ''
+          When enabled breadcrumbs show `variable`-symbols.
+        '';
+      };
+      symbolPath = mkOption {
+        type = enum [ "on" "off" "last" ];
+        default = "on";
+        description = ''
+          Controls whether and how symbols are shown in the breadcrumbs view.
+          - on: Show all symbols in the breadcrumbs view.
+          - off: Do not show symbols in the breadcrumbs view.
+          - last: Only show the current symbol in the breadcrumbs view.
+        '';
+      };
+      symbolSortOrder = mkOption {
+        type = enum [ "position" "name" "type" ];
+        default = "position";
+        description = ''
+          Controls how symbols are sorted in the breadcrumbs outline view.
+          - position: Show symbol outline in file position order.
+          - name: Show symbol outline in alphabetical order.
+          - type: Show symbol outline in symbol type order.
         '';
       };
     };
@@ -5905,127 +6158,6 @@ with types;
 }
 
 /*
-  // Tasks
-
-
-  // Configures whether a warning is shown when a provider is slow
-  "task.slowProviderWarning": true,
-
-  // Problems
-
-  // Controls whether Problems view should automatically reveal files when opening them.
-  "problems.autoReveal": true,
-
-  // Show Errors & Warnings on files and folder.
-  "problems.decorations.enabled": true,
-
-  // When enabled shows the current problem in the status bar.
-  "problems.showCurrentInStatus": false,
-
-  // Breadcrumb Navigation
-
-  // Enable/disable navigation breadcrumbs.
-  "breadcrumbs.enabled": true,
-
-  // Controls whether and how file paths are shown in the breadcrumbs view.
-  //  - on: Show the file path in the breadcrumbs view.
-  //  - off: Do not show the file path in the breadcrumbs view.
-  //  - last: Only show the last element of the file path in the breadcrumbs view.
-  "breadcrumbs.filePath": "on",
-
-  // Render breadcrumb items with icons.
-  "breadcrumbs.icons": true,
-
-  // When enabled breadcrumbs show `array`-symbols.
-  "breadcrumbs.showArrays": true,
-
-  // When enabled breadcrumbs show `boolean`-symbols.
-  "breadcrumbs.showBooleans": true,
-
-  // When enabled breadcrumbs show `class`-symbols.
-  "breadcrumbs.showClasses": true,
-
-  // When enabled breadcrumbs show `constant`-symbols.
-  "breadcrumbs.showConstants": true,
-
-  // When enabled breadcrumbs show `constructor`-symbols.
-  "breadcrumbs.showConstructors": true,
-
-  // When enabled breadcrumbs show `enumMember`-symbols.
-  "breadcrumbs.showEnumMembers": true,
-
-  // When enabled breadcrumbs show `enum`-symbols.
-  "breadcrumbs.showEnums": true,
-
-  // When enabled breadcrumbs show `event`-symbols.
-  "breadcrumbs.showEvents": true,
-
-  // When enabled breadcrumbs show `field`-symbols.
-  "breadcrumbs.showFields": true,
-
-  // When enabled breadcrumbs show `file`-symbols.
-  "breadcrumbs.showFiles": true,
-
-  // When enabled breadcrumbs show `function`-symbols.
-  "breadcrumbs.showFunctions": true,
-
-  // When enabled breadcrumbs show `interface`-symbols.
-  "breadcrumbs.showInterfaces": true,
-
-  // When enabled breadcrumbs show `key`-symbols.
-  "breadcrumbs.showKeys": true,
-
-  // When enabled breadcrumbs show `method`-symbols.
-  "breadcrumbs.showMethods": true,
-
-  // When enabled breadcrumbs show `module`-symbols.
-  "breadcrumbs.showModules": true,
-
-  // When enabled breadcrumbs show `namespace`-symbols.
-  "breadcrumbs.showNamespaces": true,
-
-  // When enabled breadcrumbs show `null`-symbols.
-  "breadcrumbs.showNull": true,
-
-  // When enabled breadcrumbs show `number`-symbols.
-  "breadcrumbs.showNumbers": true,
-
-  // When enabled breadcrumbs show `object`-symbols.
-  "breadcrumbs.showObjects": true,
-
-  // When enabled breadcrumbs show `operator`-symbols.
-  "breadcrumbs.showOperators": true,
-
-  // When enabled breadcrumbs show `package`-symbols.
-  "breadcrumbs.showPackages": true,
-
-  // When enabled breadcrumbs show `property`-symbols.
-  "breadcrumbs.showProperties": true,
-
-  // When enabled breadcrumbs show `string`-symbols.
-  "breadcrumbs.showStrings": true,
-
-  // When enabled breadcrumbs show `struct`-symbols.
-  "breadcrumbs.showStructs": true,
-
-  // When enabled breadcrumbs show `typeParameter`-symbols.
-  "breadcrumbs.showTypeParameters": true,
-
-  // When enabled breadcrumbs show `variable`-symbols.
-  "breadcrumbs.showVariables": true,
-
-  // Controls whether and how symbols are shown in the breadcrumbs view.
-  //  - on: Show all symbols in the breadcrumbs view.
-  //  - off: Do not show symbols in the breadcrumbs view.
-  //  - last: Only show the current symbol in the breadcrumbs view.
-  "breadcrumbs.symbolPath": "on",
-
-  // Controls how symbols are sorted in the breadcrumbs outline view.
-  //  - position: Show symbol outline in file position order.
-  //  - name: Show symbol outline in alphabetical order.
-  //  - type: Show symbol outline in symbol type order.
-  "breadcrumbs.symbolSortOrder": "position",
-
   // Telemetry
 
   // Enable crash reports to be sent to a Microsoft online service.
