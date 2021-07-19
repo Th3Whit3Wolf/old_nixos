@@ -2089,7 +2089,7 @@ with types;
       settings = {
         editor = mkOption {
           type = enum [ "ui" "json" ];
-          default = "json";
+          default = "ui";
           description = ''
             Determines which settings editor to use by default.
               - ui: Use the settings UI editor.
