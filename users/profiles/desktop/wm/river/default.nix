@@ -11,15 +11,15 @@ in
   home.configFile = {
     "river/init" = {
       text = ''
-#!/bin/sh
-mod="Mod4"
-riverctl map normal $mod Return spawn alacritty
-riverctl map normal $mod W spawn firefox
-# Mod+Q to close the focused view
-riverctl map normal $mod Q close
-# Mod+E to exit river
-riverctl map normal $mod E exit
-  '';
+        #!/bin/sh
+        mod="Mod4"
+        riverctl map normal $mod Return spawn alacritty
+        riverctl map normal $mod W spawn firefox
+        # Mod+Q to close the focused view
+        riverctl map normal $mod Q close
+        # Mod+E to exit river
+        riverctl map normal $mod E exit
+      '';
     };
   };
 }
