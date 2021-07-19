@@ -603,5 +603,11 @@ final: prev:
         version = "0.1.7";
         sha256 = "0r2dpd07lj8icpbl1nvgk08y6s73bzwv6njpj7m4fcapwjjvhb7l";
       };
+      julialang.language-julia = extensionFromVscodeMarketplace {
+        name = "language-julia";
+        publisher = "julialang";
+        version = "1.2.8";
+        sha256 = "1yh3mzar0v8aai52smw3wasc8cysdlqhnkhvydhpx039xl0i3pdc";
+      };
     };
 }
