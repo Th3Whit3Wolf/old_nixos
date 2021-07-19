@@ -6,6 +6,7 @@ let
   polyglot = config.nix-polyglot;
   cfg = polyglot.lang.${currLang};
   enabled = (elem currLang polyglot.langs || elem "all" polyglot.langs) && polyglot.vscode.enable;
+  jsonFormat = pkgs.formats.json { };
 
   langExtensions = with pkgs.vscode-extensions; [
     ms-vscode.cpptools

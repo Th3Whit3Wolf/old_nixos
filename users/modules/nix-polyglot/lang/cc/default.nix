@@ -11,11 +11,11 @@ let
 
   imports = [
     ./vscode.nix
-    ./neovim.nix
+    #./neovim.nix
   ];
 
   langPackages = with pkgs; [
-    clang
+    #clang
     gcc
     musl
     #      bear
@@ -52,4 +52,6 @@ in
       };
       packages = cfg.packages;
     };
-  }
+  };
+}
+
