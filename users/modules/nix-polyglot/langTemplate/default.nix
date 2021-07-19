@@ -10,22 +10,11 @@ let
   cfg = polyglot.lang.${currLang};
 
   imports = [
-    ./vscode.nix
-    ./neovim.nix
+    #./vscode.nix
+    #./neovim.nix
   ];
 
   langPackages = with pkgs; [
-    clang
-    gcc
-    musl
-    #      bear
-    gdb
-    cmake
-    cmake-language-server
-    llvmPackages.libcxx
-    ccls
-    ccache
-    fmt
   ];
 in
 {
@@ -43,14 +32,22 @@ in
         List of packages to install for rust development.
       '';
     };
-  };
-  config = mkIf enabled {
-    home = {
-      sessionVariables = {
-        CCACHE_DIR = "$XDG_CACHE_HOME/ccache";
-        CCACHE_CONFIGPATH = "$XDG_CONFIG_HOME/ccache.config";
-      };
-      packages = cfg.packages;
+    shellAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = ''
+        An attribute set that maps aliases for ${currLang} programming.
+      '';
+    };
+    sessionVariables = mkOption {
+      type = types.attrs;
+      default = { };
+      example = { CCACHE_DIR = "$XDG_CACHE_HOME/ccache"; };
+      description = ''
+        Environment variables to always set at login for ${currLang} programming.
+        </para><para>
+      '';
     };
   };
+  config = mkIf enabled { };
 }
