@@ -5,6 +5,7 @@ with builtins;
 
 let
   cfg = config.nix-polyglot.vscode;
+  polyglot = config.nix-polyglot;
 
   # When true vscode settings will be created from all possible settings
   testing = true;
@@ -83,11 +84,68 @@ let
       "[${lang}]"
     else
       name;
-  mkUserSettingsPrime = mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings);
 
-  mkUserSettings = ''
+
+
+  # Returns list of all languages
+  languages = lib.mapAttrsToList (name: type: "${name}")
+    (lib.filterAttrs (file: type: type == "directory") (builtins.readDir (../lang)));
+
+  /*
+    * Returns all extensions for all appropriate languages
+  */
+  vscodeLangExt =
+    if elem "all" polyglot.langs then
+      flatten
+        (forEach languages (lang:
+          config.nix-polyglot.lang.${lang}.vscode.extensions
+        ))
+    else
+      latten (forEach polyglot.langs (lang:
+        config.nix-polyglot.lang.${lang}.vscode.extensions
+      ));
+
+  allExtension = cfg.extensions ++ vscodeLangExt;
+
+  vscodeLangSettings =
+    let
+      defaultSettings' = mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings);
+      defaultSettings = "${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") defaultSettings')}";
+      rmOuterBrackets = jsonStr: removeSuffix "}" (removePrefix "{" jsonStr) + "\n";
+      transformToJson = settings:
+        if settings != { } then
+          "${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (fromJSON settings))}"
+        else
+          "";
+      addUserSettings = removeSuffix "}" (removePrefix "{" (toJSON cfg.additionalUserSettings));
+
+      langsSets' =
+        if elem "all" polyglot.langs then
+          flatten
+            (forEach languages (lang:
+              transformToJson config.nix-polyglot.lang.${lang}.vscode.settings
+            ))
+        else
+          flatten (forEach polyglot.langs (lang:
+            transformToJson config.nix-polyglot.lang.${lang}.vscode.settings
+          ));
+      langsSets = langsSets' ++ [ (optionalString (defaultSettings != "") defaultSettings) (optionalString (addUserSettings != "") addUserSettings) ];
+      allSets = remove "" (langsSets);
+    in
+    if allSets != [ ] then
+      ''
+        {
+          ${concatStringsSep ",\n    " allSets}
+        }
+      ''
+    else
+      "{}"
+  ;
+
+  allSettings = ''
     {
-      ${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") mkUserSettingsPrime)}
+      ${defaultSettings},
+      ${addUserSettings}
     }
   '';
 
@@ -155,7 +213,7 @@ let
     zxh404.vscode-proto3
     skellock.just
   ];
-
+  /*"dashboard.projectData": null */
 in
 {
   imports = [ ./settings.nix ];
@@ -182,6 +240,22 @@ in
         These will override but not delete manually installed ones.
       '';
     };
+    additionalUserSettings = mkOption {
+      type = jsonFormat.type;
+      default = {
+        "dashboard.projectData" = null;
+      };
+      example = literalExample ''
+        {
+          "update.channel" = "none";
+          "[nix]"."editor.tabSize" = 2;
+        }
+      '';
+      description = ''
+        Configuration written to Visual Studio Code's
+        <filename>settings.json</filename>.
+      '';
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [{
@@ -189,7 +263,7 @@ in
       vscode = {
         enable = true;
         package = (cfg.package);
-        extensions = defaultExt;
+        extensions = allExtension;
       };
       ZSH.shellAliases = aliases;
     };
@@ -214,10 +288,10 @@ in
         "${configFilePath}" = {
           # Force json validation
           # if mkUserSettings contains invalid json this will throw
-          source = writePrettyJSON "vscode-user-settings" (fromJSON mkUserSettings);
+          source = writePrettyJSON "vscode-user-settings" (fromJSON vscodeLangSettings);
         };
       };
     };
   }]);
-
 }
+
