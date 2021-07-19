@@ -22,7 +22,6 @@ let
       #rustcSource = "${pkgs.rust-analyzer}";
     };
   };
-  #langSettings = {rust-analyzer = { cargo.allFeatures = true; checkOnSave.command = "clippy"; procMacro.enable = true;};};
 in
 {
   options.nix-polyglot.lang.${currLang}.vscode = {
