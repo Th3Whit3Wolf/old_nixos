@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 with builtins;
@@ -7,7 +7,7 @@ let
   currLang = baseNameOf (builtins.toString ./.);
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
-  cfg = polyglot.lang.rust;
+  cfg = polyglot.lang.${currLang};
 
   imports = [
     ./vscode.nix
@@ -98,7 +98,7 @@ let
 in
 {
   inherit imports;
-  options.nix-polyglot.lang.rust = {
+  options.nix-polyglot.lang.${currLang} = {
     enable = mkOption {
       type = types.bool;
       default = enabled;
