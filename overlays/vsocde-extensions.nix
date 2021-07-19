@@ -519,9 +519,8 @@ final: prev:
       sumneko.lua = extensionFromVscodeMarketplace {
         name = "lua";
         publisher = "sumneko";
-        version = "1.20.1";
-        sha256 =
-          "88a2d934cfbd4aebc240a6efe42df6be053762e5176e58b23b61b3cc4aa26709";
+        version = "2.3.1";
+        sha256 = "1jj0k29p4f9hsqprn18nrd2qz5kqw054rsfkgpp5aglhyiv9m6di";
       };
       christian-kohler.npm-intellisense = extensionFromVscodeMarketplace {
         name = "npm-intellisense";
