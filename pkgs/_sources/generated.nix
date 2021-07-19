@@ -66,6 +66,18 @@
     };
 
   };
+  vimP-parinfer-rust = {
+    pname = "vimP-parinfer-rust";
+    version = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
+    src = fetchgit {
+      url = "https://github.com/eraserhd/parinfer-rust";
+      rev = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1xwahgwjv1ylmy0bwbsisycjlz5r9i1gxz20392a8f8019zhjx90";
+    };
+  };
   vimPlugins-ron-vim = {
     pname = "vimPlugins-ron-vim";
     version = "04004b3395d219f95a533c4badd5ba831b7b7c07";

@@ -18,6 +18,11 @@ fetch.github = "supermarin/YosemiteSanFranciscoFont"
 src.github = "supercomputra/SF-Mono-Font"
 fetch.github = "supercomputra/SF-Mono-Font"
 
+[vimP-parinfer-rust]
+src.git = "https://github.com/eraserhd/parinfer-rust"
+fetch.github = "eraserhd/parinfer-rust"
+extract = ["Cargo.lock"]
+
 [vimPlugins-ron-vim]
 src.github = "ron-rs/ron.vim"
 fetch.github = "ron-rs/ron.vim"
