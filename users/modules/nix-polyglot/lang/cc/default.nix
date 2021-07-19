@@ -14,6 +14,10 @@ let
     #./neovim.nix
   ];
 
+
+  /*
+    Nix is unable to install gcc and clang as user packages
+  */
   langPackages = with pkgs; [
     clang
     #gcc
@@ -43,6 +47,22 @@ in
         List of packages to install for rust development.
       '';
     };
+    shellAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = ''
+        An attribute set that maps aliases for ${currLang} programming.
+      '';
+    };
+    sessionVariables = mkOption {
+      type = types.attrs;
+      default = { };
+      example = { CCACHE_DIR = "$XDG_CACHE_HOME/ccache"; };
+      description = ''
+        Environment variables to always set at login for ${currLang} programming.
+        </para><para>
+      '';
+    };
   };
   config = mkIf enabled {
     home = {
@@ -50,7 +70,6 @@ in
         CCACHE_DIR = "$XDG_CACHE_HOME/ccache";
         CCACHE_CONFIGPATH = "$XDG_CONFIG_HOME/ccache.config";
       };
-      packages = cfg.packages;
     };
   };
 }

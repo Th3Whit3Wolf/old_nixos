@@ -38,5 +38,21 @@ in
         List of packages to install for rust development.
       '';
     };
+    shellAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      description = ''
+        An attribute set that maps aliases for ${currLang} programming.
+      '';
+    };
+    sessionVariables = mkOption {
+      type = types.attrs;
+      default = { };
+      example = { CCACHE_DIR = "$XDG_CACHE_HOME/ccache"; };
+      description = ''
+        Environment variables to always set at login for ${currLang} programming.
+        </para><para>
+      '';
+    };
   };
 }

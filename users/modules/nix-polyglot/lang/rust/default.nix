@@ -95,6 +95,12 @@ let
     cs = "cargo search";
     cfa = "cargo fmt; cargo fix --allow-dirty --allow-staged";
   };
+
+  langVars = {
+    RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
+    CARGO_HOME = "$XDG_DATA_HOME/cargo";
+    RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/library/";
+  };
 in
 {
   inherit imports;
@@ -111,13 +117,25 @@ in
         List of packages to install for rust development.
       '';
     };
+    shellAliases = mkOption {
+      type = types.attrsOf types.str;
+      default = shellAliases;
+      description = ''
+        An attribute set that maps aliases for ${currLang} programming.
+      '';
+    };
+    sessionVariables = mkOption {
+      type = types.attrs;
+      default = langVars;
+      example = { CCACHE_DIR = "$XDG_CACHE_HOME/ccache"; };
+      description = ''
+        Environment variables to always set at login for ${currLang} programming.
+        </para><para>
+      '';
+    };
   };
   config = mkIf enabled {
     home = {
-      sessionVariables = {
-        RUST_SRC_PATH = "${rust-stable}/lib/rustlib/src/rust/library/";
-      };
-      packages = cfg.packages;
       persistence."/persist/${homeDirectory}".directories =
         mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther) [
           "${data}/cargo"
@@ -125,16 +143,11 @@ in
         ];
     };
     programs.ZSH = {
-      shellAliases = mkIf polyglot.enableZshIntegration shellAliases;
       pathVar = [ "$CARGO_HOME/bin" ];
       sessionVariables = {
         RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
         CARGO_HOME = "$XDG_DATA_HOME/cargo";
       };
-      sitefunctions = [{
-        name = "cargo";
-        src = ./zsh/cargo;
-      }];
     };
   };
 }

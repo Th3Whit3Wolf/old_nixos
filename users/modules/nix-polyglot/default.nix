@@ -13,6 +13,37 @@ let
 
   polyglotPackages = with pkgs; [ git-ignore licensor just dotenv-linter ];
 
+  langPackages =
+    if elem "all" cfg.langs then
+      flatten
+        (forEach languages (lang:
+          if (hasAttrByPath [ "${lang}" "packages" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.packages else [ ]
+        ))
+    else
+      flatten (forEach polyglot.langs (lang:
+        if (hasAttrByPath [ "${lang}" "packages" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.packages else [ ]
+      ));
+  langAliases =
+    if elem "all" cfg.langs then
+      flatten
+        (forEach languages (lang:
+          if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
+        ))
+    else
+      flatten (forEach polyglot.langs (lang:
+        if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
+      ));
+
+  langVars =
+    if elem "all" cfg.langs then
+      flatten
+        (forEach languages (lang:
+          if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.sessionVariables else { }
+        ))
+    else
+      flatten (forEach polyglot.langs (lang:
+        if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.sessionVariables else { }
+      ));
 in
 {
   imports = [ ./neovim.nix ./vscode ./lang ];
@@ -56,6 +87,16 @@ in
       '';
     };
   };
-  config = mkIf cfg.enable { home.packages = nix-polyglot.packages; };
+  config = mkMerge [
+    (mkIf cfg.enable {
+      home = {
+        packages = nix-polyglot.packages ++ langPackages;
+        sessionVariables = langVars;
+      };
+    })
+    (mkIf (cfg.enable && cfg.enableZshIntegration) {
+      programs.ZSH.shellAliases = recursiveUpdate langAliases;
+    })
+  ];
 }
 
