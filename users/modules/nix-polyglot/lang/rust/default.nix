@@ -67,7 +67,7 @@ let
     cargo-update
     cargo-whatfeatures
     cargo-wipe
-    gcc # rust unable to find cc linker if this is not installed
+    #gcc # rust unable to find cc linker if this is not installed
     microserver
     rust-analyzer
     rust-stable

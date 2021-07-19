@@ -15,10 +15,10 @@ let
   ];
 
   langPackages = with pkgs; [
-    #clang
-    gcc
+    clang
+    #gcc
     musl
-    #      bear
+    bear
     gdb
     cmake
     cmake-language-server
