@@ -98,11 +98,11 @@ let
     if elem "all" polyglot.langs then
       flatten
         (forEach languages (lang:
-          config.nix-polyglot.lang.${lang}.vscode.extensions
+          if (hasAttrByPath [ "${lang}" "vscode" "extensions" ] config.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.vscode.extensions else [ ]
         ))
     else
-      latten (forEach polyglot.langs (lang:
-        config.nix-polyglot.lang.${lang}.vscode.extensions
+      flatten (forEach polyglot.langs (lang:
+        if (hasAttrByPath [ "${lang}" "vscode" "extensions" ] config.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.vscode.extensions else [ ]
       ));
 
   allExtension = cfg.extensions ++ vscodeLangExt;
@@ -123,11 +123,11 @@ let
         if elem "all" polyglot.langs then
           flatten
             (forEach languages (lang:
-              transformToJson config.nix-polyglot.lang.${lang}.vscode.settings
+              if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang) then transformToJson config.nix-polyglot.lang.${lang}.vscode.settings else ""
             ))
         else
           flatten (forEach polyglot.langs (lang:
-            transformToJson config.nix-polyglot.lang.${lang}.vscode.settings
+            if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang) then transformToJson config.nix-polyglot.lang.${lang}.vscode.settings else ""
           ));
       langsSets = langsSets' ++ [ (optionalString (defaultSettings != "") defaultSettings) (optionalString (addUserSettings != "") addUserSettings) ];
       allSets = remove "" (langsSets);
