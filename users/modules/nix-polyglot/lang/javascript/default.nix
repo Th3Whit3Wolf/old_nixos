@@ -17,6 +17,7 @@ let
   langPackages = with pkgs; [
     nodejs
     yarn
+    nodePackages.npm
     deno
     nodePackages.purescript-language-server
     nodePackages.typescript-language-server
@@ -45,7 +46,7 @@ let
   ];
 
   shellAliases = {
-    n = ''PATH="$(${pkgs.nodejs}/bin/npm bin):$PATH"'';
+    n = "npm";
     y = "yarn";
     ya = "yarn add";
     yad = "yarn add --dev";
@@ -120,7 +121,7 @@ in
       tmp=$XDG_RUNTIME_DIR/npm
       init-module=$XDG_CONFIG_HOME/npm/config/npm-init.js
     '';
-    programs.ZSH.pathVar = [ "$(${pkgs.yarn}/bin/yarn global bin)" ];
+    programs.ZSH.pathVar = [ "$(${pkgs.yarn}/bin/yarn global bin)" "$(${pkgs.nodejs}/bin/npm bin)" ];
 
   };
 }
