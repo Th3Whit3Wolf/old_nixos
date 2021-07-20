@@ -362,13 +362,14 @@ in
         inlayHints.fontFamily =
           "'VictorMono Nerd Font Mono', monospace, 'Droid Sans Fallback'";
       };
-      update = {
-        mode = "none";
-        showReleaseNotes = false;
-      };
+      window.menuBarVisibility = "toggle";
       workbench = {
         colorTheme = "Spacemacs - dark";
         iconTheme = "material-icon-theme";
+      };
+      update = {
+        mode = "none";
+        showReleaseNotes = true;
       };
     };
     home = {
