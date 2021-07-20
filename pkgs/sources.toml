@@ -5,6 +5,7 @@ fetch.github = "haslersn/any-nix-shell"
 [manix]
 src.github = "mlvzk/manix"
 fetch.github = "mlvzk/manix"
+cargo_lock = "Cargo.lock"
 
 [spacemacs-theme]
 src.github = "Th3Whit3Wolf/Space-Theme"
@@ -25,7 +26,7 @@ fetch.github = "epk/SF-Mono-Nerd-Font"
 [vimP-parinfer-rust]
 src.git = "https://github.com/eraserhd/parinfer-rust"
 fetch.github = "eraserhd/parinfer-rust"
-extract = ["Cargo.lock"]
+cargo_lock = "Cargo.lock"
 
 [vimPlugins-ron-vim]
 src.github = "ron-rs/ron.vim"
