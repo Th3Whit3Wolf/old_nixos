@@ -18,6 +18,10 @@ fetch.github = "supermarin/YosemiteSanFranciscoFont"
 src.github = "supercomputra/SF-Mono-Font"
 fetch.github = "supercomputra/SF-Mono-Font"
 
+[SFMono-nerdfont]
+src.github = "epk/SF-Mono-Nerd-Font"
+fetch.github = "epk/SF-Mono-Nerd-Font"
+
 [vimP-parinfer-rust]
 src.git = "https://github.com/eraserhd/parinfer-rust"
 fetch.github = "eraserhd/parinfer-rust"
@@ -34,4 +38,3 @@ fetch.github = "nastevens/vim-cargo-make"
 [vimPlugins-vim-duckscript]
 src.github = "nastevens/vim-duckscript"
 fetch.github = "nastevens/vim-duckscript"
-
