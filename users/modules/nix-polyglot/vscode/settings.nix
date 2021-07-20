@@ -1941,7 +1941,7 @@ with types;
         };
       };
       iconTheme = mkOption {
-        type = nullOr (enum [ "vs-minimal" "vs-seti" ]);
+        type = str;
         default = "vs-seti";
         description = ''
           Specifies the file icon theme used in the workbench or 'null' to not show any file icons.

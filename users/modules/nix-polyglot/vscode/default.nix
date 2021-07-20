@@ -41,17 +41,17 @@ let
     let
       op = sum: path: val:
         let
-          pathStr = builtins.concatStringsSep "." path; # dot-based reverse DNS notation
+          pathStr = concatStringsSep "." path; # dot-based reverse DNS notation
           isOption = hasAttrByPath ((splitString "." pathStr) ++ [ "default" ]) options.nix-polyglot.vscode.userSettings;
           notDefaultVal = if testing then true else attrByPath ((splitString "." pathStr) ++ [ "default" ]) val options.nix-polyglot.vscode.userSettings != val;
         in
         if lib.strings.isCoercibleToString val && notDefaultVal then
-        # builtins.trace "${toString val} is a path"
+        # trace "${toString val} is a path"
           (sum // {
             "${pathStr}" = val;
           })
-        else if builtins.isAttrs val then
-        # builtins.trace "${builtins.toJSON val} is an attrset"
+        else if isAttrs val then
+        # trace "${toJSON val} is an attrset"
         # recurse into that attribute set
           if isOption && notDefaultVal then
             (sum // {
@@ -63,15 +63,15 @@ let
             sum
         else
         # ignore that value
-        # builtins.trace "${toString path} is something else"
+        # trace "${toString path} is something else"
           sum
       ;
 
       recurse = sum: path: val:
-        builtins.foldl'
+        foldl'
           (sum: key: op sum (path ++ [ key ]) val.${key})
           sum
-          (builtins.attrNames val)
+          (attrNames val)
       ;
     in
     recurse { } [ ] tree;
@@ -89,7 +89,7 @@ let
 
   # Returns list of all languages
   languages = lib.mapAttrsToList (name: type: "${name}")
-    (lib.filterAttrs (file: type: type == "directory") (builtins.readDir (../lang)));
+    (lib.filterAttrs (file: type: type == "directory") (readDir (../lang)));
 
   /*
     * Returns all extensions for all appropriate languages
@@ -107,6 +107,9 @@ let
 
   allExtension = cfg.extensions ++ vscodeLangExt;
 
+  /*
+    * Returns all settings for all appropriate languages
+  */
   vscodeLangSettings =
     let
       defaultSettings' = mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings);
@@ -147,6 +150,79 @@ let
       ${defaultSettings},
       ${addUserSettings}
     }
+  '';
+
+  colorThemes =
+    let
+      packageJson = ext: elemAt (filter (file: baseNameOf "${file}" == "package.json") (filesystem.listFilesRecursive (ext + "/share/vscode/extensions"))) 0;
+      packageJsons = forEach allExtension (x: packageJson x);
+      toJson = file: (fromJSON (readFile file));
+
+      isTheme = pJson: if (hasAttr "contributes" (toJson pJson)) && (hasAttr "themes" (toJson pJson).contributes) then true else false;
+      collectedThemes = filter (packages: isTheme packages) packageJsons;
+
+      getThemes = pJson: forEach ((toJson pJson).contributes.themes) (x: if hasAttr "id" x then x.id else x.label);
+      extensionThemes = flatten (forEach collectedThemes (x: getThemes x));
+    in
+    [
+      # Light Themes
+      "Light+ (default light)"
+      "Light (Visual Studio)"
+      "Quiet Light"
+      "Solarized (light)"
+
+      # Dark Themes
+      "Abyss"
+      "Dark+ (default dark)"
+      "Dark (Visual Studio)"
+      "Kimbie Dark"
+      "Monokai"
+      "Red"
+      "Solarized Dark"
+      "Tomorrow Night Blue"
+
+      # High Contrast Themes
+      "Dark High Contrast"
+    ] ++ extensionThemes;
+
+  iconThemes =
+    let
+      packageJson = ext: elemAt (filter (file: baseNameOf "${file}" == "package.json") (filesystem.listFilesRecursive (ext + "/share/vscode/extensions"))) 0;
+      packageJsons = forEach allExtension (x: packageJson x);
+      toJson = file: (fromJSON (readFile file));
+
+      isTheme = pJson: if (hasAttr "contributes" (toJson pJson)) && (hasAttr "iconThemes" (toJson pJson).contributes) then true else false;
+      collectedThemes = filter (packages: isTheme packages) packageJsons;
+
+      getThemes = pJson: forEach ((toJson pJson).contributes.iconThemes) (x: if hasAttr "id" x then x.id else x.label);
+      extensionIconThemes = flatten (forEach collectedThemes (x: getThemes x));
+    in
+    [
+      null
+      "vs-minimal"
+      "vs-seti"
+    ] ++ extensionIconThemes;
+
+  show = v:
+    if isString v then ''"${v}"''
+    else if isInt v then toString v
+    else if isBool v then boolToString v
+    else if isNull v then "null"
+    else ''<${typeOf v}>'';
+
+  showValidThemes = themeType: "${concatMapStringsSep "\n" show themeType}";
+  warnColorTheme = ''
+    ${cfg.userSettings.workbench.colorTheme} is not a valid value!
+    Valid nix-polyglot.vscode.userSettings.workbench.colorTheme values are one of the following ${toString (length colorThemes)} options:
+
+    ${showValidThemes colorThemes}
+  '';
+
+  warnIconTheme = ''
+    ${cfg.userSettings.workbench.iconTheme} is not a valid value!
+    Valid nix-polyglot.vscode.userSettings.workbench.iconTheme values are one of the following ${toString (length iconThemes)} options:
+
+    ${showValidThemes iconThemes}
   '';
 
   vscodePname = cfg.package.pname;
@@ -216,8 +292,8 @@ let
     jock.svg
     cssho.vscode-svgviewer
     humao.rest-client
+    cometeer.spacemacs
   ];
-  /*"dashboard.projectData": null */
 in
 {
   imports = [ ./settings.nix ];
@@ -263,6 +339,12 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [{
+    warnings = optional (((elem cfg.userSettings.workbench.colorTheme colorThemes) == false) || ((elem cfg.userSettings.workbench.iconTheme iconThemes) == false)) ''
+
+      ${optionalString ((elem cfg.userSettings.workbench.colorTheme colorThemes) == false) warnColorTheme}
+      ${optionalString ((elem cfg.userSettings.workbench.iconTheme iconThemes) == false) warnIconTheme}
+    '';
+
     programs = {
       vscode = {
         enable = true;
@@ -283,6 +365,10 @@ in
       update = {
         mode = "none";
         showReleaseNotes = false;
+      };
+      workbench = {
+        colorTheme = "Spacemacs - dark";
+        iconTheme = "material-icon-theme";
       };
     };
     home = {
