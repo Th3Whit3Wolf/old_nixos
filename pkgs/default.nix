@@ -132,16 +132,12 @@ rec {
   rakePkgs = dir: with builtins;
     let
       sieve = name: val:
-        if isAttrs val then
-          all (x: x == true)
-            (forEach (attrNames val) (v:
-              hasInfix "_sources" v
-            ))
-        else
-          (val != ./default.nix && name != "bud");
+        (name != "default" && name != "bud" && name != "_sources");
+
+      filteredPkgs = filterAttrs sieve (rakeLeaves dir);
+      flattenFiltered = flattenTree (filteredPkgs);
     in
-    mapAttrs' (name: value: nameValuePair (last (splitString "." name)) (value)) (flattenTree (filterAttrs sieve (rakeLeaves dir))
-    );
+    mapAttrs' (name: value: nameValuePair (last (splitString "." name)) (value)) flattenFiltered;
 
   mapPkgSets = sources: pkgSet: pkgSetName: buildTool:
     let
