@@ -405,6 +405,12 @@ final: prev:
         sha256 =
           "7b9185bb3dd3d86378c11f5db4ab217455b3fb7417dba28d855d5887bc921dc8";
       };
+      formulahendry.auto-rename-tag = extensionFromVscodeMarketplace {
+        name = "auto-rename-tag";
+        publisher = "formulahendry";
+        version = "0.1.7";
+        sha256 = "18w60kqpa444a2mvnj5mq58vvjilzc90kx0s6kpczx8g1m6wlgkh";
+      };
       auchenberg.vscode-browser-preview = extensionFromVscodeMarketplace {
         name = "vscode-browser-preview";
         publisher = "auchenberg";
