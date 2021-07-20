@@ -1,11 +1,9 @@
-{ lib, stdenv, source, rustPlatform, darwin, Security }:
+{ lib, stdenv, source, rustPlatform, ... }:
 
 rustPlatform.buildRustPackage rec {
   inherit (source) src pname version;
 
-  buildInputs = lib.optionals stdenv.isDarwin [ Security ];
-
-  cargoSha256 = "1yivx9vzk2fvncvlkwq5v11hb9llr1zlcmy69y12q6xnd9rd8x1b";
+  cargoSha256 = "sha256-IvdV22dlC/zAzU5QaII8y5CkUkBuKCCCFOapZdjonh0=";
 
   meta = with lib; {
     description = "A Fast Documentation Searcher for Nix";
