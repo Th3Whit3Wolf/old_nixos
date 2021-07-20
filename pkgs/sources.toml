@@ -1,26 +1,26 @@
 [any-nix-shell]
-src.github = "haslersn/any-nix-shell"
+src.git = "https://github.com/haslersn/any-nix-shell"
 fetch.github = "haslersn/any-nix-shell"
 
 [manix]
-src.github = "mlvzk/manix"
+src.git = "https://github.com/mlvzk/manix"
 fetch.github = "mlvzk/manix"
 cargo_lock = "Cargo.lock"
 
 [spacemacs-theme]
-src.github = "Th3Whit3Wolf/Space-Theme"
+src.git = "https://github.com/Th3Whit3Wolf/Space-Theme"
 fetch.github = "Th3Whit3Wolf/Space-Theme"
 
 [sanFrancisco-font]
-src.github = "supermarin/YosemiteSanFranciscoFont"
+src.git = "https://github.com/supermarin/YosemiteSanFranciscoFont"
 fetch.github = "supermarin/YosemiteSanFranciscoFont"
 
 [sanFranciscoMono-font]
-src.github = "supercomputra/SF-Mono-Font"
+src.git = "https://github.com/supercomputra/SF-Mono-Font"
 fetch.github = "supercomputra/SF-Mono-Font"
 
 [SFMono-nerdfont]
-src.github = "epk/SF-Mono-Nerd-Font"
+src.git = "https://github.com/epk/SF-Mono-Nerd-Font"
 fetch.github = "epk/SF-Mono-Nerd-Font"
 
 [vimP-parinfer-rust]
@@ -29,13 +29,20 @@ fetch.github = "eraserhd/parinfer-rust"
 cargo_lock = "Cargo.lock"
 
 [vimPlugins-ron-vim]
-src.github = "ron-rs/ron.vim"
+src.git = "https://github.com/ron-rs/ron.vim"
 fetch.github = "ron-rs/ron.vim"
 
 [vimPlugins-vim-cargo-make]
-src.github = "nastevens/vim-cargo-make"
+src.git = "https://github.com/nastevens/vim-cargo-make"
 fetch.github = "nastevens/vim-cargo-make"
 
 [vimPlugins-vim-duckscript]
-src.github = "nastevens/vim-duckscript"
+src.git = "https://github.com/nastevens/vim-duckscript"
 fetch.github = "nastevens/vim-duckscript"
+
+[eww]
+src.git = "https://github.com/elkowar/eww"
+fetch.github = "elkowar/eww"
+cargo_lock = "Cargo.lock"
+
+

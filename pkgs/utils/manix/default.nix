@@ -1,7 +1,7 @@
 { lib, stdenv, source, rustPlatform, ... }:
 
 rustPlatform.buildRustPackage rec {
-  inherit (source) src pname version;
+  inherit (source) src pname version; # cargoLock;
 
   cargoSha256 = "sha256-IvdV22dlC/zAzU5QaII8y5CkUkBuKCCCFOapZdjonh0=";
 

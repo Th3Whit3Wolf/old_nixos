@@ -5,6 +5,7 @@ let
     pname = "${source.pname}-bin";
     source = source.version;
     src = source.src;
+    #cargoLock = source.cargoLock;
 
     #cargoSha256 = "H34UqJ6JOwuSABdOup5yKeIwFrGc83TUnw1ggJEx9o4=";
     buildInputs = [

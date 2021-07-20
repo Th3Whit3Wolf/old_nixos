@@ -26,6 +26,22 @@
     };
 
   };
+  eww = {
+    pname = "eww";
+    version = "4f59424e0e82eb7ce76badb266974dd3e7ea6d8c";
+    src = fetchgit {
+      url = "https://github.com/elkowar/eww";
+      rev = "4f59424e0e82eb7ce76badb266974dd3e7ea6d8c";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "12x6a487qzsngr99z39902v7c7f4xkwjximmn3wmzdz8bjddw2d2";
+    };
+    cargoLock = {
+      lockFile = ./eww-4f59424e0e82eb7ce76badb266974dd3e7ea6d8c/Cargo.lock;
+      outputHashes = { };
+    };
+  };
   manix = {
     pname = "manix";
     version = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
