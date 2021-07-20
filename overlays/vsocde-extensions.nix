@@ -208,12 +208,6 @@ final: prev:
         version = "3.18.0";
         sha256 = "nvKBPSe0+WQ8m88WrQqhzVrqYBjcBhiz6EuJ38gTFhQ=";
       };
-      zignd.html-css-class-completion = extensionFromVscodeMarketplace {
-        name = "html-css-class-completion";
-        publisher = "Zignd";
-        version = "1.20.0";
-        sha256 = "3BEppTBc+gjZW5XrYLPpYUcx3OeHQDPW8z7zseJrgsE=";
-      };
       mathiasfrohlich.kotlin = extensionFromVscodeMarketplace {
         name = "Kotlin";
         publisher = "mathiasfrohlich";
@@ -607,6 +601,72 @@ final: prev:
         publisher = "julialang";
         version = "1.2.8";
         sha256 = "1yh3mzar0v8aai52smw3wasc8cysdlqhnkhvydhpx039xl0i3pdc";
+      };
+      Zignd.html-css-class-completion = extensionFromVscodeMarketplace {
+        name = "html-css-class-completion";
+        publisher = "Zignd";
+        version = "1.20.0";
+        sha256 = "1hc2dgib3wryygb36h47wzf32iv1x6rn1swmbgchiyjw62jjj4fw";
+      };
+      mrmlnc.vscode-autoprefixer = extensionFromVscodeMarketplace {
+        name = "vscode-autoprefixer";
+        publisher = "mrmlnc";
+        version = "3.0.1";
+        sha256 = "0wzgbai4ch04arg027qwljxyvc8q0m0v1jn5ak842klp18spjfl5";
+      };
+      pranaygp.vscode-css-peek = extensionFromVscodeMarketplace {
+        name = "vscode-css-peek";
+        publisher = "pranaygp";
+        version = "4.2.0";
+        sha256 = "0dpkp3xs8jd826h2aa9xlfilsj4yv8q6r9cs350ljrpcyj7wrlpq";
+      };
+      thekalinga.bootstrap4-vscode = extensionFromVscodeMarketplace {
+        name = "bootstrap4-vscode";
+        publisher = "thekalinga";
+        version = "6.1.0";
+        sha256 = "1i8gbx7s1mvy1v9l3z34gcbymbmvp817b2hv9mp5k45inp53vw3z";
+      };
+      octref.vetur = extensionFromVscodeMarketplace {
+        name = "vetur";
+        publisher = "octref";
+        version = "0.34.1";
+        sha256 = "09w3bik1mxs7qac67wgrc58vl98ham3syrn2anycpwd7135wlpby";
+      };
+      johnpapa.Angular2 = extensionFromVscodeMarketplace {
+        name = "Angular2";
+        publisher = "johnpapa";
+        version = "12.0.0";
+        sha256 = "11xnz4bf4dibsa2kbxljzbkkn6a8nln4h0y0s9h443ssax8bm2cx";
+      };
+      amatiasq.sort-imports = extensionFromVscodeMarketplace {
+        name = "sort-imports";
+        publisher = "amatiasq";
+        version = "6.2.6";
+        sha256 = "1gcsvkpqvgr0dk4rl6h8n407g76hxhmm2awn982pkd2j27wdd1hk";
+      };
+      wix.vscode-import-cost = extensionFromVscodeMarketplace {
+        name = "vscode-import-cost";
+        publisher = "wix";
+        version = "2.15.0";
+        sha256 = "0d3b6654cdck1syn74vmmd1jmgkrw5v4c4cyrhdxbhggkip732bc";
+      };
+      anteprimorac.html-end-tag-labels = extensionFromVscodeMarketplace {
+        name = "html-end-tag-labels";
+        publisher = "anteprimorac";
+        version = "0.7.0";
+        sha256 = "1r3p7bdrkf2jj1y836sq7wprkhwyhpwmfsap3zaar2qlcppm0cf8";
+      };
+      streetsidesoftware.code-spell-checker = extensionFromVscodeMarketplace {
+        name = "code-spell-checker";
+        publisher = "streetsidesoftware";
+        version = "1.10.2";
+        sha256 = "1ll046rf5dyc7294nbxqk5ya56g2bzqnmxyciqpz2w5x7j75rjib";
+      };
+      devonray.snippet = extensionFromVscodeMarketplace {
+        name = "snippet";
+        publisher = "devonray";
+        version = "1.0.1";
+        sha256 = "0d80wm6jd2fbp76zhcjlfrlmmvnjjrrw9n0304bxlhd1759r918h";
       };
     };
 }

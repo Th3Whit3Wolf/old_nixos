@@ -205,6 +205,7 @@ let
     wwm.better-align
     rubymaniac.vscode-paste-and-indent
     tyriar.sort-lines
+    streetsidesoftware.code-spell-checker
     # TODO: Test softwaredotcom.swdc-vscode on vscode
     # It may rely on proprietary code
     ryu1kn.edit-with-shell
@@ -212,6 +213,9 @@ let
     stkb.rewrap
     zxh404.vscode-proto3
     skellock.just
+    jock.svg
+    cssho.vscode-svgviewer
+    humao.rest-client
   ];
   /*"dashboard.projectData": null */
 in
