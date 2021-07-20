@@ -5,13 +5,13 @@ stdenv.mkDerivation rec {
   buildPhase = "true";
 
   installPhase = ''
-    mkdir -p $out/share/fonts/san-francisco-mono
+    mkdir -p $out/share/fonts/SFMono
     cp *.otf $out/share/fonts/san-francisco-mono
   '';
 
   meta = with lib; {
-    description = "San Francisco Mono Font by Apple";
-    homepage = "https://github.com/supercomputra/SF-Mono-Font";
+    description = "Apple's SF Mono font patched with the Nerd Fonts patcher";
+    homepage = "https://github.com/epk/SF-Mono-Nerd-Font";
 
     maintainers = [ maintainers.Th3Whit3Wolf ];
     platforms = platforms.unix;
