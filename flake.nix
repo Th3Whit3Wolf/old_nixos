@@ -81,7 +81,6 @@
       };
     };
 
-
     # start ANTI CORRUPTION LAYER
     # remove after https://github.com/NixOS/nix/pull/4641
     nixpkgs.follows = "nixos";
@@ -111,11 +110,27 @@
     
       bud' = bud self; # rebind to access self.budModules
 
-      ol = import ./lib/overlays {
-        inherit (digga) lib;
-      };
+      lib = import ./lib { lib = digga.lib // nixos.lib; };
 
-      lib = import ./lib { lib = digga.lib // nixos.lib // ol.lib; };
+      rakePkgs = dir:
+        let
+          sieve = name: val:
+              (name != "default" && name != "bud" && name != "_sources");
+
+          filteredPkgs = nixos.lib.filterAttrs sieve (digga.lib.rakeLeaves dir);
+          flattenFiltered = digga.lib.flattenTree (filteredPkgs);
+        in
+        nixos.lib.mapAttrs' (name: value: nixos.lib.nameValuePair (nixos.lib.last (nixos.lib.splitString "." name)) (value)) flattenFiltered;
+
+    localPackages = final: prev: builtins.mapAttrs
+      (name: value:
+        let
+          sources = (import ./pkgs/_sources/generated.nix) { inherit (prev) fetchurl fetchgit; };
+          package = import (value);
+          args = builtins.intersectAttrs (builtins.functionArgs package) { source = sources.${name}; };
+        in
+        final.callPackage package args
+      )(rakePkgs (./pkgs));
 
       in digga.lib.mkFlake {
         inherit self inputs lib;
@@ -131,6 +146,7 @@
               rust.overlay
               nvfetcher.overlay
               deploy.overlay
+              localPackages
               ./pkgs/default.nix 
             ];
           };
