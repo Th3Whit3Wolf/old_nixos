@@ -43,6 +43,6 @@ fetch.github = "nastevens/vim-duckscript"
 [eww]
 src.git = "https://github.com/elkowar/eww"
 fetch.github = "elkowar/eww"
-cargo_lock = "Cargo.lock"
+extract = ["flake.lock"]
 
 

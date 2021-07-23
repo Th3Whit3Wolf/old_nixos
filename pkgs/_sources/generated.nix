@@ -3,14 +3,14 @@
 {
   SFMono-nerdfont = {
     pname = "SFMono-nerdfont";
-    version = "v15.0d5e1";
+    version = "dc6cd76df1e864af4ac4fd9e529014648bb80f3c";
     src = fetchgit {
       url = "https://github.com/epk/SF-Mono-Nerd-Font";
-      rev = "v15.0d5e1";
+      rev = "dc6cd76df1e864af4ac4fd9e529014648bb80f3c";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "02f97gasra0syj876ly1aanyf89xxxs580nrpayyfnm9k9vxni12";
+      sha256 = "0npnkff1s5ag4nv6gab5y14zyq19bh2vbd3c60sa2bk9razb2ljh";
     };
   };
   any-nix-shell = {
@@ -24,7 +24,6 @@
       leaveDotGit = false;
       sha256 = "0q27rhjhh7k0qgcdcfm8ly5za6wm4rckh633d0sjz87faffkp90k";
     };
-
   };
   eww = {
     pname = "eww";
@@ -37,112 +36,110 @@
       leaveDotGit = false;
       sha256 = "12x6a487qzsngr99z39902v7c7f4xkwjximmn3wmzdz8bjddw2d2";
     };
-    cargoLock = {
-      lockFile = ./eww-4f59424e0e82eb7ce76badb266974dd3e7ea6d8c/Cargo.lock;
-      outputHashes = { };
+    "flake.lock" = builtins.readFile ./eww-4f59424e0e82eb7ce76badb266974dd3e7ea6d8c/flake.lock;
+      };
+    manix = {
+      pname = "manix";
+      version = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
+      src = fetchgit {
+        url = "https://github.com/mlvzk/manix";
+        rev = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "1b7xi8c2drbwzfz70czddc4j33s7g1alirv12dwl91hbqxifx8qs";
+      };
+      cargoLock = {
+        lockFile = ./manix-d08e7ca185445b929f097f8bfb1243a8ef3e10e4/Cargo.lock;
+        outputHashes = { };
+      };
     };
-  };
-  manix = {
-    pname = "manix";
-    version = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
-    src = fetchgit {
-      url = "https://github.com/mlvzk/manix";
-      rev = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "1b7xi8c2drbwzfz70czddc4j33s7g1alirv12dwl91hbqxifx8qs";
+    sanFrancisco-font = {
+      pname = "sanFrancisco-font";
+      version = "bd895dae758c135851805087f68bef655fdc160c";
+      src = fetchgit {
+        url = "https://github.com/supermarin/YosemiteSanFranciscoFont";
+        rev = "bd895dae758c135851805087f68bef655fdc160c";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "0fmcjv54q9j06494zf2p09z80gr4hgr7hqw6gavpvfzqp3hln661";
+      };
     };
-
-  };
-  sanFrancisco-font = {
-    pname = "sanFrancisco-font";
-    version = "bd895dae758c135851805087f68bef655fdc160c";
-    src = fetchgit {
-      url = "https://github.com/supermarin/YosemiteSanFranciscoFont";
-      rev = "bd895dae758c135851805087f68bef655fdc160c";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "0fmcjv54q9j06494zf2p09z80gr4hgr7hqw6gavpvfzqp3hln661";
+    sanFranciscoMono-font = {
+      pname = "sanFranciscoMono-font";
+      version = "1409ae79074d204c284507fef9e479248d5367c1";
+      src = fetchgit {
+        url = "https://github.com/supercomputra/SF-Mono-Font";
+        rev = "1409ae79074d204c284507fef9e479248d5367c1";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "1yi3nqqs3lp6kkc2a5bvmmcq6j3ppkdmywsbiqcb79qyhhrvf0fz";
+      };
     };
-
-  };
-  sanFranciscoMono-font = {
-    pname = "sanFranciscoMono-font";
-    version = "1409ae79074d204c284507fef9e479248d5367c1";
-    src = fetchgit {
-      url = "https://github.com/supercomputra/SF-Mono-Font";
-      rev = "1409ae79074d204c284507fef9e479248d5367c1";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "1yi3nqqs3lp6kkc2a5bvmmcq6j3ppkdmywsbiqcb79qyhhrvf0fz";
+    spacemacs-theme = {
+      pname = "spacemacs-theme";
+      version = "f3dbdfba0207e7bb7a14f9e925c31c113eb11563";
+      src = fetchgit {
+        url = "https://github.com/Th3Whit3Wolf/Space-Theme";
+        rev = "f3dbdfba0207e7bb7a14f9e925c31c113eb11563";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "1c9vm5gfhgsslm0a1rpsh822938pjcpzqcy183xmhysv0k8jayxb";
+      };
     };
-
-  };
-  spacemacs-theme = {
-    pname = "spacemacs-theme";
-    version = "f3dbdfba0207e7bb7a14f9e925c31c113eb11563";
-    src = fetchgit {
-      url = "https://github.com/Th3Whit3Wolf/Space-Theme";
-      rev = "f3dbdfba0207e7bb7a14f9e925c31c113eb11563";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "1c9vm5gfhgsslm0a1rpsh822938pjcpzqcy183xmhysv0k8jayxb";
+    vimP-parinfer-rust = {
+      pname = "vimP-parinfer-rust";
+      version = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
+      src = fetchgit {
+        url = "https://github.com/eraserhd/parinfer-rust";
+        rev = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "1xwahgwjv1ylmy0bwbsisycjlz5r9i1gxz20392a8f8019zhjx90";
+      };
+      cargoLock = {
+        lockFile = ./vimP-parinfer-rust-afcacc8ef1fbf23d804d2c4eb01a419c50565e44/Cargo.lock;
+        outputHashes = { };
+      };
     };
-
-  };
-  vimP-parinfer-rust = {
-    pname = "vimP-parinfer-rust";
-    version = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
-    src = fetchgit {
-      url = "https://github.com/eraserhd/parinfer-rust";
-      rev = "afcacc8ef1fbf23d804d2c4eb01a419c50565e44";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "1xwahgwjv1ylmy0bwbsisycjlz5r9i1gxz20392a8f8019zhjx90";
+    vimPlugins-ron-vim = {
+      pname = "vimPlugins-ron-vim";
+      version = "04004b3395d219f95a533c4badd5ba831b7b7c07";
+      src = fetchgit {
+        url = "https://github.com/ron-rs/ron.vim";
+        rev = "04004b3395d219f95a533c4badd5ba831b7b7c07";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "1xlr8slwcr6b9p33awf8xzdp04myv6dcsxwi50val4vzvzcgyrcl";
+      };
     };
-  };
-  vimPlugins-ron-vim = {
-    pname = "vimPlugins-ron-vim";
-    version = "04004b3395d219f95a533c4badd5ba831b7b7c07";
-    src = fetchgit {
-      url = "https://github.com/ron-rs/ron.vim";
-      rev = "04004b3395d219f95a533c4badd5ba831b7b7c07";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "1xlr8slwcr6b9p33awf8xzdp04myv6dcsxwi50val4vzvzcgyrcl";
+    vimPlugins-vim-cargo-make = {
+      pname = "vimPlugins-vim-cargo-make";
+      version = "9f36abd5b6b94bf12af44f6210b5f8836509ff69";
+      src = fetchgit {
+        url = "https://github.com/nastevens/vim-cargo-make";
+        rev = "9f36abd5b6b94bf12af44f6210b5f8836509ff69";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "11vi7nmisyas27bp8fywq4qgmpdaix9bap2r9i86ip9mjajq96hv";
+      };
     };
-
-  };
-  vimPlugins-vim-cargo-make = {
-    pname = "vimPlugins-vim-cargo-make";
-    version = "9f36abd5b6b94bf12af44f6210b5f8836509ff69";
-    src = fetchgit {
-      url = "https://github.com/nastevens/vim-cargo-make";
-      rev = "9f36abd5b6b94bf12af44f6210b5f8836509ff69";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "11vi7nmisyas27bp8fywq4qgmpdaix9bap2r9i86ip9mjajq96hv";
+    vimPlugins-vim-duckscript = {
+      pname = "vimPlugins-vim-duckscript";
+      version = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
+      src = fetchgit {
+        url = "https://github.com/nastevens/vim-duckscript";
+        rev = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
+        fetchSubmodules = false;
+        deepClone = false;
+        leaveDotGit = false;
+        sha256 = "19ddz312sbd3z1ddz0pkf3sni6dpfriwwxvx0k3c304p0axd4wpi";
+      };
     };
-
-  };
-  vimPlugins-vim-duckscript = {
-    pname = "vimPlugins-vim-duckscript";
-    version = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
-    src = fetchgit {
-      url = "https://github.com/nastevens/vim-duckscript";
-      rev = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
-      fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = false;
-      sha256 = "19ddz312sbd3z1ddz0pkf3sni6dpfriwwxvx0k3c304p0axd4wpi";
-    };
-
-  };
-}
+  }
