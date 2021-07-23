@@ -6,13 +6,10 @@
     nixos.url = "nixpkgs/release-21.05";
     latest.url = "nixpkgs";
 
-    flake-utils.url = "github:numtide/flake-utils";
-    utils.url = "github:gytis-ivaskevicius/flake-utils-plus/staging";
-    utils.inputs.flake-utils.follows = "flake-utils";
     digga = {
-      url = "github:divnix/digga/develop";
+      url = "github:divnix/digga";
       inputs = {
-        nipxkgs.follows = "latest";
+        nipxkgs.follows = "nixos";
         nixlib.follows = "nixos";
         home-manager.follows = "home";
       };
@@ -20,6 +17,10 @@
 
     bud = {
       url = "github:divnix/bud"; # no need to follow nixpkgs: it never materialises
+      inputs = {
+        nixpkgs.follows = "nixos";
+        devshell.follows = "digga/devshell";
+      };
     };
 
     deploy.follows = "digga/deploy";
@@ -46,7 +47,7 @@
 
     agenix = {
       url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixos";
+      inputs.nixpkgs.follows = "latest";
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
@@ -76,16 +77,17 @@
       inputs = {
         nixpkgs.follows = "latest";
         flake-compat.follows = "digga/deploy/flake-compat";
-        flake-utils.follows = "digga/utils/flake-utils";
+        flake-utils.follows = "digga/flake-utils-plus/flake-utils";
       };
     };
+
 
     # start ANTI CORRUPTION LAYER
     # remove after https://github.com/NixOS/nix/pull/4641
     nixpkgs.follows = "nixos";
     nixlib.follows = "digga/nixlib";
     blank.follows = "digga/blank";
-    utils.follows = "digga/utils";
+    flake-utils-plus.follows = "digga/flake-utils-plus";
     flake-utils.follows = "digga/flake-utils";
     # end ANTI CORRUPTION LAYER
   };
@@ -106,30 +108,34 @@
     , ...
     }@inputs:
     let
+    
       bud' = bud self; # rebind to access self.budModules
-    in
-    digga.lib.mkFlake
-      {
-        inherit self inputs;
+
+      ol = import ./lib/overlays {
+        inherit (digga) lib;
+      };
+
+      lib = import ./lib { lib = digga.lib // nixos.lib // ol.lib; };
+
+      in digga.lib.mkFlake {
+        inherit self inputs lib;
 
         channelsConfig = { allowUnfree = true; };
-
         channels = {
           nixos = {
-            imports = [ (digga.lib.importers.overlays ./overlays) ];
+            imports = [ (digga.lib.importOverlays ./overlays) ];
             overlays = [
+              digga.overlays.patchedNix
               nur.overlay
               agenix.overlay
               rust.overlay
               nvfetcher.overlay
-              (import ./pkgs).overlay
               deploy.overlay
+              ./pkgs/default.nix 
             ];
           };
           latest = { };
         };
-
-        lib = import ./lib { lib = digga.lib // nixos.lib; };
 
         sharedOverlays = [
           (final: prev: {
@@ -144,26 +150,28 @@
           hostDefaults = {
             system = "x86_64-linux";
             channelName = "nixos";
-            imports = [ (digga.lib.importers.modules ./modules) ];
+            imports = [ (digga.lib.importModules ./modules) ];
             externalModules = [
               { lib.our = self.lib; }
+              digga.nixosModules.bootstrapIso
+              digga.nixosModules.nixConfig
               ci-agent.nixosModules.agent-profile
               home.nixosModules.home-manager
               agenix.nixosModules.age
-              (bud.nixosModules.bud bud')
+              bud.nixosModules.bud
               "${inputs.impermanence}/nixos.nix"
             ];
           };
 
-          imports = [ (digga.lib.importers.hosts ./hosts) ];
+          imports = [ (digga.lib.importHosts ./hosts) ];
           hosts = {
             # set host specific properties here
             NixOS = { };
             tardis = { };
           };
           importables = rec {
-            profiles = digga.lib.importers.rakeLeaves ./profiles // {
-              users = digga.lib.importers.rakeLeaves ./users;
+            profiles = digga.lib.rakeLeaves ./profiles // {
+              users = digga.lib.rakeLeaves ./users;
             };
             suites = with profiles; rec {
               base = [ cachix core ];
@@ -176,10 +184,10 @@
         };
 
         home = {
-          imports = [ (digga.lib.importers.modules ./users/modules) ];
+          imports = [ (digga.lib.importModules ./users/modules) ];
           externalModules = [ "${inputs.impermanence}/home-manager.nix" ];
           importables = rec {
-            profiles = digga.lib.importers.rakeLeaves ./users/profiles;
+            profiles = digga.lib.rakeLeaves ./users/profiles;
             suites = with profiles; rec {
               base = [ core direnv git xdg ssh ];
               zsh = [ shell.ZSH ];
