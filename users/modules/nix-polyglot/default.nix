@@ -17,32 +17,32 @@ let
     if elem "all" cfg.langs then
       flatten
         (forEach languages (lang:
-          if (hasAttrByPath [ "${lang}" "packages" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.packages else [ ]
+          if (hasAttrByPath [ "${lang}" "packages" ] cfg.lang) then cfg.lang.${lang}.packages else [ ]
         ))
     else
       flatten (forEach polyglot.langs (lang:
-        if (hasAttrByPath [ "${lang}" "packages" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.packages else [ ]
+        if (hasAttrByPath [ "${lang}" "packages" ] cfg.lang) then cfg.lang.${lang}.packages else [ ]
       ));
   langAliases =
     if elem "all" cfg.langs then
       flatten
         (forEach languages (lang:
-          if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
+          if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
         ))
     else
       flatten (forEach polyglot.langs (lang:
-        if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
+        if (hasAttrByPath [ "${lang}" "shellAliases" ] cfg.lang) then config.nix-polyglot.lang.${lang}.shellAliases else { }
       ));
 
   langVars =
     if elem "all" cfg.langs then
       flatten
         (forEach languages (lang:
-          if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.sessionVariables else { }
+          if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.lang) then cfg.lang.${lang}.sessionVariables else { }
         ))
     else
       flatten (forEach polyglot.langs (lang:
-        if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.nix-polyglot.lang) then config.nix-polyglot.lang.${lang}.sessionVariables else { }
+        if (hasAttrByPath [ "${lang}" "sessionVariables" ] cfg.lang) then cfg.lang.${lang}.sessionVariables else { }
       ));
 in
 {
