@@ -81,6 +81,7 @@ in
       "${cache}/gstreamer-1.0"
       "${cache}/lollypop"
       "${conf}/pipewire/media-session.d"
+      "${conf}/eww"
       ".gnupg"
       "${data}/gnupg"
       "${data}/icons"
