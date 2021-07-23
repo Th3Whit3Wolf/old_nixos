@@ -6,7 +6,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/share/fonts/SFMono
-    cp *.otf $out/share/fonts/san-francisco-mono
+    cp *.otf $out/share/fonts/SFMono
   '';
 
   meta = with lib; {
