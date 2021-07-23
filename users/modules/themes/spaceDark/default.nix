@@ -24,6 +24,7 @@ in
           breeze-qt5 # For them sweet breeze cursors
           sanFrancisco-font
           sanFranciscoMono-font
+	  SFMono-nerdfont
         ];
         gtk = {
           theme = "Space-Dark";
