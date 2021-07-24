@@ -7,13 +7,12 @@ let
   currLang = baseNameOf (builtins.toString ./.);
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
-  cfg = polyglot.lang.${currLang};
+  pLang = "nix-polyglot.lang.${currLang}";
 
   imports = [
     ./vscode.nix
     #./neovim.nix
   ];
-
 
   /*
     Nix is unable to install gcc and clang as user packages
@@ -34,7 +33,7 @@ let
 in
 {
   inherit imports;
-  options.nix-polyglot.lang.${currLang} = {
+  options.${pLang} = {
     enable = mkOption {
       type = types.bool;
       default = enabled;
@@ -56,8 +55,10 @@ in
     };
     sessionVariables = mkOption {
       type = types.attrs;
-      default = { };
-      example = { CCACHE_DIR = "$XDG_CACHE_HOME/ccache"; };
+      default = {
+        CCACHE_DIR = "$XDG_CACHE_HOME/ccache";
+        CCACHE_CONFIGPATH = "$XDG_CONFIG_HOME/ccache.config";
+      };
       description = ''
         Environment variables to always set at login for ${currLang} programming.
         </para><para>
@@ -66,11 +67,10 @@ in
   };
   config = mkIf enabled {
     home = {
-      sessionVariables = {
-        CCACHE_DIR = "$XDG_CACHE_HOME/ccache";
-        CCACHE_CONFIGPATH = "$XDG_CONFIG_HOME/ccache.config";
-      };
+      packages = config.${pLang}.packages;
+      sessionVariables = config.${pLang}.sessionVariables;
     };
+    programs.ZSH.shellAliases = config.${pLang}.shellAliases;
   };
 }
 

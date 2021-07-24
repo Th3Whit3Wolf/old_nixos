@@ -7,7 +7,7 @@ let
   currLang = baseNameOf (builtins.toString ./.);
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
-  cfg = polyglot.lang.${currLang};
+  pLang = "nix-polyglot.lang.${currLang}";
 
   imports = [
     ./vscode.nix
@@ -28,7 +28,7 @@ let
 in
 {
   inherit imports;
-  options.nix-polyglot.lang.${currLang} = {
+  options.${pLang} = {
     enable = mkOption {
       type = types.bool;
       default = enabled;
@@ -57,6 +57,13 @@ in
         </para><para>
       '';
     };
+  };
+  config = mkIf enabled {
+    home = {
+      packages = config.${pLang}.packages;
+      sessionVariables = config.${pLang}.sessionVariables;
+    };
+    programs.ZSH.shellAliases = config.${pLang}.shellAliases;
   };
 }
 

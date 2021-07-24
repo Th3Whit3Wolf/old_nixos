@@ -7,7 +7,7 @@ let
   currLang = baseNameOf (builtins.toString ./.);
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
-  cfg = polyglot.lang.${currLang};
+  pLang = "nix-polyglot.lang.${currLang}";
 
   imports = [
     ./vscode.nix
@@ -104,7 +104,7 @@ let
 in
 {
   inherit imports;
-  options.nix-polyglot.lang.${currLang} = {
+  options.${pLang} = {
     enable = mkOption {
       type = types.bool;
       default = enabled;
@@ -141,9 +141,12 @@ in
           "${data}/cargo"
           "${data}/rustup"
         ];
+      packages = config.${pLang}.packages;
+      sessionVariables = config.${pLang}.sessionVariables;
     };
     programs.ZSH = {
       pathVar = [ "$CARGO_HOME/bin" ];
+      shellAliases = config.${pLang}.shellAliases;
       sessionVariables = {
         RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
         CARGO_HOME = "$XDG_DATA_HOME/cargo";
