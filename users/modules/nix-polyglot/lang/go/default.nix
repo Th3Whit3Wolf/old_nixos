@@ -8,6 +8,7 @@ let
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
   pLang = "nix-polyglot.lang.${currLang}";
+  ifZsh = polyglot.enableZshIntegration;
 
   imports = [
     ./vscode.nix
@@ -59,11 +60,12 @@ let
 
   langVars = {
     GO111MODULE = "auto";
-    GOROOT = "${pkgs.go.out}/share/go";
     GOBIN = "$XDG_BIN_HOME";
     GOPATH = "$XDG_DATA_HOME/go";
     PATH = [ "$GOPATH/bin" ];
   };
+
+
 in
 {
   inherit imports;
@@ -106,7 +108,6 @@ in
       packages = config.${pLang}.packages;
       sessionVariables = config.${pLang}.sessionVariables;
     };
-    programs.ZSH.shellAliases = config.${pLang}.shellAliases;
-
+    programs.ZSH.shellAliases = mkIf ifZsh config.${pLang}.shellAliases;
   };
 }

@@ -33,7 +33,7 @@ in
     };
     settings = mkOption {
       type = jsonFormat.type;
-      default = (toJSON langSettings);
+      default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.
       '';

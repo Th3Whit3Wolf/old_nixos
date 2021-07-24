@@ -13,6 +13,7 @@ let
     arrterian.nix-env-selector
   ];
 
+  langSettings = { };
 in
 {
   options.nix-polyglot.lang.${currLang}.vscode = {
@@ -27,7 +28,7 @@ in
     };
     settings = mkOption {
       type = jsonFormat.type;
-      default = (toJSON { });
+      default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.
       '';

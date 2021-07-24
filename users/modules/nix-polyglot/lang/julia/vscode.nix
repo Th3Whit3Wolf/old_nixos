@@ -11,6 +11,7 @@ let
   langExtensions = with pkgs.vscode-extensions; [
     julialang.language-julia
   ];
+  langSettings = { };
 
 in
 {
@@ -35,7 +36,7 @@ in
           };
         };
       '';
-      default = (toJSON { });
+      default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.
       '';

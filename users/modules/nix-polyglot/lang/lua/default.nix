@@ -8,6 +8,7 @@ let
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
   pLang = "nix-polyglot.lang.${currLang}";
+  ifZsh = polyglot.enableZshIntegration;
 
   imports = [
     ./vscode.nix
@@ -19,7 +20,6 @@ let
     luajitPackages.luarocks
     luajitPackages.moonscript
     luajitPackages.busted
-    lua
     sumneko-lua-language-server
   ];
 in
@@ -60,7 +60,7 @@ in
       packages = config.${pLang}.packages;
       sessionVariables = config.${pLang}.sessionVariables;
     };
-    programs.ZSH.shellAliases = config.${pLang}.shellAliases;
+    programs.ZSH.shellAliases = mkIf ifZsh config.${pLang}.shellAliases;
   };
 }
 

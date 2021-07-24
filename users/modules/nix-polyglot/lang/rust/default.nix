@@ -8,6 +8,7 @@ let
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
   pLang = "nix-polyglot.lang.${currLang}";
+  ifZsh = polyglot.enableZshIntegration;
 
   imports = [
     ./vscode.nix
@@ -146,7 +147,7 @@ in
     };
     programs.ZSH = {
       pathVar = [ "$CARGO_HOME/bin" ];
-      shellAliases = config.${pLang}.shellAliases;
+      shellAliases = mkIf ifZsh config.${pLang}.shellAliases;
       sessionVariables = {
         RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
         CARGO_HOME = "$XDG_DATA_HOME/cargo";

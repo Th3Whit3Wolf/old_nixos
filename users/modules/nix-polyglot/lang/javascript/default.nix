@@ -8,6 +8,7 @@ let
   enabled = elem currLang polyglot.langs || elem "all" polyglot.langs;
   polyglot = config.nix-polyglot;
   pLang = "nix-polyglot.lang.${currLang}";
+  ifZsh = polyglot.enableZshIntegration;
 
   imports = [
     ./vscode.nix
@@ -123,7 +124,7 @@ in
     '';
     programs.ZSH = {
       pathVar = [ "$(${pkgs.yarn}/bin/yarn global bin)" "$(${pkgs.nodejs}/bin/npm bin)" ];
-      shellAliases = config.${pLang}.shellAliases;
+      shellAliases = mkIf ifZsh config.${pLang}.shellAliases;
     };
   };
 }
