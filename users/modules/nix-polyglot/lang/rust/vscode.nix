@@ -15,11 +15,11 @@ let
   ];
 
   langSettings = {
-    rust-analyzer = {
-      cargo.allFeatures = true;
-      checkOnSave.command = "clippy";
-      procMacro.enable = true;
-      #rustcSource = "${pkgs.rust-analyzer}";
+    "rust-analyzer" = {
+      "cargo.allFeatures" = true;
+      "checkOnSave.command" = "clippy";
+      "procMacro.enable" = true;
+      "rustcSource" = "${pkgs.rust-analyzer}";
     };
   };
 in
@@ -37,15 +37,14 @@ in
     settings = mkOption {
       type = jsonFormat.type;
       example = literalExample ''
-        langSettings = {
-          rust-analyzer = {
-            cargo.allFeatures = true;
-            checkOnSave.command = "clippy";
-            procMacro.enable = true;
-          };
+        "rust-analyzer" = {
+          "cargo.allFeatures" = true;
+          "checkOnSave.command" = "clippy";
+          "procMacro.enable" = true;
+          "rustcSource" = "${pkgs.rust-analyzer}";
         };
       '';
-      default = (toJSON langSettings);
+      default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.
       '';

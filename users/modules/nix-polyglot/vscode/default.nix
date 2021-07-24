@@ -108,49 +108,46 @@ let
   allExtension = cfg.extensions ++ vscodeLangExt;
 
   /*
+    colorThemes =
+    let
+    packageJson = ext: elemAt (filter (file: baseNameOf "${file}" == "package.json") (filesystem.listFilesRecursive (ext + "/share/vscode/extensions"))) 0;
+    packageJsons = forEach allExtension (x: packageJson x);
+    toJson = file: (fromJSON (readFile file));
+
+    isTheme = pJson: if (hasAttr "contributes" (toJson pJson)) && (hasAttr "themes" (toJson pJson).contributes) then true else false;
+    collectedThemes = filter (packages: isTheme packages) packageJsons;
+
+    getThemes = pJson: forEach ((toJson pJson).contributes.themes) (x: if hasAttr "id" x then x.id else x.label);
+    extensionThemes = flatten (forEach collectedThemes (x: getThemes x));
+    in
+  */
+
+  /*
     * Returns all settings for all appropriate languages
   */
   vscodeLangSettings =
     let
-      defaultSettings' = mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings);
-      defaultSettings = "${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") defaultSettings')}";
-      rmOuterBrackets = jsonStr: removeSuffix "}" (removePrefix "{" jsonStr) + "\n";
-      transformToJson = settings:
-        if settings != { } then
-          "${concatStringsSep ",\n    " (mapAttrsToList (name: value: "\"${name}\": ${toJSON value}") (fromJSON settings))}"
-        else
-          "";
-      addUserSettings = removeSuffix "}" (removePrefix "{" (toJSON cfg.additionalUserSettings));
+      defaultSettings = (mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) cfg.userSettings);
+      additionalUserSettings = cfg.additionalUserSettings;
 
-      langsSets' =
+      langsSets =
         if elem "all" polyglot.langs then
           flatten
             (forEach languages (lang:
-              if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang) then transformToJson config.nix-polyglot.lang.${lang}.vscode.settings else ""
+              if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang && config.nix-polyglot.lang.${lang}.vscode.settings != { }) then config.nix-polyglot.lang.${lang}.vscode.settings else { }
             ))
         else
           flatten (forEach polyglot.langs (lang:
-            if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang) then transformToJson config.nix-polyglot.lang.${lang}.vscode.settings else ""
+            if (hasAttrByPath [ "${lang}" "vscode" "settings" ] config.nix-polyglot.lang && config.nix-polyglot.lang.${lang}.vscode.settings != { }) then config.nix-polyglot.lang.${lang}.vscode.settings else { }
           ));
-      langsSets = langsSets' ++ [ (optionalString (defaultSettings != "") defaultSettings) (optionalString (addUserSettings != "") addUserSettings) ];
-      allSets = remove "" (langsSets);
-    in
-    if allSets != [ ] then
-      ''
-        {
-          ${concatStringsSep ",\n    " allSets}
-        }
-      ''
-    else
-      "{}"
-  ;
 
-  allSettings = ''
-    {
-      ${defaultSettings},
-      ${addUserSettings}
-    }
-  '';
+      recursiveUpdateAttrsFromList = orig: listOfAttrs:
+        if (listOfAttrs == [ ]) then
+          orig
+        else
+          recursiveUpdateAttrsFromList (orig // (head listOfAttrs)) (drop 1 listOfAttrs);
+    in
+    recursiveUpdateAttrsFromList (defaultSettings // additionalUserSettings) langsSets;
 
   colorThemes =
     let
@@ -379,7 +376,7 @@ in
         "${configFilePath}" = {
           # Force json validation
           # if mkUserSettings contains invalid json this will throw
-          source = writePrettyJSON "vscode-user-settings" (fromJSON vscodeLangSettings);
+          source = writePrettyJSON "vscode-user-settings" (vscodeLangSettings);
         };
       };
     };
