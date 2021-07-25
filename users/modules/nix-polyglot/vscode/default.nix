@@ -86,7 +86,6 @@ let
       name;
 
 
-
   # Returns list of all languages
   languages = lib.mapAttrsToList (name: type: "${name}")
     (lib.filterAttrs (file: type: type == "directory") (readDir (../lang)));
@@ -127,7 +126,7 @@ let
   */
   vscodeLangSettings =
     let
-      defaultSettings = (mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) cfg.userSettings);
+      defaultSettings = (mapAttrs' (name: value: nameValuePair (languageOverride name) (value)) (flattenTree cfg.userSettings));
       additionalUserSettings = cfg.additionalUserSettings;
 
       langsSets =

@@ -13,7 +13,10 @@ let
     arrterian.nix-env-selector
   ];
 
-  langSettings = { };
+  langSettings = {
+    "nix.enableLanguageServer" = false;
+    "nix.serverPath" = "${pkgs.rnix-lsp}/bin/rnix-lsp";
+  };
 in
 {
   options.nix-polyglot.lang.${currLang}.vscode = {
