@@ -2,7 +2,7 @@
 
 {
   nix-polyglot = {
-    langs = [ "all" ];
+    langs = [ "cc" "lua" "nix" "rust" ];
     enableZshIntegration = true;
     neovim.enable = true;
     vscode = {
