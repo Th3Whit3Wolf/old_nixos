@@ -15,6 +15,7 @@ let
         "vimPlugins" = mkVimPlugin;
       }.${pkgSet};
 
+
       pkgsInSources = self.lib.mapAttrs' (name: value: self.lib.nameValuePair (self.lib.removePrefix prefix name) (value)) (self.lib.filterAttrs (n: v: self.lib.hasPrefix prefix n) sources);
     in
     self.lib.mapAttrs (n: v: pkgSetBuilder v) pkgsInSources;
@@ -25,15 +26,5 @@ in
 
   vimPlugins = super.vimPlugins // (newPkgsSet "vimPlugins");
 
-  flakes = self.lib.forEach
-    (
-      self.lib.forEach
-        (
-          builtins.filter
-            (s:
-              self.lib.hasSuffix "flake.lock;" s)
-            (self.lib.splitString "\n" (builtins.readFile ./_sources/generated.nix)))
-        (x:
-          self.lib.last (self.lib.splitString " " x)))
-    (p: self.lib.compat p);
 }
+
