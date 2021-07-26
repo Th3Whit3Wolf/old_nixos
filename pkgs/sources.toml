@@ -26,13 +26,11 @@ fetch.github = "epk/SF-Mono-Nerd-Font"
 [eww]
 src.git = "https://github.com/elkowar/eww"
 fetch.github = "elkowar/eww"
-extract = ["flake.lock"]
 
 # Vim Plugins
 [vimP-parinfer-rust]
 src.git = "https://github.com/eraserhd/parinfer-rust"
 fetch.github = "eraserhd/parinfer-rust"
-cargo_lock = "Cargo.lock"
 
 [vimPlugins-ron-vim]
 src.git = "https://github.com/ron-rs/ron.vim"
