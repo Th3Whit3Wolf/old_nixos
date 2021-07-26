@@ -16,7 +16,8 @@
     };
 
     bud = {
-      url = "github:divnix/bud"; # no need to follow nixpkgs: it never materialises
+      url =
+        "github:divnix/bud"; # no need to follow nixpkgs: it never materialises
       inputs = {
         nixpkgs.follows = "nixos";
         devshell.follows = "digga/devshell";
@@ -104,39 +105,44 @@
     , nvfetcher
     , deploy
     , rust
+    , naersk
     , ...
     }@inputs:
     let
 
       bud' = bud self; # rebind to access self.budModules
 
-      lib = import ./lib { lib = digga.lib // nixos.lib; };
-
       rakePkgs = dir:
         let
           sieve = name: val:
             (name != "default" && name != "bud" && name != "_sources");
 
-          filteredPkgs = nixos.lib.filterAttrs sieve (digga.lib.rakeLeaves dir);
-          flattenFiltered = digga.lib.flattenTree (filteredPkgs);
+          flattenFiltered = digga.lib.flattenTree
+            (nixos.lib.filterAttrs sieve (digga.lib.rakeLeaves dir));
+          getBasename = name: nixos.lib.last (nixos.lib.splitString "." name);
         in
-        nixos.lib.mapAttrs' (name: value: nixos.lib.nameValuePair (nixos.lib.last (nixos.lib.splitString "." name)) (value)) flattenFiltered;
+        nixos.lib.mapAttrs' (n: v: nixos.lib.nameValuePair (getBasename n) v)
+          flattenFiltered;
 
-      localPackages = final: prev: builtins.mapAttrs
-        (name: value:
-          let
-            sources = (import ./pkgs/_sources/generated.nix) { inherit (prev) fetchurl fetchgit; };
-            package = import (value);
-            args = builtins.intersectAttrs (builtins.functionArgs package) { source = sources.${name}; };
-          in
-          final.callPackage package args
-        )
-        (rakePkgs (./pkgs));
+      localPackages = final: prev:
+        builtins.mapAttrs
+          (name: value:
+            let
+              sources = (import ./pkgs/_sources/generated.nix) {
+                inherit (prev) fetchurl fetchgit;
+              };
+              package = import (value);
+              args = builtins.intersectAttrs (builtins.functionArgs package) {
+                source = sources.${name};
+              };
+            in
+            final.callPackage package args)
+          (rakePkgs (./pkgs));
 
     in
     digga.lib.mkFlake
       {
-        inherit self inputs lib;
+        inherit self inputs;
 
         channelsConfig = { allowUnfree = true; };
         channels = {
@@ -147,6 +153,7 @@
               nur.overlay
               agenix.overlay
               rust.overlay
+              naersk.overlay
               nvfetcher.overlay
               deploy.overlay
               localPackages
@@ -156,12 +163,12 @@
           latest = { };
         };
 
+        lib = import ./lib { lib = digga.lib // nixos.lib; };
+
         sharedOverlays = [
           (final: prev: {
             __dontExport = true;
-            lib = prev.lib.extend (lfinal: lprev: {
-              our = self.lib;
-            });
+            lib = prev.lib.extend (lfinal: lprev: { our = self.lib; });
           })
         ];
 
@@ -221,7 +228,8 @@
 
         devshell.modules = [ (import ./shell bud') ];
 
-        homeConfigurations = digga.lib.mkHomeConfigurations self.nixosConfigurations;
+        homeConfigurations =
+          digga.lib.mkHomeConfigurations self.nixosConfigurations;
 
         deploy.nodes = digga.lib.mkDeployNodes self.nixosConfigurations { };
 
