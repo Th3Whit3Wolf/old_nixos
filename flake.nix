@@ -82,6 +82,15 @@
       };
     };
 
+    nix-polyglot = {
+      url = "path:./external/nix-polyglot";
+      inputs = {
+        nixpkgs.follows = "nixos";
+        flake-utils.follows = "digga/flake-utils-plus/flake-utils";
+      };
+      flake = false;
+    };
+
     # start ANTI CORRUPTION LAYER
     # remove after https://github.com/NixOS/nix/pull/4641
     nixpkgs.follows = "nixos";
@@ -106,6 +115,7 @@
     , deploy
     , rust
     , naersk
+    , nix-polyglot
     , ...
     }@inputs:
     let
@@ -211,7 +221,11 @@
 
         home = {
           imports = [ (digga.lib.importModules ./users/modules) ];
-          externalModules = [ "${inputs.impermanence}/home-manager.nix" ];
+          externalModules = [
+            "${inputs.impermanence}/home-manager.nix"
+            "${inputs.nix-polyglot}/modules/home-manager/default.nix"
+
+          ];
           importables = rec {
             profiles = digga.lib.rakeLeaves ./users/profiles;
             suites = with profiles; rec {
@@ -219,9 +233,10 @@
               zsh = [ shell.ZSH ];
               firefox = [ desktop.browser.firefox ];
               psd = [ desktop.browser.psd ];
+              eww = [ desktop.widgets.eww ];
               sway = [ desktop.wm.sway ];
               waybar = [ desktop.bar.waybar ];
-              tardis = [ base dev psd firefox sway waybar eraseYourDarlings zsh ];
+              tardis = [ base psd firefox sway eww waybar eraseYourDarlings zsh dev ];
             };
           };
         };

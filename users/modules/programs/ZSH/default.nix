@@ -6,7 +6,7 @@ let
   inherit (config.home) homeDirectory username;
 
   cfg = config.programs.ZSH;
-  polyglot = config.nix-polyglot;
+  polyglot = config.home.nix-polyglot;
 
   # For persistence
   startWithHome = xdgDir:
@@ -89,7 +89,7 @@ let
 
   aliasesStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: "alias ${k}=${lib.escapeShellArg v}")
-      cfg.shellAliases);
+      (cfg.shellAliases // config.programs.zsh.shellAliases));
 
   globalAliasesStr = concatStringsSep "\n"
     (mapAttrsToList (k: v: "alias -g ${k}=${lib.escapeShellArg v}")

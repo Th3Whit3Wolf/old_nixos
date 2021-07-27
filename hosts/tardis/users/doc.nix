@@ -1,4 +1,4 @@
-{ self, lib, modulesPath, pkgs, suites, hardware, profiles, config, ... }:
+{ self, lib, modulesPath, pkgs, suites, hardware, profiles, config, nix-polyglot, ... }:
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
@@ -50,6 +50,8 @@ in
         # Required
         firefox-wayland
         brightnessctl
+        eww
+        vscodium
 
       ] ++ themePackages;
   };

@@ -5,7 +5,7 @@ with lib;
 let
   inherit (config.home) homeDirectory username;
 
-  npg = config.nix-polyglot;
+  npg = config.home.nix-polyglot;
   xdg = config.xdg;
   zsh = config.programs.ZSH;
 
@@ -81,7 +81,6 @@ in
       "${cache}/gstreamer-1.0"
       "${cache}/lollypop"
       "${conf}/pipewire/media-session.d"
-      "${conf}/eww"
       ".gnupg"
       "${data}/gnupg"
       "${data}/icons"
@@ -93,6 +92,7 @@ in
       "${desktop}"
       "${documents}"
       "${download}"
+      "${music}"
       "${pictures}"
       "${publicShare}"
       "${templates}"

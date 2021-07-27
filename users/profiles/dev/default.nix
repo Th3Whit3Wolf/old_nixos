@@ -1,9 +1,10 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  nix-polyglot = {
-    langs = [ "cc" "lua" "nix" "rust" ];
-    enableZshIntegration = true;
+  home.nix-polyglot = {
+    enable = true;
+    langs = [ "all" ];
+    enableZshIntegration = false;
     neovim.enable = true;
     vscode = {
       enable = true;
@@ -11,3 +12,8 @@
     };
   };
 }
+
+/*
+  pathVar = [ "$(${pkgs.yarn}/bin/yarn global bin)" "$(${pkgs.nodejs}/bin/npm bin)" ];
+  pathVar = [ "$CARGO_HOME/bin" ];
+*/
