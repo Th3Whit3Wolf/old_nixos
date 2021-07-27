@@ -91,8 +91,8 @@
       dispatcherScripts = [{
         source = pkgs.writeText "10-chrony" ''
           #!/bin/sh
-          INTERFACE=\$1
-          STATUS=\$2
+          INTERFACE=$1
+          STATUS=$2
           # Make sure we're always getting the standard response strings
           LANG='C'
           CHRONY=${pkgs.chrony}/bin/chrony
