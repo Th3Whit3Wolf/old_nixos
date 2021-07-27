@@ -43,6 +43,7 @@ in
   wayland.windowManager.sway = {
     enable = true;
     xwayland = true;
+    systemdIntegration = false;
     wrapperFeatures = { gtk = true; };
     extraSessionCommands = "systemctl --user import-environment";
     config = rec {
@@ -246,6 +247,7 @@ in
         }
         # Build .zcompdump on startup
         { command = "{pkgs.zsh}/bin/zsh -i -c exit"; }
+        { command = ''if [[ "$(date +%Y" == "1970" ]]; then systemctl restart chronyd fi''; }
       ];
     };
     extraConfig = ''
