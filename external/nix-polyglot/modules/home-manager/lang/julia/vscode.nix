@@ -19,7 +19,6 @@ in
     extensions = mkOption {
       type = types.listOf types.package;
       default = langExtensions;
-      example = literalExample "[ pkgs.vscode-extensions.matklad.rust-analyzer ]";
       description = ''
         The extensions Visual Studio Code should use with for programming in ${currLang}.
         These will override but not delete manually installed ones.
@@ -27,15 +26,6 @@ in
     };
     settings = mkOption {
       type = jsonFormat.type;
-      example = literalExample ''
-        langSettings = {
-          rust-analyzer = {
-            cargo.allFeatures = true;
-            checkOnSave.command = "clippy";
-            procMacro.enable = true;
-          };
-        };
-      '';
       default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.

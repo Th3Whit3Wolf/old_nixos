@@ -27,7 +27,6 @@ in
     extensions = mkOption {
       type = types.listOf types.package;
       default = langExtensions;
-      example = literalExample "[ pkgs.vscode-extensions.matklad.rust-analyzer ]";
       description = ''
         The extensions Visual Studio Code should use with for programming in ${currLang}.
       '';
