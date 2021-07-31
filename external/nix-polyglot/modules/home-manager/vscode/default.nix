@@ -144,7 +144,7 @@ let
         if (listOfAttrs == [ ]) then
           orig
         else
-          recursiveUpdateAttrsFromList (orig // (head listOfAttrs)) (drop 1 listOfAttrs);
+          recursiveUpdateAttrsFromList (recursiveUpdate orig (head listOfAttrs)) (drop 1 listOfAttrs);
     in
     recursiveUpdateAttrsFromList (defaultSettings // additionalUserSettings) langsSets;
 
