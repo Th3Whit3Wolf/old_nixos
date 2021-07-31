@@ -25,12 +25,13 @@ let
     ];
   };
 
+
   langSettings = {
     "rust-analyzer.cargo.allFeatures" = true;
     "rust-analyzer.checkOnSave.command" = "clippy";
     "rust-analyzer.procMacro.enable" = true;
-    "rust-analyzer.serverPath" = "${pkgs.rust-analyzer}";
-    "rust-analyzer.rustcSource" = "${rust-stable}/lib/rustlib/src/rust/library/";
+    "rust-analyzer.serverPath" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+    #"rust-analyzer.rustcSource" = "${pkgs.latest.rustChannels.stable.rust-src}/lib/rustlib/src/rust/library/";
   };
 in
 {
@@ -46,13 +47,6 @@ in
     };
     settings = mkOption {
       type = jsonFormat.type;
-      example = literalExample ''
-        "rust-analyzer.cargo.allFeatures" = true;
-        "rust-analyzer.checkOnSave.command" = "clippy";
-        "rust-analyzer.procMacro.enable" = true;
-        "rust-analyzer.serverPath" = "${pkgs.rust-analyzer}";
-        "rust-analyzer.rustcSource" = "${rust-stable}/lib/rustlib/src/rust/library/";
-      '';
       default = langSettings;
       description = ''
         User settings for vscode related to ${currLang}.
