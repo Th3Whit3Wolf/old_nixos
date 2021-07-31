@@ -97,13 +97,21 @@ in
       "${publicShare}"
       "${templates}"
       "${videos}"
+      ".mozilla/firefox"
       ".ssh"
+
+      # Nix Polyglot
+      "${data}/cargo"
+      "${data}/rustup"
+      "${data}/go"
+
 
       # Vscode
       (optionalString (vscodePname != null) "${conf}/${vscodeConfigDir}")
       (optionalString (vscodePname != null) "${cache}/mesa_shader_cache")
       (optionalString (vscodePname != null) ".pki")
       (optionalString (vscodePname != null) "${vscodeExtensionDir}")
+
     ] ++ extraUserDirs;
   };
 }
