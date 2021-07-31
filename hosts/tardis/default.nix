@@ -20,7 +20,7 @@ in
   home-manager.useUserPackages = true;
 
   nix = {
-    maxJobs = 4;
+    maxJobs = 3;
     extraOptions = ''
       access-tokens = "${accessToken}";
     '';
