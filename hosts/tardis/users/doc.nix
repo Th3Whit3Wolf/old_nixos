@@ -12,6 +12,10 @@ in
     (lib.mkAliasOptionModule [ "${user}" ] [ "home-manager" "users" "${user}" ])
   ];
 
+  /*
+    https://github.com/ms747/vimsnitch
+  */
+
   users.users.${user} = {
     uid = 1000;
     description = "Just the doctor";
@@ -117,7 +121,13 @@ in
           };
         };
       };
-      ZSH.pathVar = [ "$XDG_BIN_HOME" ];
+      ZSH = {
+        pathVar = [ "$XDG_BIN_HOME" ];
+        shellAliases = {
+          nrfb = ''cd /persist/etc/nixos && nix flake lock --update-input nix-polyglot && sudo nixos-rebuild --flake .#${config.networking.hostName} boot && cd $OLDPWD'';
+          nrfs = ''cd /persist/etc/nixos && nix flake lock --update-input nix-polyglot && sudo nixos-rebuild --flake .#${config.networking.hostName} switch && cd $OLDPWD'';
+        };
+      };
     };
 
     xdg = {
