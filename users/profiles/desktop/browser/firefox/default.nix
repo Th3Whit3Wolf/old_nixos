@@ -4,7 +4,7 @@ with lib;
 let
   inherit (config.home) homeDirectory username;
   ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
-    auto-tab-discard
+    #auto-tab-discard
     bitwarden
     canvasblocker
     clearurls
@@ -26,11 +26,14 @@ in
 
 
 {
-  home.persistence."/persist/${homeDirectory}".directories =
-    mkIf (config.home.persistence."/persist/${homeDirectory}".allowOther)
-      [ ".mozilla/firefox" ];
   programs.firefox = {
     enable = true;
+    package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+      forceWayland = true;
+      extraPolicies = {
+        ExtensionSettings = { };
+      };
+    };
     extensions = [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
@@ -47,16 +50,113 @@ in
       '';
       isDefault = true;
       settings = {
-        "devtools.theme" = "dark";
-
         # Disables annoying prompt to reset firefox addons and settings
         "browser.disableResetPrompt" = true;
-        # Enable userContent.css and userChrome.css for our theme modules
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Stop creating ~/Downloads!
         "browser.download.dir" = "${homeDirectory}/Downs";
 
-        # The following was taken from https://github.com/arkenfox/user.js/
+        "browser.download.viewableInternally.typeWasRegistered.svg" = true;
+        "browser.download.viewableInternally.typeWasRegistered.webp" = true;
+        "browser.download.viewableInternally.typeWasRegistered.xml" = true;
+
+        "browser.proton.enabled" = true;
+
+        "browser.search.hiddenOneOffs" = "Google,Amazon.com,Bing,DuckDuckGo,Wikipedia (en)";
+        "browser.search.firstRunSkipsHomepage" = true;
+
+        "browser.uiCustomization.state" = builtins.toJSON {
+          "placements" = {
+            "widget-overflow-fixed-list" = [ ];
+            "nav-bar" = [
+              "back-button"
+              "forward-button"
+              "stop-reload-button"
+              "urlbar-container"
+              "downloads-button"
+              "library-button"
+              "sidebar-button"
+              "fxa-toolbar-menu-button"
+            ];
+            "toolbar-menubar" = [
+              "menubar-items"
+            ];
+            "TabsToolbar" = [
+              "tabbrowser-tabs"
+              "new-tab-button"
+              "alltabs-button"
+            ];
+            "PersonalToolbar" = [
+              "import-button"
+              "personal-bookmarks"
+            ];
+          };
+          "seen" = [
+            "developer-button"
+          ];
+          "dirtyAreaCache" = [
+            "nav-bar"
+            "PersonalToolbar"
+            "toolbar-menubar"
+            "TabsToolbar"
+          ];
+          "currentVersion" = 16;
+          "newElementCount" = 4;
+        };
+
+
+
+        "devtools.accessibility.enabled" = false;
+        "devtools.cache.disabled" = true;
+        "devtools.chrome.enabled" = true;
+        "devtools.command-button-fission-prefs.enabled" = false;
+        "devtools.command-button-measure.enabled" = true;
+        "devtools.command-button-rulers.enabled" = true;
+        "devtools.command-button-screenshot.enabled" = true;
+        "devtools.debugger.prefs-schema-version" = 11;
+        "devtools.editor.keymap" = "vim";
+        "devtools.inspector.activeSidebar" = "ruleview";
+        "devtools.inspector.three-pane-enabled" = false;
+        "devtools.memory.enabled" = false;
+        "devtools.netmonitor.columnsData" = "[{\"name\":\"status\",\"minWidth\":30,\"width\":5.79},{\"name\":\"method\",\"minWidth\":30,\"width\":5.79},{\"name\":\"domain\",\"minWidth\":30,\"width\":7.54},{\"name\":\"file\",\"minWidth\":30,\"width\":39.2},{\"name\":\"url\",\"minWidth\":30,\"width\":20},{\"name\":\"initiator\",\"minWidth\":30,\"width\":17.54},{\"name\":\"type\",\"minWidth\":30,\"width\":4.51},{\"name\":\"transferred\",\"minWidth\":30,\"width\":16.78},{\"name\":\"contentSize\",\"minWidth\":30,\"width\":29.21},{\"name\":\"waterfall\",\"minWidth\":150,\"width\":44.71},{\"name\":\"cookies\",\"minWidth\":30,\"width\":7.41},{\"name\":\"setCookies\",\"minWidth\":30,\"width\":7.41},{\"name\":\"remoteip\",\"minWidth\":30,\"width\":7.41},{\"name\":\"scheme\",\"minWidth\":30,\"width\":7.41},{\"name\":\"protocol\",\"minWidth\":30,\"width\":7.41}]";
+        "devtools.netmonitor.filters" = "[\"xhr\"]";
+        "devtools.netmonitor.visibleColumns" = "[\"status\",\"method\",\"file\",\"type\",\"waterfall\"]";
+        "devtools.performance.enabled" = false;
+        "devtools.screenshot.clipboard.enabled" = true;
+        "devtools.styleeditor.enabled" = false;
+        "devtools.theme" = "dark";
+        "devtools.toolbox.host" = "right";
+        "devtools.toolbox.previousHost" = "bottom";
+        "devtools.toolbox.sidebar.width" = 1471;
+        "devtools.toolbox.splitconsoleHeight" = 387;
+        "devtools.toolsidebar-height.inspector" = 350;
+        "devtools.toolsidebar-width.inspector" = 704;
+        "devtools.toolsidebar-width.inspector.splitsidebar" = 704;
+        "extensions.webcompat.enable_picture_in_picture_overrides" = true;
+        "extensions.webcompat.enable_shims" = true;
+        "extensions.webcompat.perform_injections" = true;
+        "extensions.webcompat.perform_ua_overrides" = true;
+
+        "gfx.webrender.all" = true;
+        "gfx.webrender.enabled" = true;
+
+        # Enable userContent.css and userChrome.css for our theme modules
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+
+
+        /*
+          * Need to figure out vaapi on nixos first
+          * "media.ffmpeg.vaapi.enabled" = true;
+        */
+
+        /*
+          * The following settings were taken from arkenfox
+          * https://github.com/arkenfox/user.js/
+        */
+
+
+
+        #
         # 0000: disable about:config warning
         # FF73-86: chrome://global/content/config.xhtml
         "general.warnOnAboutConfig" = false;
@@ -845,13 +945,6 @@ in
         # 2606: disable UITour backend so there is no chance that a remote page can use it
         "browser.uitour.enabled" = false;
         "browser.uitour.url" = "";
-        # 2607: disable various developer tools in browser context
-        # [SETTING] Devtools>Advanced Settings>Enable browser chrome and add-on debugging toolboxes
-        # [1] https://github.com/pyllyukko/user.js/issues/179#issuecomment-246468676 ***/
-        "devtools.chrome.enabled" = false;
-        #2608: reset remote debugging to disabled
-        # [1] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/16222
-        # "devtools.debugger.remote-enabled" = false; # [DEFAULT: false]
         # 2609: disable MathML (Mathematical Markup Language) [FF51+] [SETUP-HARDEN]
         # [TEST] https://arkenfox.github.io/TZP/tzp.html#misc
         # [1] https://bugzilla.mozilla.org/1173199 ***/
