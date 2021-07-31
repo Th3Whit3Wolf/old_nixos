@@ -3,24 +3,45 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    utils.url = "github:numtide/flake-utils";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }@inputs:
-    let
-      inherit (flake-utils.lib) eachDefaultSystem eachSystem;
-    in
-    eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs { inherit system; };
-        in
-        {
-          devShell = pkgs.mkShell { buildInputs = [ (pkgs.python3.withPackages (ps: with ps; [ PyGithub ])) ]; };
-        }) //
-    eachSystem [ "x86_64-linux" ]
-      (system: {
-        hmModule = import ./modules/home-manager/default.nix inputs;
-      });
-}
+  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
+    utils.lib.eachDefaultSystem (system:
+      let
+
+        overlays = [
+          rust-overlay.overlay
+          (self: super:
+            let
+              rust-stable = pkgs.rust-bin.stable.latest.default.override {
+                extensions =
+                  [ "cargo" "clippy" "rust-docs" "rust-src" "rust-std" "rustc" "rustfmt" ];
+              };
+            in
+            {
+              rustc = rust-stable;
+              cargo = rust-stable;
+              clippy = rust-stable;
+              rustfmt = rust-stable;
+            })
+        ];
+
+        pkgs = import nixpkgs {
+          inherit system overlays;
+        };
+
+        devShell = pkgs.mkShell {
+          buildInputs = [
+            cargo
+          ];
+        };
+
+        ) //
+        eachSystem [ "x86_64-linux" ]
+        (system: {
+        hmModule = import ./modules/home-manager/default.nix;
+        });
+        }
 
