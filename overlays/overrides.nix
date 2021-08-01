@@ -15,6 +15,9 @@ channels: final: prev: {
     #mesa
     ;
 
+  unstable = channels.latest;
+  old = channels.nixos_old;
+
   haskellPackages = prev.haskellPackages.override
     (old: {
       overrides = prev.lib.composeExtensions (old.overrides or (_: _: { })) (hfinal: hprev:
