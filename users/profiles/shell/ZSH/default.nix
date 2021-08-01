@@ -80,6 +80,8 @@
       mktar = "tar -cvf";
       mountedinfo = "df -hT";
       ngr = "sudo nginx -s reload";
+      nrfb = "sudo nixos-rebuild --flake /persist/etc/nixos#$(hostname) boot";
+      nrfs = "sudo nixos-rebuild --flake /persist/etc/nixos#$(hostname) switch";
       openports = "netstat -nape --inet";
       p = "ps aux | grep ";
       play = "mpv --hwdec=auto";
@@ -178,6 +180,31 @@
             command mv -v $1 ./
           else
             command mv -v $@
+          fi
+        '';
+      }
+      {
+        name = "nrfb";
+        text = ''
+          HOSTNAME=$(hostname)
+          TMPSIZE=$(cat /etc/fstab | rg /tmp | tr ',' '\n' | grep size)
+          TOTAL_MEM=$(free -h --si | grep Mem | awk '{print $2}')
+          MEM_UNITS=$(echo ''${TOTAL_MEM: -1})
+          MEM_MINUS_ONE=$(expr $(echo ''${TOTAL_MEM:0:-1}) - 1)
+          if [ ! -z "''${HOSTNAME}"]; then
+            cd /persist/etc/nixos
+            nix flake lock --update-input nix-polyglot
+            if [[ ! -z $TMPSIZE ]] && [[ $MEM_MINUS_ONE == ?(-)+([0-9]) ]] && [[ ! -z $MEM_UNITS ]]; then
+              echo "Increase size of /tmp"
+              sudo mount -o remount,size=''${MEM_MINUS_ONE}''${MEM_UNITS} /tmp
+              sudo nixos-rebuild --flake .#''${HOSTNAME} boot
+              sudo mount -o remount,''${TMPSIZE} /tmp
+            else
+              sudo nixos-rebuild --flake .#''${HOSTNAME} boot
+            fi
+            cd $OLDPWD
+          else
+            echo hostname not found
           fi
         '';
       }
