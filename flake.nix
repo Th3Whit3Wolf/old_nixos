@@ -2,9 +2,9 @@
   description = "A highly structured configuration database.";
 
   inputs = {
-
+    nixos_old.url = "nixpkgs/release-20.09";
     nixos.url = "nixpkgs/release-21.05";
-    latest.url = "nixpkgs";
+    latest.url = "nixpkgs/nixos-unstable";
 
     digga = {
       url = "github:divnix/digga";
@@ -106,6 +106,7 @@
     , digga
     , bud
     , nixos
+    , nixos_old
     , ci-agent
     , home
     , nixos-hardware
@@ -163,6 +164,19 @@
               nur.overlay
               agenix.overlay
               rust.overlay
+              /*
+              (self: super: 
+                let
+                  rust-stable = pkgs.rust-bin.stable.latest.default.override {
+                    extensions =
+                      [ "cargo" "clippy" "rust-docs" "rust-src" "rust-std" "rustc" "rustfmt" ];
+                  };
+                in
+                {
+                  rustc = rust-stable;
+                  cargo = rust-stable;
+                }) 
+                */
               naersk.overlay
               nvfetcher.overlay
               deploy.overlay
@@ -170,6 +184,7 @@
               ./pkgs/default.nix
             ];
           };
+          nixos_old = { };
           latest = { };
         };
 
