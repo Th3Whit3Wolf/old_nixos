@@ -23,7 +23,7 @@ rustPlatform.buildRustPackage rec {
   ];
 
   buildInputs = with pkgs; [
-    gtk3
+    old.gtk3
     cairo
     glib
     glib.dev
