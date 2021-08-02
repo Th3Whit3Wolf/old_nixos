@@ -27,14 +27,14 @@
   };
   eww = {
     pname = "eww";
-    version = "4f59424e0e82eb7ce76badb266974dd3e7ea6d8c";
+    version = "8556e1539576fd39a89500d59acde4b523e9f716";
     src = fetchgit {
       url = "https://github.com/elkowar/eww";
-      rev = "4f59424e0e82eb7ce76badb266974dd3e7ea6d8c";
+      rev = "8556e1539576fd39a89500d59acde4b523e9f716";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "12x6a487qzsngr99z39902v7c7f4xkwjximmn3wmzdz8bjddw2d2";
+      sha256 = "0qs63k7m0675jwvpgkvdmza9csvhzl5r5agvh6s2zjfp8fa3414b";
     };
   };
   manix = {
@@ -127,14 +127,14 @@
   };
   vimPlugins-vim-duckscript = {
     pname = "vimPlugins-vim-duckscript";
-    version = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
+    version = "3f3683132576cae15c470ac157fc1f6674c563f6";
     src = fetchgit {
       url = "https://github.com/nastevens/vim-duckscript";
-      rev = "108c10c664c62539ea0fdff0c4d5011dbf86bc2e";
+      rev = "3f3683132576cae15c470ac157fc1f6674c563f6";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "19ddz312sbd3z1ddz0pkf3sni6dpfriwwxvx0k3c304p0axd4wpi";
+      sha256 = "1361mn5zxv086r26fn95hc8nkjwq6zmjimvxbxaj9c91pqx90rhg";
     };
   };
 }
