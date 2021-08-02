@@ -83,7 +83,6 @@
       nrfb = "sudo nixos-rebuild --flake /persist/etc/nixos#$(hostname) boot";
       nrfs = "sudo nixos-rebuild --flake /persist/etc/nixos#$(hostname) switch";
       openports = "netstat -nape --inet";
-      p = "ps aux | grep ";
       play = "mpv --hwdec=auto";
       poweroff = "sudo systemctl poweroff";
       reboot = "sudo systemctl reboot";
@@ -206,6 +205,16 @@
           else
             echo hostname not found
           fi
+        '';
+      }
+      {
+        name = "p";
+        text = ''
+          pgm=$1
+          head=$(ps -o user,pid,%cpu,%mem,vsz,rss,command ax | head -n 1)
+          contents=$(ps -o user,pid,%cpu,%mem,vsz,rss,command ax | awk 'NR>1 {$5=int($5/1024)"M";}{ print;}' | grep $pgm)
+          echo $head
+          printf "%s/n" "$contents"
         '';
       }
       {
