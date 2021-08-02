@@ -28,12 +28,13 @@ in
 {
   programs.firefox = {
     enable = true;
-    package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
-      forceWayland = true;
-      extraPolicies = {
-        ExtensionSettings = { };
-      };
-    };
+    package = pkgs.firefox-wayland;
+    #package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+    #  forceWayland = true;
+    #  extraPolicies = {
+    #    ExtensionSettings = { };
+    #  };
+    #};
     extensions = [
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
