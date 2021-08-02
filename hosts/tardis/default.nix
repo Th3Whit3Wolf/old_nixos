@@ -20,7 +20,14 @@ in
   home-manager.useUserPackages = true;
 
   nix = {
-    maxJobs = 3;
+    /*
+      * Maximum Processes = maxJobs * buildCores
+      *
+      * 2 derivations will be built at once,
+      * each given access to 3 cores.
+    */
+    maxJobs = 2;
+    buildCores = 3;
     extraOptions = ''
       access-tokens = "${accessToken}";
     '';
