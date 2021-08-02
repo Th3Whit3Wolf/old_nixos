@@ -164,19 +164,6 @@
               nur.overlay
               agenix.overlay
               rust.overlay
-              /*
-              (self: super: 
-                let
-                  rust-stable = pkgs.rust-bin.stable.latest.default.override {
-                    extensions =
-                      [ "cargo" "clippy" "rust-docs" "rust-src" "rust-std" "rustc" "rustfmt" ];
-                  };
-                in
-                {
-                  rustc = rust-stable;
-                  cargo = rust-stable;
-                }) 
-                */
               naersk.overlay
               nvfetcher.overlay
               deploy.overlay
