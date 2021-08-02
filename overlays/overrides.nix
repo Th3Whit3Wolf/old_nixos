@@ -10,10 +10,7 @@ channels: final: prev: {
     nixpkgs-fmt
     starship
     river
-    #sway
-    #river
-    #mesa
-    ;
+    tiramisu;
 
   unstable = channels.latest;
   old = channels.nixos_old;

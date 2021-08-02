@@ -15,7 +15,7 @@ rustPlatform.buildRustPackage rec {
     # a patch file to add/update Cargo.lock in the source code
     ./update-Cargo.lock.patch
   ];
-  cargoSha256 = "sha256-D3yU10Rz4vTTJbHjuYyCi/Kt1ZEMB32J93h6i38OB4w=";
+  cargoSha256 = "sha256-gPMFrL9D1lmmmoCLUUf/X8BOOt8zmOCCZGVQPzN+zrQ=";
   cargoBuildFlags = [ "--no-default-features" "--features=wayland" ];
   nativeBuildInputs = with pkgs; [
     pkgs.wrapGAppsHook
@@ -44,6 +44,5 @@ rustPlatform.buildRustPackage rec {
     description = "A standalone widget system made in Rust to add AwesomeWM like widgets to any WM";
     homepage = "https://github.com/elkowar/eww";
     license = licenses.mit;
-    maintainers = with maintainers; [ fortuneteller2k ];
   };
 }

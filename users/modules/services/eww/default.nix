@@ -307,45 +307,45 @@ in
         )
         ];
 
-        #home.packages = pkgs.eww;
-
-        systemd.user.services = {
-        eww = {
-        Unit = {
-        Description = "Customizable Widget system daemon";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
-        };
-        Service = {
-        Type = "forking";
-        ExecStart = "${pkgs.eww}/bin/eww daemon";
-        EnvironmentFile = "${pkgs.writeShellScript "eww-environment" ''
-        export PATH=${lib.escapeShellArg (lib.makeBinPath (with pkgs; [ playerctl curl gnome.nautilus curl ]))}"''${PATH:+:}$PATH"
-        ''}";
-        Restart = "on-failure";
-        RestartSec = "5sec";
-        KillMode = "mixed";
-        };
-        Install.WantedBy = [ "graphical.target" ];
-        };
-
-        eww-logs = {
-        Unit = {
-        Description = "Eww logs streamed to Systemd";
-        After = [ "eww.service" ];
-        BindsTo = [ "eww.service" ];
-        PartOf = [ "graphical-session.target" ];
-        };
-        Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.eww}/bin/eww logs";
-        Restart = "on-failure";
-        };
-        Install.WantedBy = [ "eww.service" ];
-        };
-        };
       */
+      home.packages = [ pkgs.eww ];
 
+      systemd.user = {
+        services = {
+          eww = {
+            Unit = {
+              Description = "Customizable Widget system daemon";
+              PartOf = [ "graphical-session.target" ];
+              After = [ "graphical-session.target" ];
+            };
+            Service = {
+              Type = "forking";
+              ExecStart = "${pkgs.eww}/bin/eww -c ${config.home.homeDirectory}/.config/eww daemon";
+              #EnvironmentFile = "${config.home.homeDirectory}/";
+              Restart = "on-failure";
+              RestartSec = "5sec";
+              KillMode = "mixed";
+            };
+            Install.WantedBy = [ "graphical.target" ];
+          };
+
+          eww-bar = {
+            Unit = {
+              Description = "Eww statusbar";
+              After = [ "eww.service" ];
+              BindsTo = [ "eww.service" ];
+              PartOf = [ "graphical-session.target" ];
+            };
+            Service = {
+              Type = "simple";
+              ExecStart = "${pkgs.eww}/bin/eww -c ${config.home.homeDirectory}/.config/eww open bar";
+              Restart = "on-failure";
+            };
+            Install.WantedBy = [ "eww.service" ];
+          };
+        };
+        startServices = true;
+      };
     }
     (mkIf (cfg.config.definitions != { } && cfg.config.variables != { } && cfg.config.windows != { }) {
 
