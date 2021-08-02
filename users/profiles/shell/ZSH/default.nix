@@ -211,10 +211,8 @@
         name = "p";
         text = ''
           pgm=$1
-          head=$(ps -o user,pid,%cpu,%mem,vsz,rss,command ax | head -n 1)
-          contents=$(ps -o user,pid,%cpu,%mem,vsz,rss,command ax | awk 'NR>1 {$5=int($5/1024)"M";}{ print;}' | grep $pgm)
-          echo $head
-          printf "%s/n" "$contents"
+          contents=$(ps -o user,pid,%cpu,%mem,rss,command ax | awk 'NR>1 {$5=int($5/1024)"M";}{ print $1"   "$2"  "$3"   "$4"  "$5"      "$6" "$7" "$8}' | grep $pgm)
+          printf "USER  PID     CPU%%  MEM%% MEM(MB) COMMAND\n%s\n" "$contents"
         '';
       }
       {
