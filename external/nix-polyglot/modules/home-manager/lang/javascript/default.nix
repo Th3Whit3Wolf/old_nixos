@@ -77,7 +77,7 @@ let
   langVars = {
     NPM_CONFIG_USERCONFIG = "$XDG_CONFIG_HOME/npm/config";
     NPM_CONFIG_CACHE = "$XDG_CACHE_HOME/npm";
-    NPM_CONFIG_TMP = "$XDG_RUNTIME_DIR/npm";
+    #NPM_CONFIG_TMP = "$XDG_RUNTIME_DIR/npm";
     NPM_CONFIG_PREFIX = "$XDG_CACHE_HOME/npm";
     NODE_REPL_HISTORY = "$XDG_CACHE_HOME/node/repl_history";
     NVM_DIR = "$XDG_DATA_HOME/nvm";
@@ -119,7 +119,6 @@ in
     xdg.configFile."npm/config".text = ''
       cache=$XDG_CACHE_HOME/npm
       prefix=$XDG_DATA_HOME/npm
-      tmp=$XDG_RUNTIME_DIR/npm
       init-module=$XDG_CONFIG_HOME/npm/config/npm-init.js
     '';
     programs.zsh = {
@@ -128,3 +127,4 @@ in
   };
 }
 
+/* tmp=$XDG_RUNTIME_DIR/npm */

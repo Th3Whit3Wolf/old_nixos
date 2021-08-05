@@ -277,7 +277,7 @@ let
     wwm.better-align
     rubymaniac.vscode-paste-and-indent
     tyriar.sort-lines
-    streetsidesoftware.code-spell-checker
+    #streetsidesoftware.code-spell-checker
     # TODO: Test softwaredotcom.swdc-vscode on vscode
     # It may rely on proprietary code
     ryu1kn.edit-with-shell

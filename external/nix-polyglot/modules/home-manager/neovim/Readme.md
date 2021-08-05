@@ -135,7 +135,7 @@
   * Autoremove/Autorename html tag
   * Works with html,tsx,vue,svelte,php
 * [Sphinx](https://github.com/stsewd/sphinx.nvim)
-  * Sphinx integrations for Neovim.
+  * Sphinx integrations for Neovim. 
 
 ### Debugging
 
@@ -174,7 +174,9 @@
 * [sniprun](https://github.com/michaelb/sniprun) 
   * Run lines/blocs of code
 * [efm lsp](https://github.com/mattn/efm-langserver)
-* Generic language server for languages without one
+  * Generic language server for languages without one
+* [lazy.nvim](https://github.com/tjdevries/lazy.nvim)
+  * set of helper functions to make requiring modules easier
   
 ## Configs to look at:
 
