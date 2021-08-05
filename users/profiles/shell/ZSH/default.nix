@@ -230,6 +230,18 @@
           cd $d
         '';
       }
+      {
+        name = "whereis";
+        text = ''
+          prog=$1
+          wherePath=$(${pkgs.util-linux}/bin/whereis $prog)
+          if [ -s $wherePath ]; then
+            echo "$prog: $(${pkgs.coreutils}/bin/readlink) $prog"
+          else
+            echo "$prog: $wherePath"
+          fi
+        '';
+      }
     ];
   };
   services.lorri.enable = config.programs.ZSH.integrations.direnv;
