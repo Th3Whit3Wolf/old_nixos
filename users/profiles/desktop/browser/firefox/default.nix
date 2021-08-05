@@ -39,14 +39,50 @@ in
       #ijohanne.firefoxPlugins.enhancer-for-youtube
     ] ++ ryceeAddons;
     profiles.${username} = {
+      /*
+        import the rest of https://github.com/vinceliuice/Orchis-theme/tree/master/src/firefox
+      */
       userContent = ''
-        /* Hide scrollbar in FF Quantum */
-        *{scrollbar-width:none !important}
-        /*
-         *  Hide tabs if only one tab
-         */
-        #titlebar .tabbrowser-tab[first-visible-tab="true"][last-visible-tab="true"]{
+        @namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+        /* Allow drag window from headerbar buttons */
+        :root[tabsintitlebar] #nav-bar *,
+        :root[tabsintitlebar] #titlebar .titlebar-button,
+        :root[tabsintitlebar][inFullscreen] #window-controls toolbarbutton {
+          -moz-window-dragging: drag;
+        }
+
+        /* Avoid window dragging from urlbar */
+        :root[tabsintitlebar] #nav-bar .urlbar-input-box,
+        :root[tabsintitlebar] #nav-bar .urlbar-input-box * {
+          -moz-window-dragging: no-drag !important;
+        }
+
+        /* Rounded title buttons (headerbar window controls) */
+        :root[tabsintitlebar] #titlebar .titlebar-button {
+          border-radius: 100% !important;
+          height: 30px !important;
+          width: 30px !important;
+          margin: 2px 5px !important;
+        }
+
+        #tabbrowser-tabs tab:only-of-type {
+          display: none !important;
+        }
+
+        :root[tabsintitlebar][sizemode="maximized"] #titlebar .titlebar-buttonbox-container {
             display: none !important;
+        }
+
+        :root[tabsintitlebar][sizemode="maximized"] #nav-bar {
+            padding-left: 3px !important;
+        }
+        /* TODO: Hidde tabbar bottom border */
+
+        /* Set theme version text in customization panel */
+        #customization-footer::before {
+          content: "Firefox Orchis theme";
+          padding: 9px;
         }
       '';
       isDefault = true;
@@ -104,8 +140,6 @@ in
           "newElementCount" = 4;
         };
 
-
-
         "devtools.accessibility.enabled" = false;
         "devtools.cache.disabled" = true;
         "devtools.chrome.enabled" = true;
@@ -142,7 +176,11 @@ in
 
         # Enable userContent.css and userChrome.css for our theme modules
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-
+        # Enable CSD
+        "browser.tabs.drawInTitlebar" = true;
+        #Set UI density to normal
+        "browser.uidensity" = 0;
+        "layers.acceleration.force-enabled" = true;
 
 
         /*
