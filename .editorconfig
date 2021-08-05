@@ -26,6 +26,8 @@ indent_size = unset
 
 [*.scss]
 indent_size = 4
+indent_style = tabs
+trim_trailing_whitespace = unset
 
 [*.py]
 indent_size = 4
