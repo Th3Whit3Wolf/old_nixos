@@ -33,7 +33,16 @@ in
     '';
   };
 
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+
+    # Prevent replacing the running kernel w/o reboot
+    protectKernelImage = true;
+
+    pam.services.greetd = {
+      enableGnomeKeyring = true;
+    };
+  };
 
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
@@ -44,6 +53,8 @@ in
       pulse.enable = true;
       jack.enable = true;
     };
+    irqbalance.enable = true;
+    rice.enable = true;
 
     greetd = {
       enable = true;
@@ -56,7 +67,49 @@ in
       };
     };
   };
+  networking = {
+    networkmanager = {
+      enable = true;
+      packages = with pkgs; [ gnome3.networkmanager-openvpn ];
+    };
+
+    firewall = {
+      enable = true; # Enable firewall
+      allowedTCPPorts = [
+        #22070                           # Syncthing relay
+        #22067                           # Syncthing relay
+      ];
+      allowedUDPPorts = [
+
+      ];
+    };
+  };
 
   sound.enable = true;
   time.timeZone = "Europe/London";
+
+  environment.etc = {
+
+    "greetd/environment" = {
+      text = ''
+        ${pkgs.sway}/bin/sway
+        ${pkgs.zsh}/bin/zsh
+      '';
+    };
+    "greetd/swayconfig" = {
+      text = ''
+        # Config for sway
+        # only enable this if every app you use is compatible with wayland
+        # xwayland disable
+
+        exec ${pkgs.greetd.wlgreet}/bin/wlgreet
+
+        # Need to created wayland-logout package
+        # Should be simple https://github.com/soreau/wayland-logout
+        #exec ''${pkgs.qtgreet}/bin/qtgreet && wayland-logout
+        #; loginctl terminate-user $USER
+
+      '';
+    };
+  };
 }
