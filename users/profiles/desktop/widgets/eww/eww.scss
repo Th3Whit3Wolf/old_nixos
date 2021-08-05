@@ -1,7 +1,7 @@
 * {
     all: unset; //Unsets everything so you can style everything from scratch
 }
-
+// margin/padding is top right bottom left
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
@@ -12,158 +12,424 @@
     to {opacity: 0;}
 }
 
+$darkBG: hsl(240, 6%, 14%);
+$lightBG: hsl(216,5.7%,17.1%);
+$lightFG: hsl(0,0%,69.8%);
+
+$selectFG: hsl(270,19.2%,79.6%);
+$selectBG: hsl(261.3,22.6%,39%);
+
+$brad: 12px;
 
 //Global Styles
 window {
     font-style: italic;
     font-family: Victor Mono, SFMono Nerd Font;
+    font-size: 16px;
 }
 
 .bar {
-    background-color: #222226;
-    color: #b2b2b2;
+    background-color: $darkBG;
+    color: $lightFG;
     padding: 0px 15px 0px 15px;
-    margin: 8px 21px 0px 21px;
-    border-bottom: 2px solid #292B2E;
+    margin: 20px 21px 0px 21px;
+    border-bottom: 2px solid $lightBG;
     border-radius: 290486px;
 }
 
 .workspaces {
     font-size: 12px;
-    margin: 0px 2px
-    //@at-root: #494949;
-}
-.workspaces .active {
-    color: #dcbb8c;
-    font-weight: bold;
-}
-.workspaces .occupied {
-    color: #98967E;
-}
-.workspaces button:hover {
-    opacity: 0.6;
+    margin: 0px 2px;
+    font-family: SFMono Nerd Font;
+    font-style: normal;
+
+    .active_workspace {
+        margin: 3px 2px;
+        padding: 4px 5px;
+        border-radius: 5px;
+        color: $selectFG;
+        background-color: $selectBG;
+    }
+
+    .inactive_workspace {
+        margin: 3px 2px;
+        padding: 3px 5px;
+        border-radius: 5px;
+        color: $lightFG;
+        background-color: lighten($darkBG, 5%);
+
+        &:hover {
+            background-color: lighten($selectBG, 10%);
+        }
+    }
 }
 
-.workspaces_btn {
-    margin: 3px 2px;
-    padding: 3px 5px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    color: #b2b2b2;
-    background-color: mix(#CBC1D5,#222226,0.6);
-    font-family: SFMono Nerd Font;
-}
 
 .tray {
     all: unset;
-    font-size: 11px;
-}
-
-.side-close {
-    padding-top: 80px;
-}
-
-// Time
-.time {
-    color: #CBC1D5;
-    padding: 4px;
-}
-.hour {
-    font-size: 85px;
-    font-weight: 600;
-    font-style: normal;
-    font-family: SFMono Nerd Font;
-}
-.semicolon {
-    font-size: 70px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-style: normal;
-    font-family: SFMono Nerd Font;
-}
-.min {
-    font-size: 85px;
-    font-weight: lighter;
-    font-style: normal;
-    font-family: SFMono Nerd Font;
-}
-.ampm {
-    font-size: 40px;
-    margin-top: 48px;
-    margin-left: 15px;
-    font-weight: 600;
-    font-style: italic;
-    font-family: Victor Mono;
-    animation-name: fadeIn;
-    animation-duration: 300ms;
-}
-.date {
-    font-size: 30px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    animation-name: fadeIn;
-    animation-duration: 600ms;
-}
-
-.powermenu {
-    margin-top: 20px;
-    font-family: SFMono Nerd Font;
-    font-size: 35px;
-}
-
-.powerbuttons {
-    border-radius: 20px;
-    margin: 10px 40px 10px 40px;
-}
-.powerbuttons:hover {
-    color: #987a6b;
-}
-
-.userinfo {
-    margin-top: 20px;
-}
-
-.seperator {
-    font-family: SFMono Nerd Font;
-    margin: 10px 0 10px 0px;
-}
-.face-img {
-    min-width: 100px;
-    min-height: 100px;
-    border-radius: 100%;
-    background-size: 100px;
-}
-.username {
-    font-size: 23px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-.hostname {
-    font-size: 18px;
-    margin-top: 10px;
-    font-style: italic;
-}
-.sysinfo {
     font-size: 16px;
-    margin-left: 45px;
-    margin-top: 8px;
+
+    .network {
+        font-weight: 600; 
+        color: $selectFG;
+    }
+    
+    .time {
+        font-style: normal;
+        font-weight: 600;
+        color: $selectFG;
+        padding: 4px;
+    }
+    
+    .notificationsIcon {
+        font-weight: 600; 
+        color: $selectFG;
+    }
 }
-.sysinfo-text {
-    font-family: SFMono Nerd Font;
-    font-style: normal;
-    font-weight: 300;
+
+
+.sidebar {
+    margin-top: -13px;
+    margin-right: 8px;
+    background-color: $lightBG;
+    padding: 13px;
+    border-radius: 13px;
+
+    .side-close {
+        padding-top: 89px;
+        border-top-left-radius: 26;
+        border-top-right-radius: 26;
+    }
+
+    .hour {
+        font-size: 85px;
+        font-weight: 600;
+        font-style: normal;
+        font-family: SFMono Nerd Font;
+    }
+    
+    .semicolon {
+        font-size: 70px;
+        margin-left: 5px;
+        margin-right: 5px;
+        font-style: normal;
+        font-family: SFMono Nerd Font;
+    }
+    
+    .min {
+        font-size: 85px;
+        font-weight: lighter;
+        font-style: normal;
+        font-family: SFMono Nerd Font;
+    }
+    
+    .ampm {
+        font-size: 40px;
+        margin-top: 48px;
+        margin-left: 15px;
+        font-weight: 600;
+        font-style: italic;
+        font-family: Victor Mono;
+        animation-name: fadeIn;
+        animation-duration: 300ms;
+    }
+    
+    .date {
+        font-size: 30px;
+        font-weight: 500;
+        margin-bottom: 20px;
+        animation-name: fadeIn;
+        animation-duration: 600ms;
+    }
+    
+    .powermenu {
+        margin-top: 20px;
+        font-family: SFMono Nerd Font;
+        font-size: 35px;
+    }
+    
+    .powerbuttons {
+        border-radius: 20px;
+        margin: 10px 40px 10px 40px;
+    }
+    
+    .powerbuttons:hover {
+        color: #987a6b;
+    }
+    
+    .userinfo {
+        margin-top: 20px;
+    }
+    
+    .seperator {
+        font-family: SFMono Nerd Font;
+        margin: 10px 0 10px 0px;
+    }
+    
+    .face-img {
+        min-width: 100px;
+        min-height: 100px;
+        border-radius: 100%;
+        background-size: 100px;
+    }
+    
+    .username {
+        font-size: 23px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    
+    .hostname {
+        font-size: 18px;
+        margin-top: 10px;
+        font-style: italic;
+    }
+    
+    .sysinfo {
+        font-size: 16px;
+        margin-left: 45px;
+        margin-top: 8px;
+    }
+    
+    .sysinfo-text {
+        font-family: SFMono Nerd Font;
+        font-style: normal;
+        font-weight: 300;
+    }
+    
+    .syslabel {
+        font-weight: bold;
+    }
 }
-.syslabel {
-    font-weight: bold;
+
+
+calendar {
+	padding: 2px 4px 0px 4px;
+	font-size: 17px;
+	font-family: SFMono Nerd Font;
+	font-style: normal;
+
+    &:selected {
+        border-radius: 3px;
+        color: #e6dad6;
+        background-color: #6c605a;
+    }
+
+    &:indeterminate {
+        color: rgba(108, 96, 90, 0.3);
+    }
+
+    .header {
+        color: #6c605a;
+        font-weight: bold;
+    }
+    .button {
+        color: rgba(108, 96, 90, 0.7);
+    }
+    .highlight {
+        color: rgba(108, 96, 90, 0.7);
+        font-weight: bold;
+    }
 }
+/*calendar:disabled {
+	color: rgba(190, 190, 190, 0.2);
+}*/
+
+.calendar {
+	padding: 17px;
+
+    calendar:selected {
+        border-radius: 3px;
+        color: #e6dad6;
+        background-color: #6c605a;
+    }
+
+    calendar {
+        .header {
+            color: #8b8f7e;
+            font-weight: bold;
+        }
+        .button {
+            color: #8b8f7e;
+        }
+        .highlight {
+            color: #877979;
+            font-weight: bold;
+        }
+        &:indeterminate {
+            color: rgba(155, 155, 155, 0.4);
+        }
+    }
+    expander {
+        arrow {
+            all: unset;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 16px;
+            min-height: 30px;
+            -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
+            -gtk-icon-transform: rotate(-90deg) translateY(-8px);
+            //color: rgba(108, 96, 90, 0.5);
+            color: rgba(190, 190, 190, 0.5);
+
+            &:checked:hover {
+                -gtk-icon-transform: rotate(0deg) translateX(-4px);
+                //color: rgba(108, 96, 90, 1);
+                color: #987a6b;
+            }
+            &:hover, &:active {
+                -gtk-icon-transform: rotate(-90deg) translateY(-4px);
+                //color: rgba(108, 96, 90, 1);
+                color: #987a6b;
+            }
+        }
+    }
+	
+
+    .calendar-date-num {
+        font-family: SFMono Nerd Font;
+        margin-left: 6px;
+        font-size: 40px;
+        font-weight: 300;
+    }
+
+    .calendar-year {
+        margin-left: 6px;
+        font-family: SFMono Nerd Font;
+        font-size: 18px;
+        font-weight: 500;
+        color: rgba(108, 96, 90, 0.8)
+    }
+
+    .calendar-info {
+        margin-left: 40px;
+
+        .quote-container {
+            margin-bottom: 30px;
+
+            .quote {
+                font-weight: 400;
+                font-size: 17px;
+                margin-bottom: 5px;
+            }
+            .quote-info {
+                font-weight: 300;
+                font-family: SFMono Nerd Font;
+                font-style: normal;
+                margin-left: 50px;
+
+                .quote-author-dark {
+                    color: #937f74;
+                }
+
+                .quote-title {
+                    font-weight: 500;
+                    font-family: Victor Mono;
+                    font-style: italic;
+                    color: rgba(108, 96, 90, 0.9);
+                }
+            }
+            
+            .quote-number {
+                font-size: 13.5px;
+                margin-right: 10px;
+                font-family: SFMono Nerd Font;
+                font-style: normal;
+                color: rgba(108, 96, 90, 0.7);
+            }
+
+            .quote-time {
+                font-size: 13.5px;
+                margin-right: 10px;
+                font-weight: 500;
+                color: rgba(108, 96, 90, 0.7);
+            }
+        }
+    }
+
+    .calendar-container {
+        background-color: rgba(108, 96, 90, 0.04);
+        padding: 23px;
+        border-radius: 10px;
+
+        .next-app-text {
+            font-family: SFMono Nerd Font;
+            font-style: normal;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .next-app {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .app-times {
+            font-size: 15px;
+            font-family: SFMono Nerd Font;
+            font-style: normal;
+            font-weight: normal;
+            color: #877979;
+            margin-left: 15px;
+        }
+
+        .app-names {
+            font-size: 15px;
+            font-family: Victor Mono;
+            font-style: italic;
+            font-weight: normal;
+            margin-left: 40px;
+        }
+
+        .todo-names {
+            font-size: 15px;
+            font-family: Victor Mono;
+            font-style: italic;
+            font-weight: normal;
+            margin-left: 15px;
+        }
+    }
+}
+
 
 .notification {
     font-family: Victor Mono;
+    margin: 10px; 
+    padding: 5px 0px 5px 0px;
     font-size: 11px;
-    border-radius: 5px;
-    border: 1px solid #292B2E;
+    border-radius: $brad;
+    border: 1px solid $lightBG;
 }
+
+.notifications-center {
+    font-family: Victor Mono;
+    margin: 0 5px 0px 5px;
+    border-radius: $brad;
+    border: 1px solid $lightBG;
+}
+
+/*
+.notifications-center .title{
+    font-family: Victor Mono;
+    font-weight: bold;
+    font-size: 18px;
+    color: $selectBG;
+    margin: 0 5px 0px 5px;
+    border-radius: $brad;
+    border: 1px solid $lightBG;
+}
+
+.notifications-center .icon{
+    font-family: Victor Mono;
+    font-weight: bold;
+    font-size: 26px;
+    padding: 0px 10px 0px 10px;
+    border: 1px solid $lightBG;
+    border-radius: $brad;
+}
+*/
+
 .notif {
-    background-color: #292B2E;
-    border-radius: 5px;
+    background-color: $lightBG;
+    border-radius: $brad;
 }

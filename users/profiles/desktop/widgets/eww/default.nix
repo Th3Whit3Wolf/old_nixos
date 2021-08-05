@@ -57,7 +57,34 @@ let
     in
     lib.filterAttrs (n: v: v != { }) (lib.mapAttrs' collect files);
 
+  paths = lib.mapAttrsToList (name: value: value) (flattenTree (rakeLeaves ./definitions));
+  recursiveUpdateAttrsFromList = orig: listOfAttrs:
+    if (listOfAttrs == [ ]) then
+      orig
+    else
+      recursiveUpdateAttrsFromList (lib.recursiveUpdate orig (lib.head listOfAttrs)) (lib.drop 1 listOfAttrs);
   defsAttr = lib.mapAttrs' (name: value: lib.nameValuePair (builtins.replaceStrings [ "." ] [ "-" ] name) (value)) (flattenTree (rakeLeaves ./definitions));
+  varAttrs =
+    let
+      varAttrs' = lib.remove { } (lib.forEach paths (x:
+        if builtins.hasAttr "vars" (import x { lib = lib; pkgs = pkgs; }) then
+          (import x { lib = lib; pkgs = pkgs; }).vars
+        else
+          { }
+      ));
+    in
+    recursiveUpdateAttrsFromList { } varAttrs';
+  scriptVarAttrs =
+    let
+      scriptVarAttrs' = lib.remove { } (lib.forEach paths (x:
+        if builtins.hasAttr "script-vars" (import x { lib = lib; pkgs = pkgs; }) then
+          (import x { lib = lib; pkgs = pkgs; }).script-vars
+        else
+          { }
+      ));
+    in
+    recursiveUpdateAttrsFromList { } scriptVarAttrs';
+
   defs = lib.forEach
     (
       lib.mapAttrsToList (n: v: n) defsAttr
@@ -67,41 +94,15 @@ let
     ${(import defsAttr.${x} { lib = lib; pkgs = pkgs; }).def}
     </def>''
     );
-  sysCheck = pkgs.writeScriptBin "sysCheck" ''
-        #!${pkgs.stdenv.shell}
-        case $1 in
-      up) # deals with uptime less than a minute, where the command `uptime` doesn't work
-        time="$(uptime -p )"
-        time="''${time/up }"
-        time="''${time/ day,/d}"
-        time="''${time/ days,/d}"
-        time="''${time/ hours,/h}"
-        time="''${time/ minutes/m}"
-        echo ''${time:-'less than a minute'}
-        ;;
-      cpuavg) # avg cpu load since the cpu started
-        grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage "%"}' ;;
-      disk) # disk space of the root partition
-        percent_used="$(df -h /persist | tail -n -1 | awk '{ print $4 "\t" }')"
-        df -h /persist | tail -n -1 | awk '{ print $4" / "$3 }'
-        ;;
-      mem) # source: https://github.com/KittyKatt/screenFetch/issues/386#issuecomment-249312716
-        while IFS=":" read -r a b; do
-              case $a in
-                "MemTotal") ((mem_used+=''${b/kB})); mem_total="''${b/kB}" ;;
-                "Shmem") ((mem_used+=''${b/kB}))  ;;
-                "MemFree" | "Buffers" | "Cached" | "SReclaimable")
-                mem_used="$((mem_used-=''${b/kB}))"
-              ;;
-              esac
-        done < /proc/meminfo
 
-            echo "$((mem_used / 1024))kb / $((mem_total / 1024))kb"
-        ;;
-    esac
-  '';
 
-  barHeight = "13px";
+
+  toPx = s: ''${builtins.toString s}px'';
+  barH = 21;
+  widgetH = barH + 4;
+  widgetHeight = toPx widgetH;
+
+  barHeight = toPx barH;
 in
 {
   config = {
@@ -112,7 +113,12 @@ in
       packages = [
         pkgs.tiramisu
         pkgs.SFMono-nerdfont
+        pkgs.procps
       ];
+    };
+    xdg.configFile."eww/extra" = {
+      source = ./extra;
+      recursive = true;
     };
     fonts.fontconfig.enable = true;
     services.eww = {
@@ -122,110 +128,12 @@ in
       config = {
         definitions = defs;
         variables = {
-          script-vars = {
-
-            time = {
-              text = ''date "+%H:%M"'';
-              interval = {
-                quantity = 15;
-                units = "s";
-              };
-            };
-
-            networking = {
-              text = "nmcli -p -g {connection} | grep -e 'connected to' | sed -e 's/ .* //' -e 's/.*://'";
-              interval = {
-                quantity = 60;
-                units = "s";
-              };
-            };
-
-            /*
-              * Date
-            */
-            day_num = {
-              text = ''date "+%d"'';
-              interval = {
-                quantity = 2;
-                units = "h";
-              };
-            };
-            month = {
-              text = ''date "+%b"'';
-              interval = {
-                quantity = 12;
-                units = "h";
-              };
-            };
-            weekday = {
-              text = ''date "+%a"'';
-              interval = {
-                quantity = 2;
-                units = "h";
-              };
-            };
-            min = {
-              text = ''date "+%M"'';
-              interval = {
-                quantity = 10;
-                units = "s";
-              };
-            };
-            hour = {
-              text = ''date "+%I"'';
-              interval = {
-                quantity = 25;
-                units = "s";
-              };
-            };
-            ampm = {
-              text = ''date "+%P"'';
-              interval = {
-                quantity = 1;
-                units = "h";
-              };
-            };
-
-            /*
-              * Sidebar
-            */
-            uptime = {
-              text = ''bash -c "${sysCheck}/bin/sysCheck up"'';
-              interval = {
-                quantity = 60;
-                units = "s";
-              };
-            };
-            cpuavg = {
-              text = ''bash -c "${sysCheck}/bin/sysCheck cpuavg"'';
-              interval = {
-                quantity = 60;
-                units = "s";
-              };
-            };
-            disk = {
-              text = ''bash -c "${sysCheck}/bin/sysCheck disk"'';
-              interval = {
-                quantity = 1;
-                units = "h";
-              };
-            };
-            mem = {
-              text = ''bash -c "${sysCheck}/bin/sysCheck mem"'';
-              interval = {
-                quantity = 30;
-                units = "s";
-              };
-            };
-
-          };
+          script-vars = { } // scriptVarAttrs;
           vars = {
-            homedir = "${config.home.homeDirectory}";
-            usernm = "${config.home.username}";
-            hostnm = "tardis";
             notificationBool = "false";
             notificationsContent = "";
-          };
+            userIMG = "/persist/home/doc/Pics/Start/anarchy-linux-icon-arch-linux-menu-icon-11553405183t9efc972tu.png";
+          } // varAttrs;
         };
         windows = {
           bar = {
@@ -247,7 +155,7 @@ in
               x = "0px";
               y = barHeight;
               width = "500px";
-              height = "100%";
+              height = "50%";
             };
             widget = "sidebar";
           };

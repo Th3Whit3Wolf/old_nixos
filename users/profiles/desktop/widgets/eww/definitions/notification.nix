@@ -3,8 +3,8 @@
 
 {
   def = ''
-    <box style="padding: 0px 5px 0px 5px">
-        <literal content="{{notificationsContent}}"/>
-      </box>
+    <box>
+      <literal content="{{notificationsContent}}"/>
+    </box>
   '';
 }

@@ -65,6 +65,12 @@ in
     day_num_cal = {
       text = ''date "+%d"'';
     };
-
+  };
+  vars = {
+    next_appointment_time = "01h 43mins";
+    next_appointment = "Sleep";
+    appointment_names = "Caffeine";
+    appointment_time = "10h 23mins";
+    todo = "Space 100";
   };
 }
