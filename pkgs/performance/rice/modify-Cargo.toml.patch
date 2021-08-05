@@ -1,0 +1,17 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index fec09d6..7c6341f 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -3,4 +3,10 @@ members = ["lib", "bin"]
+ default-members = ["lib", "bin"]
+ 
+ [profile.release]
+-debug = true
++opt-level = 3
++debug = false
++rpath = false
++lto = true
++debug-assertions = false
++codegen-units = 1
++panic = 'unwind'
+\ No newline at end of file

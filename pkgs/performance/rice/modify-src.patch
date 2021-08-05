@@ -1,0 +1,218 @@
+diff --git a/bin/src/main.rs b/bin/src/main.rs
+index 46a74a7..84b30c0 100644
+--- a/bin/src/main.rs
++++ b/bin/src/main.rs
+@@ -1,11 +1,13 @@
+ #[cfg(not(unix))]
+ compile_error!("only unix systems are supported");
+ 
+-use anyhow::{Context, Result};
++use anyhow::{Context, Result, anyhow};
+ use log::{error, info, trace};
+ use std::sync::atomic::{AtomicBool, Ordering};
+ use std::sync::Arc;
+ use std::time::Duration;
++use std::env;
++use std::path::PathBuf;
+ 
+ #[cfg(log = "stderr")]
+ fn init_log() {
+@@ -19,49 +21,61 @@ fn init_log() {
+ 
+ fn main() {
+     init_log();
+-    if let Err(e) = run() {
+-        error!("{}", e);
+-        std::process::exit(1);
++    let args: Vec<String> = env::args().collect();
++    if args.len() < 2 {
++        error!("Please supply path to rules");
++    } else {
++        if let Err(e) = run(&args[1]) {
++            error!("{}", e);
++            std::process::exit(1);
++        }
+     }
+ }
+ 
+-fn run() -> Result<()> {
+-    let mut cgroups = rice::parse_cgroups();
+-    let types = rice::build_types();
+-    let rules = rice::parse_rules(&types);
+-
+-    info!("{} cgroups loaded", cgroups.len());
+-    trace!("{:?}", cgroups);
+-    info!("{} types loaded", types.len());
+-    trace!("{:?}", types);
+-    info!("{} rules loaded", rules.len());
+-    trace!("{:?}", rules);
+-
+-    let term = Arc::new(AtomicBool::new(false));
+-    signal_hook::flag::register(signal_hook::SIGINT, Arc::clone(&term))
+-        .context("failed to register SIGINT handler")?;
+-    signal_hook::flag::register(signal_hook::SIGTERM, Arc::clone(&term))
+-        .context("failed to register SIGTERM handler")?;
+-
+-    while !term.load(Ordering::Relaxed) {
+-        let errors = rice::apply_all_rules(&rules, &mut cgroups)?
+-            .filter_map(Result::err);
+-
+-        for err in errors {
+-            error!("{}", err);
+-        }
+-
+-        //40-50ms per loop
+-
+-        let mut remaining = Duration::from_secs(5);
+-        while let Some(remain) = shuteye::sleep(remaining) {
+-            if term.load(Ordering::Relaxed) {
+-                break;
++fn run(rules_path_string: &str) -> Result<()> {
++    let rules_path = PathBuf::from(&rules_path_string);
++    if rules_path.as_path().is_dir() {
++        let mut cgroups = rice::parse_cgroups(rules_path.as_path());
++        let types = rice::build_types(rules_path.as_path());
++        let rules = rice::parse_rules(rules_path.as_path(), &types);
++    
++        info!("{} cgroups loaded", cgroups.len());
++        trace!("{:?}", cgroups);
++        info!("{} types loaded", types.len());
++        trace!("{:?}", types);
++        info!("{} rules loaded", rules.len());
++        trace!("{:?}", rules);
++    
++        let term = Arc::new(AtomicBool::new(false));
++        signal_hook::flag::register(signal_hook::SIGINT, Arc::clone(&term))
++            .context("failed to register SIGINT handler")?;
++        signal_hook::flag::register(signal_hook::SIGTERM, Arc::clone(&term))
++            .context("failed to register SIGTERM handler")?;
++    
++        while !term.load(Ordering::Relaxed) {
++            let errors = rice::apply_all_rules(&rules, &mut cgroups)?
++                .filter_map(Result::err);
++    
++            for err in errors {
++                error!("{}", err);
++            }
++    
++            //40-50ms per loop
++    
++            let mut remaining = Duration::from_secs(5);
++            while let Some(remain) = shuteye::sleep(remaining) {
++                if term.load(Ordering::Relaxed) {
++                    break;
++                }
++    
++                remaining = remain;
+             }
+-
+-            remaining = remain;
+         }
++        Ok(())
++    } else {
++        Err(
++            anyhow!("Path to rules must be a directory")
++        )
+     }
+ 
+-    Ok(())
+ }
+diff --git a/lib/src/cgroup.rs b/lib/src/cgroup.rs
+index 3ae701f..2ca3ce1 100644
+--- a/lib/src/cgroup.rs
++++ b/lib/src/cgroup.rs
+@@ -5,7 +5,7 @@ use procfs::process::Process;
+ use serde::Deserialize;
+ use std::collections::HashMap;
+ use std::convert::{TryFrom, TryInto};
+-use std::path::PathBuf;
++use std::path::{Path, PathBuf};
+ 
+ const PERIOD_US: u64 = 100_000;
+ 
+@@ -19,10 +19,10 @@ struct RawCgroup {
+     cpu_quota: u8,
+ }
+ 
+-pub fn parse_cgroups() -> HashMap<String, Cgroup> {
++pub fn parse_cgroups(rules_path: &Path) -> HashMap<String, Cgroup> {
+     let mut map = HashMap::new();
+ 
+-    crate::parse::walk(crate::ANANICY_CONFIG_DIR, "cgroups", |r: RawCgroup| {
++    crate::parse::walk(rules_path, "cgroups", |r: RawCgroup| {
+         if r.cpu_quota > 100 {
+             warn!("invalid CPUQuota {} for rule {}", r.cpu_quota, r.cgroup);
+         } else {
+diff --git a/lib/src/lib.rs b/lib/src/lib.rs
+index 63b3919..8bf9d8d 100644
+--- a/lib/src/lib.rs
++++ b/lib/src/lib.rs
+@@ -9,8 +9,6 @@ use std::collections::HashMap;
+ use std::path::PathBuf;
+ use std::str::FromStr;
+ 
+-pub(crate) const ANANICY_CONFIG_DIR: &str = "/etc/ananicy.d";
+-
+ mod cgroup;
+ mod class;
+ mod parse;
+diff --git a/lib/src/proc_type.rs b/lib/src/proc_type.rs
+index f1d35cd..ea2def5 100644
+--- a/lib/src/proc_type.rs
++++ b/lib/src/proc_type.rs
+@@ -2,7 +2,7 @@ use crate::class::IoClass;
+ use libc::c_int;
+ use serde::Deserialize;
+ use std::collections::HashMap;
+-
++use std::path::Path;
+ #[derive(Deserialize, Debug)]
+ struct RawType {
+     #[serde(alias = "type")]
+@@ -23,9 +23,9 @@ pub struct Type {
+     pub oom_scote_adj: Option<c_int>,
+ }
+ 
+-pub fn build_types() -> HashMap<String, Type> {
++pub fn build_types(rules_path: &Path) -> HashMap<String, Type> {
+     let mut map = HashMap::new();
+-    crate::parse::walk(crate::ANANICY_CONFIG_DIR, "types", |raw: RawType| {
++    crate::parse::walk(rules_path, "types", |raw: RawType| {
+         map.insert(
+             raw.proc_type,
+             Type {
+diff --git a/lib/src/rule.rs b/lib/src/rule.rs
+index efafb11..447d223 100644
+--- a/lib/src/rule.rs
++++ b/lib/src/rule.rs
+@@ -7,7 +7,8 @@ use nix::errno::Errno;
+ use procfs::process::Process;
+ use serde::Deserialize;
+ use std::collections::HashMap;
+-
++use std::convert::TryInto;
++use std::path::Path;
+ #[derive(Deserialize, Debug, PartialEq)]
+ struct RawRule {
+     name: String,
+@@ -51,7 +52,7 @@ impl<'a> Rule<'a> {
+             unsafe {
+                 // nix hasn't implemented setpriority yet
+                 Errno::clear();
+-                ret = libc::setpriority(libc::PRIO_PROCESS as u32, proc.pid as u32, nice);
++                ret = libc::setpriority((libc::PRIO_PROCESS as u32).try_into().unwrap(), proc.pid as u32, nice);
+             }
+             if ret == -1 {
+                 let errno = nix::errno::errno();
+@@ -114,9 +115,9 @@ impl<'a> Rule<'a> {
+     }
+ }
+ 
+-pub fn parse_rules(types: &HashMap<String, Type>) -> HashMap<String, Rule> {
++pub fn parse_rules<'a>(rules_path: &'a Path, types: &'a HashMap<String, Type>) -> HashMap<String, Rule<'a>> {
+     let mut map = HashMap::new();
+-    crate::parse::walk(crate::ANANICY_CONFIG_DIR, "rules", |r: RawRule| {
++    crate::parse::walk(rules_path, "rules", |r: RawRule| {
+         if let Some(nice) = r.ionice {
+             if nice > 7 {
+                 warn!("invalid ionice value {} for rule {}", nice, r.name);

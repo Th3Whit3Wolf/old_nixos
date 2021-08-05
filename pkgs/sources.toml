@@ -26,6 +26,11 @@ fetch.github = "epk/SF-Mono-Nerd-Font"
 [eww]
 src.git = "https://github.com/elkowar/eww"
 fetch.github = "elkowar/eww"
+cargo_lock = "Cargo.lock"
+
+[rice]
+src.git = "https://github.com/themadprofessor/rice"
+fetch.github = "themadprofessor/rice"
 
 # Vim Plugins
 [vimP-parinfer-rust]

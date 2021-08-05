@@ -36,6 +36,10 @@
       leaveDotGit = false;
       sha256 = "0qs63k7m0675jwvpgkvdmza9csvhzl5r5agvh6s2zjfp8fa3414b";
     };
+    cargoLock = {
+      lockFile = ./eww-8556e1539576fd39a89500d59acde4b523e9f716/Cargo.lock;
+      outputHashes = { };
+    };
   };
   manix = {
     pname = "manix";
@@ -51,6 +55,18 @@
     cargoLock = {
       lockFile = ./manix-d08e7ca185445b929f097f8bfb1243a8ef3e10e4/Cargo.lock;
       outputHashes = { };
+    };
+  };
+  rice = {
+    pname = "rice";
+    version = "3828474ea40e1c546bffedf6dee94bf3c880ce65";
+    src = fetchgit {
+      url = "https://github.com/themadprofessor/rice";
+      rev = "3828474ea40e1c546bffedf6dee94bf3c880ce65";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1gjmfj5cxzdybmw1qqzc09la8ri1azdc5q7x91cn2ykw0f9jfpi9";
     };
   };
   sanFrancisco-font = {
