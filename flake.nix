@@ -239,7 +239,7 @@
               eww = [ desktop.widgets.eww ];
               sway = [ desktop.wm.sway ];
               waybar = [ desktop.bar.waybar ];
-              tardis = [ base psd firefox sway eww waybar eraseYourDarlings zsh dev ];
+              tardis = [ base psd firefox sway waybar eraseYourDarlings zsh dev ];
             };
           };
         };
