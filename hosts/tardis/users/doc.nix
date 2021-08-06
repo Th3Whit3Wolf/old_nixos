@@ -34,7 +34,7 @@ in
     packages = with pkgs;
       [
         # Git tools
-        git
+        (git.override { withLibsecret = true; })
         git-crypt
         git-hub
         git-lfs
@@ -85,7 +85,7 @@ in
         extraConfig = {
           core.editor = "nvim";
           commit.verbose = true;
-          credentil.helper = "${pkgs.git}/git-credential-libsecret";
+          credential.helper = "${pkgs.git.override { withLibsecret = true; }}/bin/git-credential-libsecret";
           pull.ff = "only";
           fetch = {
             recurseSubmodules = "on-demand";
@@ -126,7 +126,9 @@ in
         pathVar = [ "$XDG_BIN_HOME" ];
       };
     };
-
+    services = {
+      gpg-agent.pinentryFlavor = "gnome3";
+    };
     xdg = {
       enable = true;
       cacheHome = "${homey}/.cache";

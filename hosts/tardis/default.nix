@@ -56,8 +56,9 @@ in
   };
 
   services = {
-    dbus.packages = [ pkgs.gnome3.dconf ];
+    dbus.packages = with pkgs; [ gnome3.dconf gcr ];
     gvfs.enable = true;
+    gnome.gnome-keyring.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -95,7 +96,7 @@ in
       ];
     };
   };
-
+  programs.seahorse.enable = true;
   sound.enable = true;
   time.timeZone = "Europe/London";
 
