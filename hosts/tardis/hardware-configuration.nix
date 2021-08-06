@@ -5,6 +5,34 @@
 
   # Use the latest kernel
   boot = {
+    blacklistedKernelModules = [
+      # Obscure network protocols
+      "ax25"
+      "netrom"
+      "rose"
+
+      # Old or rare or insufficiently audited filesystems
+      "adfs"
+      "affs"
+      "bfs"
+      "befs"
+      "cramfs"
+      "efs"
+      "erofs"
+      "exofs"
+      "freevxfs"
+      "hfs"
+      "hpfs"
+      "jfs"
+      "minix"
+      "nilfs2"
+      "ntfs"
+      "omfs"
+      "qnx4"
+      "qnx6"
+      "sysv"
+      "ufs"
+    ];
     consoleLogLevel = 0;
     initrd = {
       verbose = false;
@@ -25,21 +53,39 @@
     extraModulePackages = [ ];
     kernelPackages = pkgs.linuxPackages_xanmod;
     kernelParams = [
-      # HACK Disables fixes for spectre, meltdown, L1TF and a number of CPU
-      #      vulnerabilities. Don't copy this blindly! And especially not for
-      #      mission critical or server/headless builds exposed to the world.
-      "mitigations=off"
+      /*
+        * Hardened
+      */
+
+      # Slab/slub sanity checks, redzoning, and poisoning
+      "slub_debug=FZP"
+
+      # Overwrite free'd memory
+      "page_poison=1"
+
+      # Enable page allocator randomization
+      "page_alloc.shuffle=1"
+
+      /*
+        * Silent Boot
+      */
 
       # Prevents unneccesary infor being written to stdout durring boot.
       "quiet"
       "udev.log_priority=3"
 
+      /*
+        * Laptop Quirks
+      */
       "add_efi_memmap"
       "acpi_backlight=native"
     ];
     kernelModules = [ "kvm-amd" "tcp_bbr" ];
 
     kernel.sysctl = {
+      /*
+        * Increase system responsiveness
+      */
       # The swappiness sysctl parameter represents the kernel's preference (or avoidance) of swap space. Swappiness can have a value between 0 and 100, the default value is 60.
       # A low value causes the kernel to avoid swapping, a higher value causes the kernel to try to use swap space. Using a low value on sufficient memory is known to improve responsiveness on many systems.
       "vm.swappiness" = 10;
@@ -72,28 +118,49 @@
       # tunable expresses the interval between those wakeups, in 100'ths of a second (Default is 500).
       "vm.dirty_writeback_centisecs" = "1500";
 
-      # Enable the sysctl setting kernel.unprivileged_userns_clone to allow normal users to run unprivileged containers.
-      "kernel.unprivileged_userns_clone" = 1;
+      /*
+        * Hardening
+      */
+      # Restrict ptrace() usage to processes with a pre-defined relationship
+      # (e.g., parent/child)
+      "kernel.yama.ptrace_scope" = 1;
+
+      # Hide kptrs even for processes with CAP_SYSLOG
+      "kernel.kptr_restrict" = 2;
+
+      # Disable bpf() JIT (to eliminate spray attacks)
+      "net.core.bpf_jit_enable" = false;
+
+      # Disable ftrace debugging
+      "kernel.ftrace_enabled" = false;
+
+      # Enable strict reverse path filtering (that is, do not attempt to route
+      # packets that "obviously" do not belong to the iface's network; dropped
+      # packets are logged as martians).
+      "net.ipv4.conf.all.log_martians" = true;
+      "net.ipv4.conf.all.rp_filter" = "1";
+      "net.ipv4.conf.default.log_martians" = true;
+      "net.ipv4.conf.default.rp_filter" = "1";
 
       # The Magic SysRq key is a key combo that allows users connected to the
       # system console of a Linux kernel to perform some low-level commands.
       # Disable it, since we don't need it, and is a potential security concern.
       "kernel.sysrq" = 0;
 
-      ## TCP hardening
+      /*
+        * TCP hardening
+      */
       # Prevent bogus ICMP errors from filling up logs.
       "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
-      # Reverse path filtering causes the kernel to do source validation of
-      # packets received from all interfaces. This can mitigate IP spoofing.
-      "net.ipv4.conf.default.rp_filter" = 1;
-      "net.ipv4.conf.all.rp_filter" = 1;
       # Do not accept IP source route packets (we're not a router)
       "net.ipv4.conf.all.accept_source_route" = 0;
       "net.ipv6.conf.all.accept_source_route" = 0;
-      # Don't send ICMP redirects (again, we're on a router)
+      # Ignore outgoing ICMP redirects (this is ipv4 only)
       "net.ipv4.conf.all.send_redirects" = 0;
       "net.ipv4.conf.default.send_redirects" = 0;
-      # Refuse ICMP redirects (MITM mitigations)
+      # Ignore incoming ICMP redirects (note: default is needed to ensure that the
+      # setting is applied to interfaces added after the sysctls are set)
+
       "net.ipv4.conf.all.accept_redirects" = 0;
       "net.ipv4.conf.default.accept_redirects" = 0;
       "net.ipv4.conf.all.secure_redirects" = 0;
@@ -119,6 +186,7 @@
       "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
       "net.ipv6.icmp_echo_ignore_broadcasts" = 1;
 
+      # May improve system performance
       "sched_autogroup_enabled" = 0;
     };
 

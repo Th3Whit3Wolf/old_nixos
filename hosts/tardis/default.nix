@@ -28,16 +28,27 @@ in
     */
     maxJobs = 2;
     buildCores = 3;
+    allowedUsers = [ "@users" ];
     extraOptions = ''
       access-tokens = "${accessToken}";
     '';
   };
 
   security = {
-    rtkit.enable = true;
-
+    lockKernelModules = true;
     # Prevent replacing the running kernel w/o reboot
     protectKernelImage = true;
+    forcePageTableIsolation = true;
+    rtkit.enable = true;
+
+    # This is required by podman to run containers in rootless mode.
+    #unprivilegedUsernsClone = config.virtualisation.containers.enable;
+
+    virtualisation.flushL1DataCache = "always";
+    apparmor = {
+      enable = true;
+      killUnconfinedConfinables = true;
+    };
 
     pam.services.greetd = {
       enableGnomeKeyring = true;
@@ -88,28 +99,31 @@ in
   sound.enable = true;
   time.timeZone = "Europe/London";
 
-  environment.etc = {
+  environment = {
+    #memoryAllocator.provider = "scudo";
+    #variables.SCUDO_OPTIONS = "ZeroContents=1";
+    etc = {
+      "greetd/environment" = {
+        text = ''
+          ${pkgs.sway}/bin/sway
+          ${pkgs.zsh}/bin/zsh
+        '';
+      };
+      "greetd/swayconfig" = {
+        text = ''
+          # Config for sway
+          # only enable this if every app you use is compatible with wayland
+          # xwayland disable
 
-    "greetd/environment" = {
-      text = ''
-        ${pkgs.sway}/bin/sway
-        ${pkgs.zsh}/bin/zsh
-      '';
-    };
-    "greetd/swayconfig" = {
-      text = ''
-        # Config for sway
-        # only enable this if every app you use is compatible with wayland
-        # xwayland disable
+          exec ${pkgs.greetd.wlgreet}/bin/wlgreet
 
-        exec ${pkgs.greetd.wlgreet}/bin/wlgreet
+          # Need to created wayland-logout package
+          # Should be simple https://github.com/soreau/wayland-logout
+          #exec ''${pkgs.qtgreet}/bin/qtgreet && wayland-logout
+          #; loginctl terminate-user $USER
 
-        # Need to created wayland-logout package
-        # Should be simple https://github.com/soreau/wayland-logout
-        #exec ''${pkgs.qtgreet}/bin/qtgreet && wayland-logout
-        #; loginctl terminate-user $USER
-
-      '';
+        '';
+      };
     };
   };
 }

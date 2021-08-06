@@ -101,7 +101,7 @@
             exec \$CHRONY -a \$1
           }
           nm_connected() {
-            [ "\$(nmcli -t --fields STATE g)" = 'connected' ]
+            [ "\$(${pkgs.networkmanager}/bin/nmcli -t --fields STATE g)" = 'connected' ]
           }
           case "\$STATUS" in
             up)
