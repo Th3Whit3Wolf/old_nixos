@@ -134,11 +134,11 @@ in
     MOZ_ENABLE_WAYLAND = "1";
   };
 
-  #programs.mako = {
-  #  enable = true;
-  #  anchor = "top-center";
-  #  defaultTimeout = 5000;
-  #};
+  programs.mako = {
+    enable = true;
+    anchor = "top-center";
+    defaultTimeout = 5000;
+  };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -331,10 +331,10 @@ in
           command =
             "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
         }
-        #{
-        # Notification deamon:
-        #  command = "${pkgs.mako}/bin/mako >/tmp/mako.log 2>&1";
-        #}
+        {
+          # Notification deamon:
+          command = "${pkgs.mako}/bin/mako >/tmp/mako.log 2>&1";
+        }
         #{
         #  command =
         #    "${pkgs.my.persway}/bin/persway -w -a -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1'";
@@ -349,7 +349,7 @@ in
         { command = ''bash -c "${notificationUpdater}/bin/notificationUpdater"''; }
         # Build .zcompdump on startup
         { command = "${pkgs.zsh}/bin/zsh -i -c exit"; }
-        { command = ''if [[ "$(date +%Y" == "1970" ]]; then systemctl restart chronyd fi''; }
+        #{ command = ''if [[ "$(date +%Y" == "1970" ]]; then systemctl restart chronyd fi''; }
       ];
     };
     extraConfig = ''
