@@ -32,6 +32,15 @@ cargo_lock = "Cargo.lock"
 src.git = "https://github.com/themadprofessor/rice"
 fetch.github = "themadprofessor/rice"
 
+[QtGreet]
+src.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
+fetch.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
+
+[widevine-cdm]
+src.webpage = "https://dl.google.com/widevine-cdm/versions.txt"
+src.regex = "(.*)"
+fetch.url = "https://dl.google.com/widevine-cdm/$ver-linux-x64.zip"
+
 # Vim Plugins
 [vimP-parinfer-rust]
 src.git = "https://github.com/eraserhd/parinfer-rust"
