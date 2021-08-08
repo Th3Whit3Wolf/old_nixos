@@ -49,6 +49,7 @@
       luks.devices."crypt".device =
         "/dev/disk/by-uuid/57d2784d-0fcb-471b-838f-cbcca73fda93";
       kernelModules = [ ];
+      supportedFilesystems = [ "btrfs" ];
     };
     extraModulePackages = [ ];
     kernelPackages = pkgs.linuxPackages_xanmod;

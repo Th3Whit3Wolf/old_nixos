@@ -56,6 +56,7 @@ in
         brightnessctl
         eww
         vscodium
+        QtGreet
 
       ] ++ themePackages;
   };

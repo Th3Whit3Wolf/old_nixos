@@ -73,9 +73,14 @@ in
       restart = false;
       settings = {
         default_session = {
+          #command = "${pkgs.sway}/bin/sway --config /etc/greetd/swayconfig > /dev/null 2>&1";
           command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
           user = "greeter";
         };
+        #initial_session = {
+        #  command = "sway";
+        #  user = "doc";
+        #};
       };
     };
   };
@@ -116,7 +121,8 @@ in
           # only enable this if every app you use is compatible with wayland
           # xwayland disable
 
-          exec ${pkgs.greetd.wlgreet}/bin/wlgreet
+          #exec ${pkgs.unstable.greetd.wlgreet}/bin/wlgreet
+          exec ${pkgs.QtGreet}/bin/qtgreet
 
           # Need to created wayland-logout package
           # Should be simple https://github.com/soreau/wayland-logout
