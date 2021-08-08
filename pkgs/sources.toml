@@ -36,6 +36,10 @@ fetch.github = "themadprofessor/rice"
 src.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
 fetch.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
 
+[flyingfox]
+src.git = "https://github.com/akshat46/FlyingFox"
+fetch.github = "akshat46/FlyingFox"
+
 [widevine-cdm]
 src.webpage = "https://dl.google.com/widevine-cdm/versions.txt"
 src.regex = "(.*)"

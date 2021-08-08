@@ -10,7 +10,7 @@ indent_style = space
 indent_size = 2
 
 # Ignore diffs/patches
-[*.{diff,patch,lock}]
+[*.{diff,patch,lock,scss,css}]
 end_of_line = unset
 insert_final_newline = unset
 trim_trailing_whitespace = unset
@@ -23,11 +23,6 @@ trim_trailing_whitespace = unset
 charset = unset
 indent_style = unset
 indent_size = unset
-
-[*.scss]
-indent_size = 4
-indent_style = tabs
-trim_trailing_whitespace = unset
 
 [*.py]
 indent_size = 4

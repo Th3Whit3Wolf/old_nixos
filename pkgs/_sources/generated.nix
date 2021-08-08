@@ -53,6 +53,18 @@
       outputHashes = { };
     };
   };
+  flyingfox = {
+    pname = "flyingfox";
+    version = "8fc00aa654c10260deac2cbbc5bf062b7dcce811";
+    src = fetchgit {
+      url = "https://github.com/akshat46/FlyingFox";
+      rev = "8fc00aa654c10260deac2cbbc5bf062b7dcce811";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "0z6q2953cbxngnzbpd0map2r89dywg3xjagav1qzzbpkyqck32w9";
+    };
+  };
   manix = {
     pname = "manix";
     version = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
@@ -163,6 +175,14 @@
       deepClone = false;
       leaveDotGit = false;
       sha256 = "1361mn5zxv086r26fn95hc8nkjwq6zmjimvxbxaj9c91pqx90rhg";
+    };
+  };
+  widevine-cdm = {
+    pname = "widevine-cdm";
+    version = "4.10.2209.1";
+    src = fetchurl {
+      url = "https://dl.google.com/widevine-cdm/4.10.2209.1-linux-x64.zip";
+      sha256 = "1mnbxkazjyl3xgvpna9p9qiiyf08j4prdxry51wk8jj5ns6c2zcc";
     };
   };
 }

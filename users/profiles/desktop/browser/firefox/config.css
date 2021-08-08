@@ -1,0 +1,74 @@
+/* order of these files is important and should not be changed */
+
+@import 'icons/extension-icons.css';
+@import 'window-controls/wc-without-tabline.css';
+@import 'hide-tabline.css';
+@import "userChrome-hover.css";
+
+:root { 
+  --dark-0: #212026;
+  --dark-base: #292b2e;
+  --dark-1: #373A3E;
+  --dark-2: #414449;
+  --dark-3: #54585F;
+  --dark-4: #5D6269;
+  --light-0: #292b2e;
+  --light-base: #686868;
+  --light-1: #8c8c8c; /* url bar*/
+  --light-2: #5d4d7a; /* icons hover */
+  --light-3: #5d4d7a; /* Current tab */
+  --light-4: #292b2e;
+  --accent: #5d4d7a;
+  --yellow: #ffc265;
+  --green: #449484;
+  --red: #d87085;
+  --extension-icon-mask: grayscale(85%) invert(34%) sepia(7%) saturate(622%) hue-rotate(179deg) brightness(89%) contrast(82%);
+    
+  /* expanded width of the sidebar. 
+    used for userChrome-static, and hover */
+  --sidebar-width: 250px; 
+  /* initial width of the sidebar. 
+    advised not to change since tst css relies on this value*/
+  --sidebar-collapsed-width: 60px;
+
+  --dividers: 2px;
+    
+  --tl-animation-duration: 200ms;
+  /*--tl-tab-background-gradient: */
+  /* uncomment and add gradient value for selected tab gradient*/
+  
+  /******WINDOW CONTROL PLACEMENT VARS******/
+  /* larger value moves window controls down,*/
+  /* can be negative(moves controls up) */
+  /* 55px if tabline visible, -25px if tabline hidden */
+  --wc-vertical-shift: 15px;
+  --wc-left-space: 10px; /* add space to the left of window controls*/
+  --wc-right-space: 15px; /* add space to the right of window controls*/
+  /* left-space shifts window-controls */
+  /* if you want to shift them to the left: positive value */
+  /* and if you want to shift them to the right: smaller or negative value */
+  /* right-space shifts rest of the navbar (forward,backward,urlbar,etc.) to the right */
+  /* if you want to increase/decrease space between window-controls and navbars: */
+  /* set positive/negative value for right-space*/
+    
+}
+
+:root[privatebrowsingmode="temporary"]{ 
+  --dark-0: #212026;
+  --dark-base: #292b2e;
+  --dark-1: #373A3E;
+  --dark-2: #414449;
+  --dark-3: #54585F;
+  --dark-4: #5D6269;
+  --light-0: #292b2e;
+  --light-base: #686868;
+  --light-1: #8c8c8c; /* url bar*/
+  --light-2: #5d4d7a; /* icons hover */
+  --light-3: #5d4d7a; /* Current tab */
+  --light-4: #292b2e;
+  --accent: #5d4d7a;
+  --yellow: #ffc265;
+  --green: #449484;
+  --red: #d87085;
+  --extension-icon-mask: grayscale(85%) invert(32%) sepia(9%) saturate(466%) hue-rotate(202deg) brightness(86%) contrast(88%); 
+}
