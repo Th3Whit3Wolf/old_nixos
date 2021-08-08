@@ -42,7 +42,7 @@
     homepage = "https://gitlab.com/marcusbritanicus/QtGreet";
     maintainers = with maintainers; [ th3whit3wolf ];
     platforms = platforms.linux;
-    license = licenses.gplv3;
+    license = licenses.gpl3;
   };
 })
 
