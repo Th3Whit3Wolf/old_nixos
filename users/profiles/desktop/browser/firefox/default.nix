@@ -20,21 +20,22 @@ let
     "{94060031-effe-4b93-89b4-9cd570217a8d}"
     "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}"
     "{c607c8df-14a7-4f28-894f-29e8722976af}"
-  ];    
+  ];
 
-  firefoxExtensionSettings = builtins.listToAttrs(forEach extensionsList (x: 
-    nameValuePair "extensions.webextensions.ExtensionStorageIDB.migrated.${x}" true
-  )++ [
-    {name = "devtools.storage.extensionStorage.enabled"; value = true; }
-    {name = "extensions.webextensions.ExtensionStorageIDB.enabled"; value = true; }
+  firefoxExtensionSettings = builtins.listToAttrs (forEach extensionsList
+    (x:
+      nameValuePair "extensions.webextensions.ExtensionStorageIDB.migrated.${x}" true
+    ) ++ [
+    { name = "devtools.storage.extensionStorage.enabled"; value = true; }
+    { name = "extensions.webextensions.ExtensionStorageIDB.enabled"; value = true; }
   ]);
-  firefoxUserSettings = (import ./settings.nix { downloadDir = "${homeDirectory}/Downs";}) // firefoxExtensionSettings;
+  firefoxUserSettings = (import ./settings.nix { downloadDir = "${homeDirectory}/Downs"; }) // firefoxExtensionSettings;
   mozPath = ".mozilla";
   cfgPath = "${mozPath}/firefox";
 
   configCss = fileContents ./config.css;
   treeStyleTabCss = fileContents ./tree-style-tab.css;
-  chrome = pkgs.flyingfox.override { inherit configCss treeStyleTabCss;};
+  chrome = pkgs.flyingfox.override { inherit configCss treeStyleTabCss; };
 
   ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
     #auto-tab-discard
@@ -63,12 +64,18 @@ let
   };
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
+  wayFirefox = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+    forceWayland = true;
+    extraPolicies = {
+      ExtensionSettings = { };
+    };
+  };
 in
 
 
 {
   home = {
-    packages = [ pkgs.firefox-wayland ];
+    packages = [ wayFirefox ];
     file = {
       "${cfgPath}/profiles.ini".text = ''
         [General]
@@ -98,5 +105,6 @@ in
         force = true;
       };
     };
+    sessionVariables.MOZ_ENABLE_WAYLAND = 1;
   };
 }

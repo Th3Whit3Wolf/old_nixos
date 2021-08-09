@@ -58,7 +58,6 @@ in
   services = {
     dbus.packages = with pkgs; [ gnome3.dconf gcr ];
     gvfs.enable = true;
-    gnome.gnome-keyring.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -74,7 +73,7 @@ in
       settings = {
         default_session = {
           #command = "${pkgs.sway}/bin/sway --config /etc/greetd/swayconfig > /dev/null 2>&1";
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --cmd sway";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --remember  --asterisks --time --greeting \"Welcome to Nix\" --cmd sway";
           user = "greeter";
         };
         #initial_session = {
@@ -133,4 +132,5 @@ in
       };
     };
   };
+
 }

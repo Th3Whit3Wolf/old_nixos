@@ -71,11 +71,12 @@ in
 
     systemd.user = {
       sessionVariables = {
-        ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";  
+        ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
       };
+      # This is effectively what psd does
       services.firefox-persist = {
-        Unit = { 
-          Description = "Firefox persistent storage sync"; 
+        Unit = {
+          Description = "Firefox persistent storage sync";
         };
 
         Service = {
@@ -90,9 +91,9 @@ in
         };
       };
 
-      timers.firefox-persist  = {
-        Unit = { 
-          Description = "Firefox persistent storage periodic sync"; 
+      timers.firefox-persist = {
+        Unit = {
+          Description = "Firefox persistent storage periodic sync";
         };
 
         Timer = {
@@ -182,6 +183,7 @@ in
       };
     };
   };
+
 
   boot.kernelParams = [
     (if (theme.vt.red != null && theme.vt.grn != null && theme.vt.blu

@@ -6,25 +6,39 @@ let
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   lockCommand =
     "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
- 
+
 in
 {
-  home.packages = with pkgs; [
-    alacritty
-    #brightnessctl
-    wofi
-    kanshi
-    swaylock-effects
-    swayidle
-    grim
-    sway-contrib.grimshot
-    imv
-    slurp
-    qt5.qtwayland
-    nwg-launchers
-    wl-clipboard
-    mpv
-  ];
+  home = {
+    packages = with pkgs; [
+      alacritty
+      #brightnessctl
+      wofi
+      kanshi
+      swaylock-effects
+      swayidle
+      grim
+      sway-contrib.grimshot
+      imv
+      slurp
+      qt5.qtwayland
+      nwg-launchers
+      wl-clipboard
+      mpv
+    ];
+    sessionVariables = {
+      # Wayland Settings
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+      XDG_SESSION_TYPE = "wayland";
+      QT_QPA_PLATFORM = "wayland";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      MOZ_ENABLE_WAYLAND = "1";
+
+      # Keyring
+      GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+      SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
+    };
+  };
 
   systemd.user.sessionVariables = {
     # Wayland Settings
@@ -33,6 +47,10 @@ in
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     MOZ_ENABLE_WAYLAND = "1";
+
+    # Keyring
+    GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+    SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
   };
 
   programs.mako = {
@@ -41,12 +59,19 @@ in
     defaultTimeout = 5000;
   };
 
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "pkcs11" "secrets" "ssh" ];
+  };
+
   wayland.windowManager.sway = {
     enable = true;
     xwayland = true;
     #systemdIntegration = false;
     wrapperFeatures = { gtk = true; };
-    extraSessionCommands = "systemctl --user import-environment; systemctl --user start firefox-persist.service; systemctl --user start firefox-persist.timer";
+    extraSessionCommands = ''
+      systemctl --user import-environment
+    '';
     config = rec {
       bars = lib.mkIf config.programs.waybar.enable [{
         command = "${pkgs.waybar}/bin/waybar";
@@ -243,13 +268,17 @@ in
         { command = "${pkgs.kanshi}/bin/kanshi >/tmp/kanshi.log 2>&1"; }
         { command = "systemd-notify --ready"; }
         {
-          command =
-            "${pkgs.swayidle}/bin/sway/idle -w -d timeout 300 '${lockCommand}' timeout 600 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${lockCommand}'";
+          command = ''${pkgs.swayidle}/bin/swayidle -w \
+            timeout 600 ${lockCommand} \
+            timeout 1200 'swaymsg "output * dpms off"' \
+            resume 'swaymsg "output * dpms on"' \
+            before-sleep ${lockCommand}'';
         }
         # Build .zcompdump on startup
         { command = "${pkgs.zsh}/bin/zsh -i -c exit"; }
         { command = ''${pkgs.bash}/bin/bash -c "cp -r /persist${homeDirectory}/.mozilla/firefox/${username}/* ${homeDirectory}/.mozilla/firefox/${username}/"''; }
-        { command = "st"; }
+        { command = "systemctl --user start firefox-persist.service && systemctl --user start firefox-persist.timer"; }
+
       ];
     };
     extraConfig = ''
