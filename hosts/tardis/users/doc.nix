@@ -69,8 +69,41 @@ in
       theme.name = "Space Dark";
     };
 
-    systemd.user.sessionVariables = {
-      ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";
+    systemd.user = {
+      sessionVariables = {
+        ZDOTDIR = "${config.home-manager.users.${user}.home.homeDirectory}/zsh";  
+      };
+      services.firefox-persist = {
+        Unit = { 
+          Description = "Firefox persistent storage sync"; 
+        };
+
+        Service = {
+          CPUSchedulingPolicy = "idle";
+          IOSchedulingClass = "idle";
+          Environment = "PATH=${pkgs.coreutils}";
+          # copy all files except those that are symlinks
+          ExecStart = toString (pkgs.writeShellScript "firefox-backup" ''
+            ${pkgs.coreutils}/bin/cp -r /home/doc/.mozilla/firefox/doc/* /persist/home/doc/.mozilla/firefox/doc/
+            ${pkgs.coreutils}/bin/rm -dR  /persist/home/doc/.mozilla/firefox/doc/extensions /persist/home/doc/.mozilla/firefox/doc/chrome /persist/home/doc/.mozilla/firefox/doc/user.js
+          '');
+        };
+      };
+
+      timers.firefox-persist  = {
+        Unit = { 
+          Description = "Firefox persistent storage periodic sync"; 
+        };
+
+        Timer = {
+          Unit = "firefox-persist.service";
+          # Run every hour on the hour
+          OnCalendar = "*-*-* ${builtins.concatStringsSep "," (lib.forEach (lib.range 0 23) (x: if x < 10 then "0${builtins.toString x}" else builtins.toString x))}:00:00";
+          Persistent = true;
+        };
+
+        Install = { WantedBy = [ "timers.target" ]; };
+      };
     };
 
 

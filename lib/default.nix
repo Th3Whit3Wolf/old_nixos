@@ -4,6 +4,7 @@ lib.makeExtensible (self: rec {
 
   inherit (nixos-lib)
     mkFirefoxUserJs
+    getNormalUsers
     ;
 
 })

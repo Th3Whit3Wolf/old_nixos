@@ -214,10 +214,8 @@
             };
             suites = with profiles; rec {
               base = [ cachix core ];
-              psd = [ desktop.browser.psd ];
               sway = [ desktop.wm.sway ];
-
-              tardis = [ base laptop psd eraseYourDarlings sway ];
+              tardis = [ base laptop  eraseYourDarlings sway ];
             };
           };
         };
@@ -235,11 +233,10 @@
               base = [ core direnv git xdg ssh ];
               zsh = [ shell.ZSH ];
               firefox = [ desktop.browser.firefox ];
-              psd = [ desktop.browser.psd ];
               eww = [ desktop.widgets.eww ];
               sway = [ desktop.wm.sway ];
               waybar = [ desktop.bar.waybar ];
-              tardis = [ base psd firefox sway waybar eraseYourDarlings zsh dev ];
+              tardis = [ base firefox sway waybar eraseYourDarlings zsh dev ];
             };
           };
         };

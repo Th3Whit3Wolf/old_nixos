@@ -59,6 +59,7 @@ let
         xdg.userDirs.extraConfig)
     else
       [ ];
+  ffoxProf = "${homeDirectory}/.mozilla/firefox/${username}";
 
   vscodePname = npg.vscode.package.pname;
   vscodeConfigDir = {
@@ -97,7 +98,6 @@ in
       "${publicShare}"
       "${templates}"
       "${videos}"
-      ".mozilla/firefox"
       ".ssh"
 
       # Nix Polyglot

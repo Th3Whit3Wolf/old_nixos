@@ -1,9 +1,11 @@
 /* order of these files is important and should not be changed */
 
 @import 'icons/extension-icons.css';
-@import 'window-controls/wc-without-tabline.css';
-@import 'hide-tabline.css';
-@import "userChrome-hover.css";
+@import 'userChrome-hover.css';
+
+#TabsToolbar{
+  display: none !important;
+}
 
 :root { 
   --dark-0: #212026;
@@ -22,7 +24,7 @@
   --yellow: #ffc265;
   --green: #449484;
   --red: #d87085;
-  --extension-icon-mask: grayscale(85%) invert(34%) sepia(7%) saturate(622%) hue-rotate(179deg) brightness(89%) contrast(82%);
+  --extension-icon-mask: grayscale(85%) invert(32%) sepia(9%) saturate(466%) hue-rotate(202deg) brightness(86%) contrast(88%); 
     
   /* expanded width of the sidebar. 
     used for userChrome-static, and hover */
@@ -33,7 +35,7 @@
 
   --dividers: 2px;
     
-  --tl-animation-duration: 200ms;
+  --tl-animation-duration: 150ms;
   /*--tl-tab-background-gradient: */
   /* uncomment and add gradient value for selected tab gradient*/
   

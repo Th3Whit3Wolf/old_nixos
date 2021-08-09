@@ -6,13 +6,35 @@ let
   inherit (lib.our) mkFirefoxUserJs;
   inherit (config.home) homeDirectory username;
 
-  firefoxUserSettings = import ./settings.nix { downloadDir = "${homeDirectory}/Downs"; };
+  extensionsList = [
+    "@testpilot-containers"
+    "CanvasBlocker@kkapsner.de"
+    "addon@darkreader.org"
+    "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack"
+    "jid1-KKzOGWgsW3Ao4Q@jetpack"
+    "screenshots@mozilla.org"
+    "treestyletab@piro.sakura.ne.jp"
+    "uBlock0@raymondhill.net"
+    "{446900e4-71c2-419f-a6a7-df9c091e268b}"
+    "{74145f27-f039-47ce-a470-a662b129930a}"
+    "{94060031-effe-4b93-89b4-9cd570217a8d}"
+    "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}"
+    "{c607c8df-14a7-4f28-894f-29e8722976af}"
+  ];    
+
+  firefoxExtensionSettings = builtins.listToAttrs(forEach extensionsList (x: 
+    nameValuePair "extensions.webextensions.ExtensionStorageIDB.migrated.${x}" true
+  )++ [
+    {name = "devtools.storage.extensionStorage.enabled"; value = true; }
+    {name = "extensions.webextensions.ExtensionStorageIDB.enabled"; value = true; }
+  ]);
+  firefoxUserSettings = (import ./settings.nix { downloadDir = "${homeDirectory}/Downs";}) // firefoxExtensionSettings;
   mozPath = ".mozilla";
   cfgPath = "${mozPath}/firefox";
 
-  configCss = builtins.readFile ./config.css;
-  treeStyleTabCss = builtins.readFile ./tree-style-tab.css;
-  chrome = pkgs.flyingfox.override { inherit configCss treeStyleTabCss; };
+  configCss = fileContents ./config.css;
+  treeStyleTabCss = fileContents ./tree-style-tab.css;
+  chrome = pkgs.flyingfox.override { inherit configCss treeStyleTabCss;};
 
   ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
     #auto-tab-discard
@@ -55,21 +77,22 @@ in
         [Profile0]
         Default=1
         IsRelative=1
-        Name=doc
-        Path=doc
+        Name=${username}
+        Path=${username}
       '';
 
-      "${cfgPath}/doc/user.js" = {
+      "${cfgPath}/${username}/user.js" = {
         text = mkFirefoxUserJs {
           firefoxConfig = firefoxUserSettings;
         };
       };
 
-      "${cfgPath}/doc/chrome" = {
+      "${cfgPath}/${username}/chrome" = {
         source = "${chrome}/chrome";
         recursive = true;
       };
-      "${cfgPath}/doc/extensions" = {
+
+      "${cfgPath}/${username}/extensions" = {
         source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
         recursive = true;
         force = true;

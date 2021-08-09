@@ -6,106 +6,7 @@ let
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   lockCommand =
     "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --effect-pixelate 3 --ring-color 5d4d7a --grace 2 --fade-in 0.7";
-  dsq = "''";
-  notificationUpdater = pkgs.writeScriptBin "notificationUpdater" ''
-    #!${pkgs.stdenv.shell}
-
-    LINE=0
-    COUNT=0
-    LITERAL='<box orientation="v" spacing="10" space-evenly="false" style="margin: 10px 5px 5px 5px;padding: 0px">'
-
-    show() {
-      ((COUNT+=1))
-      killall -q sleep 2> /dev/null
-      ${pkgs.eww}/bin/eww update notificationBool=true
-      ${pkgs.eww}/bin/eww update notificationsContent="$LITERAL"
-    }
-
-    hide() {
-      sleep 4.5 && ${pkgs.eww}/bin/eww update notification=false
-    }
-
-    reset() {
-      LITERAL='<box orientation="v" spacing="10" space-evenly="false" style="margin: 10px 5px 5px 5px;padding: 0px">'
-      COUNT=0
-    }
-
-    build() {
-      if [[ $BODY =~ .{50,} ]]; then
-        BODY="${BODY:0:50}..."
-      fi
-      if [[ $SUMMARY =~ .{30,} ]]; then
-        SUMMARY="${SUMMARY:0:30}..."
-      fi
-      if [[ ! -e $APP_ICON && -e ${pkgs.spacemacs-theme}/share/icons/Space-Dark/mimetypes/48/$APP_ICON.svg  ]]; then
-        APP_ICON=${pkgs.spacemacs-theme}/share/icons/Space-Dark/mimetypes/48/$APP_ICON.svg
-        SHOW_ICON=true
-      elif [[ -e $APP_ICON ]]; then
-        SHOW_ICON=true
-      else
-        SHOW_ICON=false
-      fi
-      if [[ $COUNT -gt 4 ]]; then
-        reset
-      fi
-      LITERAL=''${LITERAL/%'</box>'}
-      read -r -d ${dsq} NEW << EOM
-      <box orientation="v" space-evenly="false">
-        <button onclick="$ACTION">
-          <box height="80" spacing="0" orientation="h" space-evenly="false" class="notif">
-          <box width="80" halign="center" visible="$SHOW_ICON"
-          style="background-image: url('$APP_ICON'); border-radius: 5px 0px 0px 5px; background-size:contain; background-position: center; background-repeat: no-repeat"></box>
-            <box width="200" style="margin-left: 15px" valign="center" space-evenly="false" spacing="5" orientation="v" halign="fill" class="content">
-              <box width="230" spacing="5" orientation="v" valign="center" halign="start" space-evenly="false">
-                <label halign="start" style="color: #dcbb8c; font-size: 14px; font-weight: bold" limit-width="30" markup="$SUMMARY"></label>
-                <label halign="start"  style="color: #6f6f6f"
-                text="$APP_NAME" limit-width="15"></label>
-              </box>
-              <label halign="start" valign="center" style="color: #dcbb8c; margin: 0px; padding: 0px" markup="$BODY"></label>
-            </box>
-          </box>
-        </button>
-      </box>
-    </box>
-    EOM
-      LITERAL+=$NEW
-      show
-      hide &
-    }
-
-    ${pkgs.tiramisu}/bin/tiramisu -s | while read -r value
-    do
-      if [[ $value =~ \#.* ]]; then
-        :
-      else
-        case $LINE in
-          0 )
-            if [[ -z $(${pkgs.eww}/bin/eww state | grep notificationsContent | awk '{printf $2}') ]]; then
-              reset
-            fi
-            APP_NAME="''${value//\"}"
-            ;;
-          1 )
-            APP_ICON="$value"
-            ;;
-          3 )
-            SUMMARY="''${value//\"}"
-            ;;
-          4 )
-            BODY="''${value//\"}"
-            ;;
-          5 )
-            ACTION="$value"
-            ;;
-          8 )
-            LINE=-1
-            build
-            ;;
-        esac
-      fi
-      ((LINE+=1))
-    done
-  '';
+ 
 in
 {
   home.packages = with pkgs; [
@@ -145,7 +46,7 @@ in
     xwayland = true;
     #systemdIntegration = false;
     wrapperFeatures = { gtk = true; };
-    extraSessionCommands = "systemctl --user import-environment";
+    extraSessionCommands = "systemctl --user import-environment; systemctl --user start firefox-persist.service; systemctl --user start firefox-persist.timer";
     config = rec {
       bars = lib.mkIf config.programs.waybar.enable [{
         command = "${pkgs.waybar}/bin/waybar";
@@ -345,11 +246,10 @@ in
           command =
             "${pkgs.swayidle}/bin/sway/idle -w -d timeout 300 '${lockCommand}' timeout 600 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${lockCommand}'";
         }
-        # Update notifications
-        { command = ''bash -c "${notificationUpdater}/bin/notificationUpdater"''; }
         # Build .zcompdump on startup
         { command = "${pkgs.zsh}/bin/zsh -i -c exit"; }
-        #{ command = ''if [[ "$(date +%Y" == "1970" ]]; then systemctl restart chronyd fi''; }
+        { command = ''${pkgs.bash}/bin/bash -c "cp -r /persist${homeDirectory}/.mozilla/firefox/${username}/* ${homeDirectory}/.mozilla/firefox/${username}/"''; }
+        { command = "st"; }
       ];
     };
     extraConfig = ''

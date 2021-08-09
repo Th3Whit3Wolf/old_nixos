@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , source
+, pkgs
 , configCss ? ""
 , treeStyleTabCss ? ""
 }:
@@ -9,8 +10,8 @@ stdenv.mkDerivation rec {
 
   installPhase =
     ''
-      cp -r ./chrome $out
-      cp -r ./treestyletab $out/chrome
+      mkdir -p $out/chrome
+      cp -r chrome/* $out/chrome
       ${lib.optionalString (configCss != "")
       ''
       echo "${configCss}" > $out/chrome/config.css
@@ -26,7 +27,7 @@ stdenv.mkDerivation rec {
     description = "An opinionated set of configurations for firefox";
     homepage = "https://flyingfox.netlify.app";
     license = licenses.mit;
-    maintainers = [ danielphan2003 ];
+    maintainers = [ th3whit3wolf ];
     platforms = platforms.all;
   };
 }

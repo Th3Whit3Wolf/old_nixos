@@ -1,6 +1,9 @@
 { downloadDir }:
 
 {
+  # This settings makes smooth scrolling ineffective on wayland
+  "apz.gtk.kinetic_scroll.enabled" = false;
+
   # Disables annoying prompt to reset firefox addons and settings
   "browser.disableResetPrompt" = true;
   # Stop creating ~/Downloads!
@@ -15,76 +18,6 @@
   "browser.search.hiddenOneOffs" = "Google,Amazon.com,Bing,DuckDuckGo,Wikipedia (en)";
   "browser.search.firstRunSkipsHomepage" = true;
 
-  "browser.uiCustomization.state" = builtins.toJSON {
-    "placements" = {
-      "widget-overflow-fixed-list" = [
-        "_c607c8df-14a7-4f28-894f-29e8722976af_-browser-action"
-        "_testpilot-containers-browser-action"
-        "treestyletab_piro_sakura_ne_jp-browser-action"
-        "_94060031-effe-4b93-89b4-9cd570217a8d_-browser-action"
-        "ublock0_raymondhill_net-browser-action"
-        "jid1-om7ejgwa1u8akg_jetpack-browser-action"
-        "_a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad_-browser-action"
-        "canvasblocker_kkapsner_de-browser-action"
-        "_f209234a-76f0-4735-9920-eb62507a54cd_-browser-action"
-        "_74145f27-f039-47ce-a470-a662b129930a_-browser-action"
-        "jid1-kkzogwgsw3ao4q_jetpack-browser-action"
-      ];
-      "nav-bar" = [
-        "back-button"
-        "forward-button"
-        "stop-reload-button"
-        "urlbar-container"
-        "downloads-button"
-        "library-button"
-        "sidebar-button"
-        "fxa-toolbar-menu-button"
-        "_3c078156-979c-498b-8990-85f7987dd929_-browser-action"
-        "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action"
-        "addon_darkreader_org-browser-action"
-        "support_lastpass_com-browser-action"
-      ];
-      "toolbar-menubar" = [
-        "menubar-items"
-      ];
-      "TabsToolbar" = [
-        "tabbrowser-tabs"
-        "new-tab-button"
-        "alltabs-button"
-      ];
-      "PersonalToolbar" = [
-        "import-button"
-        "personal-bookmarks"
-      ];
-    };
-    "seen" = [
-      "developer-button"
-      "_testpilot-containers-browser-action"
-      "jid1-om7ejgwa1u8akg_jetpack-browser-action"
-      "_94060031-effe-4b93-89b4-9cd570217a8d_-browser-action"
-      "_a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad_-browser-action"
-      "_f209234a-76f0-4735-9920-eb62507a54cd_-browser-action"
-      "canvasblocker_kkapsner_de-browser-action"
-      "addon_darkreader_org-browser-action"
-      "jid1-kkzogwgsw3ao4q_jetpack-browser-action"
-      "support_lastpass_com-browser-action"
-      "ublock0_raymondhill_net-browser-action"
-      "_3c078156-979c-498b-8990-85f7987dd929_-browser-action"
-      "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action"
-      "_74145f27-f039-47ce-a470-a662b129930a_-browser-action"
-      "_c607c8df-14a7-4f28-894f-29e8722976af_-browser-action"
-      "treestyletab_piro_sakura_ne_jp-browser-action"
-    ];
-    "dirtyAreaCache" = [
-      "nav-bar"
-      "PersonalToolbar"
-      "toolbar-menubar"
-      "TabsToolbar"
-    ];
-    "currentVersion" = 17;
-    "newElementCount" = 6;
-  };
-
   "devtools.accessibility.enabled" = false;
   "devtools.cache.disabled" = true;
   "devtools.chrome.enabled" = true;
@@ -97,7 +30,23 @@
   "devtools.inspector.activeSidebar" = "ruleview";
   "devtools.inspector.three-pane-enabled" = false;
   "devtools.memory.enabled" = false;
-  "devtools.netmonitor.columnsData" = "[{\"name\":\"status\",\"minWidth\":30,\"width\":5.79},{\"name\":\"method\",\"minWidth\":30,\"width\":5.79},{\"name\":\"domain\",\"minWidth\":30,\"width\":7.54},{\"name\":\"file\",\"minWidth\":30,\"width\":39.2},{\"name\":\"url\",\"minWidth\":30,\"width\":20},{\"name\":\"initiator\",\"minWidth\":30,\"width\":17.54},{\"name\":\"type\",\"minWidth\":30,\"width\":4.51},{\"name\":\"transferred\",\"minWidth\":30,\"width\":16.78},{\"name\":\"contentSize\",\"minWidth\":30,\"width\":29.21},{\"name\":\"waterfall\",\"minWidth\":150,\"width\":44.71},{\"name\":\"cookies\",\"minWidth\":30,\"width\":7.41},{\"name\":\"setCookies\",\"minWidth\":30,\"width\":7.41},{\"name\":\"remoteip\",\"minWidth\":30,\"width\":7.41},{\"name\":\"scheme\",\"minWidth\":30,\"width\":7.41},{\"name\":\"protocol\",\"minWidth\":30,\"width\":7.41}]";
+  "devtools.netmonitor.columnsData" = builtins.toJSON [
+    {name = "status"; minWidth = 30; width = 5.79;}
+    {name = "method"; minWidth = 30; width = 5.79;}
+    {name = "domain"; minWidth = 30; width = 7.54;}
+    {name = "file"; minWidth = 30; width = 39.2;}
+    {name = "url"; minWidth = 30; width = 20;}
+    {name = "initiator"; minWidth = 30; width = 17.54;}
+    {name = "type"; minWidth = 30; width = 4.51;}
+    {name = "transferred"; minWidth = 30; width = 16.78;}
+    {name = "contentSize"; minWidth = 30; width = 29.21;}
+    {name = "waterfall"; minWidth = 150; width = 44.71;}
+    {name = "cookies"; minWidth = 30; width = 7.41;}
+    {name = "setCookies"; minWidth = 30; width = 7.41;}
+    {name = "remoteip"; minWidth = 30; width = 7.41;}
+    {name = "scheme"; minWidth = 30; width = 7.41;}
+    {name = "protocol"; minWidth = 30; width = 7.41;}
+  ];
   "devtools.netmonitor.filters" = "[\"xhr\"]";
   "devtools.netmonitor.visibleColumns" = "[\"status\",\"method\",\"file\",\"type\",\"waterfall\"]";
   "devtools.performance.enabled" = false;
@@ -115,6 +64,7 @@
   "extensions.webcompat.enable_shims" = true;
   "extensions.webcompat.perform_injections" = true;
   "extensions.webcompat.perform_ua_overrides" = true;
+  "extensions.webextensions.uuids" = "{\"{f18f0257-10ad-4ff7-b51e-6895edeccfc8}\":\"cf7657ac-3385-4d92-91d0-46147e83706f\",\"{c607c8df-14a7-4f28-894f-29e8722976af}\":\"e18a1aef-fa9c-4cb8-ae98-1b6ba0493469\",\"{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}\":\"8114fa2e-b71d-4951-94ff-843b62a96a9b\",\"{446900e4-71c2-419f-a6a7-df9c091e268b}\":\"c494d9c6-15d3-4dec-a27e-8809426c61ef\",\"support@lastpass.com\":\"fea60382-9d1b-45ad-876e-71487ca4a6ef\",\"jid1-Om7eJGwA1U8Akg@jetpack\":\"3f9bda5d-b4a6-4860-9fcd-60a654f116d0\",\"jid1-KKzOGWgsW3Ao4Q@jetpack\":\"20bd3a42-d193-46ae-9e74-938b1a69b9e4\",\"jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack\":\"96c839ee-be5f-40f6-8c9b-cf8f05d10672\",\"addon@darkreader.org\":\"d0a98dbc-649c-4609-a338-5c06515ed627\",\"CanvasBlocker@kkapsner.de\":\"182925c1-efcb-4281-9481-d88f1e430695\",\"@testpilot-containers\":\"33bd93e1-171e-4a93-9593-ef241e586fc3\",\"treestyletab@piro.sakura.ne.jp\":\"423debc9-7884-4a79-ac11-88c61fadb081\",\"doh-rollout@mozilla.org\":\"da4a8e89-6878-41c3-90b5-1c364857736b\",\"formautofill@mozilla.org\":\"29287be6-30eb-4c9e-857a-86bdbcda55bd\",\"pictureinpicture@mozilla.org\":\"559b9d3d-f917-4a97-8ed1-50def8f97faa\",\"screenshots@mozilla.org\":\"c1f762b6-bde5-40ec-a52f-0da4d26d840b\",\"webcompat-reporter@mozilla.org\":\"456fe3b0-8cfb-40ec-b049-852b395baa4d\",\"webcompat@mozilla.org\":\"0f04ea85-f332-4f3d-a030-947a31a86824\",\"default-theme@mozilla.org\":\"81957d84-4533-4c90-8ea3-dd5f1a135f81\",\"google@search.mozilla.org\":\"96fb9eec-ebd9-4e31-aecf-6facaa9125e3\",\"amazondotcom@search.mozilla.org\":\"11cae559-5412-4b0f-939f-7abf2dcfc12d\",\"wikipedia@search.mozilla.org\":\"1a584e86-7fe6-4c93-abe0-16165e11608f\",\"bing@search.mozilla.org\":\"0e9eb897-e42e-4a82-85c1-b0c1848b7c46\",\"ddg@search.mozilla.org\":\"bbaf05d2-4c22-475f-8450-168a3c1f9c8a\",\"ebay@search.mozilla.org\":\"59b10a5c-c532-43b2-a5e2-b9815ccc2c7c\",\"{74145f27-f039-47ce-a470-a662b129930a}\":\"00b5ad19-f369-41ce-a2ce-740fa046c0d3\",\"{94060031-effe-4b93-89b4-9cd570217a8d}\":\"3653169d-11ab-44c6-90f1-8442f6d877ec\",\"uBlock0@raymondhill.net\":\"81f6cf4c-6096-41b4-a186-eda284ad8721\",\"{f209234a-76f0-4735-9920-eb62507a54cd}\":\"db038f3a-d7d3-49f9-bd81-36a3f70062ef\"}";
 
   # Enable auto scroll
   "general.autoScroll" = true;
