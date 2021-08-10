@@ -85,8 +85,7 @@ in
           Environment = "PATH=${pkgs.coreutils}";
           # copy all files except those that are symlinks
           ExecStart = toString (pkgs.writeShellScript "firefox-backup" ''
-            ${pkgs.coreutils}/bin/cp -r /home/doc/.mozilla/firefox/doc/* /persist/home/doc/.mozilla/firefox/doc/
-            ${pkgs.coreutils}/bin/rm -dR  /persist/home/doc/.mozilla/firefox/doc/extensions /persist/home/doc/.mozilla/firefox/doc/chrome /persist/home/doc/.mozilla/firefox/doc/user.js
+            ${pkgs.rsync}/bin/rsync -avh --exclude={'user.js','chrome','extensions'} /home/doc/.mozilla/firefox/doc /persist/home/doc/.mozilla/firefox/doc
           '');
         };
       };
