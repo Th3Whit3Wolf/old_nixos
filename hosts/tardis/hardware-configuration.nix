@@ -45,10 +45,11 @@
         "usb_storage"
         "sd_mod"
         "rtsx_pci_sdmmc"
+        "asus-nb-wmi"
       ];
       luks.devices."crypt".device =
         "/dev/disk/by-uuid/57d2784d-0fcb-471b-838f-cbcca73fda93";
-      kernelModules = [ ];
+      kernelModules = [ "asus-nb-wmi" ];
       supportedFilesystems = [ "btrfs" ];
     };
     extraModulePackages = [ ];
