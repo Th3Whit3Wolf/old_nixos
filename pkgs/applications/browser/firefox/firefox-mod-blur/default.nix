@@ -8,8 +8,8 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "It's like Photon, but better.";
-    homepage = "https://github.com/1280px/rainfox";
+    description = "Firefox Proton - Blur Mod / For dark theme lovers / Blurred search and bookmarks bar";
+    homepage = "https://github.com/datguypiko/Firefox-Mod-Blur";
     license = licenses.mit;
     maintainers = [ th3whit3wolf ];
     platforms = platforms.all;

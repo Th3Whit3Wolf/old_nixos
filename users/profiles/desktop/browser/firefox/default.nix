@@ -33,9 +33,16 @@ let
   mozPath = ".mozilla";
   cfgPath = "${mozPath}/firefox";
 
-  configCss = fileContents ./config.css;
-  treeStyleTabCss = fileContents ./tree-style-tab.css;
-  chrome = pkgs.flyingfox.override { inherit configCss treeStyleTabCss; };
+  flyingFoxConfigCss = fileContents ./config.css;
+  flyingFoxTreeStyleTabCss = fileContents ./tree-style-tab.css;
+  navigatorToolboxColor = "#cbc1d588";
+  urlbarBorderBottom = "1px solid #41444988";
+  urlbarAutocompletePopupColor = "#5d4d7a88";
+  megabarBackgroundColor = "#292b2ea8";
+  toolboxBackgroundColor = "#212026";
+  toolbarIcons = "#cbc1d5";
+  toolbarIconsDisabled = "#64606B";
+  chrome = pkgs.mkUserChrome.override { inherit flyingFoxConfigCss flyingFoxTreeStyleTabCss navigatorToolboxColor urlbarBorderBottom urlbarAutocompletePopupColor megabarBackgroundColor toolboxBackgroundColor toolbarIcons toolbarIconsDisabled; };
 
   ryceeAddons = with pkgs.nur.repos.rycee.firefox-addons; [
     #auto-tab-discard

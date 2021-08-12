@@ -1,76 +1,93 @@
 /* order of these files is important and should not be changed */
-
 @import 'icons/extension-icons.css';
 @import 'userChrome-hover.css';
 
-#TabsToolbar{
-  display: none !important;
+#TabsToolbar {
+    display: none !important;
 }
 
-:root { 
-  --dark-0: #212026;
-  --dark-base: #292b2e;
-  --dark-1: #373A3E;
-  --dark-2: #414449;
-  --dark-3: #54585F;
-  --dark-4: #5D6269;
-  --light-0: #292b2e;
-  --light-base: #686868;
-  --light-1: #8c8c8c; /* url bar*/
-  --light-2: #5d4d7a; /* icons hover */
-  --light-3: #5d4d7a; /* Current tab */
-  --light-4: #292b2e;
-  --accent: #5d4d7a;
-  --yellow: #ffc265;
-  --green: #449484;
-  --red: #d87085;
-  --extension-icon-mask: grayscale(85%) invert(32%) sepia(9%) saturate(466%) hue-rotate(202deg) brightness(86%) contrast(88%); 
-    
-  /* expanded width of the sidebar. 
-    used for userChrome-static, and hover */
-  --sidebar-width: 250px; 
-  /* initial width of the sidebar. 
-    advised not to change since tst css relies on this value*/
-  --sidebar-collapsed-width: 60px;
+/*
+FDF9FF - 60
+E3DFEA - 50
+D7D3DE - 45
+CAC6D1 - 40
+B1ADB8 - 30
+A4A0AB - 25
+97939E - 20
+8A8691 - 15
+7E7A85 - 10
+716D78 - 05
 
-  --dividers: 2px;
-    
-  --tl-animation-duration: 150ms;
-  /*--tl-tab-background-gradient: */
-  /* uncomment and add gradient value for selected tab gradient*/
-  
-  /******WINDOW CONTROL PLACEMENT VARS******/
-  /* larger value moves window controls down,*/
-  /* can be negative(moves controls up) */
-  /* 55px if tabline visible, -25px if tabline hidden */
-  --wc-vertical-shift: 15px;
-  --wc-left-space: 10px; /* add space to the left of window controls*/
-  --wc-right-space: 15px; /* add space to the right of window controls*/
-  /* left-space shifts window-controls */
-  /* if you want to shift them to the left: positive value */
-  /* and if you want to shift them to the right: smaller or negative value */
-  /* right-space shifts rest of the navbar (forward,backward,urlbar,etc.) to the right */
-  /* if you want to increase/decrease space between window-controls and navbars: */
-  /* set positive/negative value for right-space*/
-    
+64606B - 00
+
+57535E - 05
+4B4752 - 10
+3E3A45 - 15
+312D38 - 20
+24202B - 25
+18141F - 30
+*/
+
+:root {
+    --dark-0: #0000ff;
+    --dark-base: #B1ADB8;
+    --dark-1: #8A8691; /* text for context menu */
+    --dark-2: #CAC6D1; /* urlbar text */
+    --dark-3: #ff0000;
+    --dark-4: #5d4d7a; /* border between sidebar/toolbar and the window */
+    --light-0: #0000ff;
+    --light-base: #444155;
+    --light-1: #292b2e;   /* url bar */
+    --light-2: #5d4d7a;   /* icons hover */
+    --light-3: #9a9aba;   /* Current tab */
+    --light-4: #292b2e;   /* Icon selected */
+    --accent: #5d4d7a;
+    --yellow: #ffc265;
+    --green: #449484;
+    --red: #d87085;
+    --extension-icon-mask: grayscale(85%) invert(85%) sepia(4%) saturate(57%) hue-rotate(200deg) brightness(114%) contrast(99%);
+    /*--extension-icon-mask: grayscale(85%) invert(100%) sepia(27%) saturate(245%) hue-rotate(197deg) brightness(98%) contrast(99%);*/
+   /* expanded width of the sidebar. used for userChrome-static, and hover */
+    --sidebar-width: 250px;
+   /* initial width of the sidebar. advised not to change since tst css relies on this value*/
+    --sidebar-collapsed-width: 60px;
+    --dividers: 2px;
+    --tl-animation-duration: 150ms;
+   /*--tl-tab-background-gradient: */
+   /* uncomment and add gradient value for selected tab gradient*/
+   /******WINDOW CONTROL PLACEMENT VARS******/
+   /* larger value moves window controls down,*/
+   /* can be negative(moves controls up) */
+   /* 55px if tabline visible, -25px if tabline hidden */
+    /*--wc-vertical-shift: 15px;
+    --wc-left-space: 10px;*/
+   /* add space to the left of window controls*/
+    /*--wc-right-space: 15px;*/
+   /* add space to the right of window controls*/
+   /* left-space shifts window-controls */
+   /* if you want to shift them to the left: positive value */
+   /* and if you want to shift them to the right: smaller or negative value */
+   /* right-space shifts rest of the navbar (forward,backward,urlbar,etc.) to the right */
+   /* if you want to increase/decrease space between window-controls and navbars: */
+   /* set positive/negative value for right-space*/
 }
 
-:root[privatebrowsingmode="temporary"]{ 
-  --dark-0: #212026;
-  --dark-base: #292b2e;
-  --dark-1: #373A3E;
-  --dark-2: #414449;
-  --dark-3: #54585F;
-  --dark-4: #5D6269;
-  --light-0: #292b2e;
-  --light-base: #686868;
-  --light-1: #8c8c8c; /* url bar*/
-  --light-2: #5d4d7a; /* icons hover */
-  --light-3: #5d4d7a; /* Current tab */
-  --light-4: #292b2e;
-  --accent: #5d4d7a;
-  --yellow: #ffc265;
-  --green: #449484;
-  --red: #d87085;
-  --extension-icon-mask: grayscale(85%) invert(32%) sepia(9%) saturate(466%) hue-rotate(202deg) brightness(86%) contrast(88%); 
+:root[privatebrowsingmode="temporary"]{
+    --dark-0: #212026;
+    --dark-base: #292b2e;
+    --dark-1: #373A3E;
+    --dark-2: #414449;
+    --dark-3: #54585F;
+    --dark-4: #5D6269;
+    --light-0: #292b2e;
+    --light-base: #686868;
+    --light-1: #8c8c8c;   /* url bar*/
+    --light-2: #5d4d7a;   /* icons hover */
+    --light-3: #5d4d7a;   /* Current tab */
+    --light-4: #292b2e;
+    --accent: #5d4d7a;
+    --yellow: #ffc265;
+    --green: #449484;
+    --red: #d87085;
+    --extension-icon-mask: grayscale(85%) invert(32%) sepia(9%) saturate(466%) hue-rotate(202deg) brightness(86%) contrast(88%);
 }

@@ -44,6 +44,9 @@ fetch.github = "akshat46/FlyingFox"
 src.git = "https://github.com/1280px/rainfox"
 fetch.github = "1280px/rainfox"
 
+[firefox-mod-blur]
+src.git = "https://github.com/datguypiko/Firefox-Mod-Blur"
+fetch.github = "datguypiko/Firefox-Mod-Blur"
 
 [widevine-cdm]
 src.webpage = "https://dl.google.com/widevine-cdm/versions.txt"

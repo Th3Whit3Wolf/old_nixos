@@ -53,6 +53,18 @@
       outputHashes = { };
     };
   };
+  firefox-mod-blur = {
+    pname = "firefox-mod-blur";
+    version = "eaf2c136233181ea674492c9b7d188e08fb4b705";
+    src = fetchgit {
+      url = "https://github.com/datguypiko/Firefox-Mod-Blur";
+      rev = "eaf2c136233181ea674492c9b7d188e08fb4b705";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "06bndrjfyzz54sbba25fv4k1sbzrpjyfz03il1avgny44g9jqii2";
+    };
+  };
   flyingfox = {
     pname = "flyingfox";
     version = "8fc00aa654c10260deac2cbbc5bf062b7dcce811";
