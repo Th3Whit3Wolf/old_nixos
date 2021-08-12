@@ -81,6 +81,30 @@
       outputHashes = { };
     };
   };
+  nbfc-linux = {
+    pname = "nbfc-linux";
+    version = "c78a639c895ed97550f67a2d872d4985fbda0904";
+    src = fetchgit {
+      url = "https://github.com/nbfc-linux/nbfc-linux";
+      rev = "c78a639c895ed97550f67a2d872d4985fbda0904";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1h41szkwhxqc9fhrljc20gizykqkzxzllw8xibazmf5wyy4f058l";
+    };
+  };
+  rainfox = {
+    pname = "rainfox";
+    version = "d373dc136b805097f5092d02365a90327dc1de4a";
+    src = fetchgit {
+      url = "https://github.com/1280px/rainfox";
+      rev = "d373dc136b805097f5092d02365a90327dc1de4a";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1g39n3gzqq4hgic3w4n20fs8cz4a855scbnmah8pypz3amsnqzr5";
+    };
+  };
   rice = {
     pname = "rice";
     version = "3828474ea40e1c546bffedf6dee94bf3c880ce65";

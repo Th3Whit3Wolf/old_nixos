@@ -40,10 +40,19 @@ fetch.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
 src.git = "https://github.com/akshat46/FlyingFox"
 fetch.github = "akshat46/FlyingFox"
 
+[rainfox]
+src.git = "https://github.com/1280px/rainfox"
+fetch.github = "1280px/rainfox"
+
+
 [widevine-cdm]
 src.webpage = "https://dl.google.com/widevine-cdm/versions.txt"
 src.regex = "(.*)"
 fetch.url = "https://dl.google.com/widevine-cdm/$ver-linux-x64.zip"
+
+[nbfc-linux]
+src.git = "https://github.com/nbfc-linux/nbfc-linux"
+fetch.github = "nbfc-linux/nbfc-linux"
 
 # Vim Plugins
 [vimP-parinfer-rust]
