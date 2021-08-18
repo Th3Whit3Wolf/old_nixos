@@ -10,7 +10,8 @@ channels: final: prev: {
     nixpkgs-fmt
     starship
     river
-    tiramisu;
+    tiramisu
+    helix;
 
   unstable = channels.latest;
   old = channels.nixos_old;
