@@ -57,6 +57,7 @@ in
         eww
         vscodium
         QtGreet
+        helix
 
       ] ++ themePackages;
   };
