@@ -126,6 +126,7 @@ in
   config = mkIf enabled {
     home = {
       packages = config.${pLang}.packages;
+      sessionPath = [ "${relToData "cargo/bin"}" ];
       sessionVariables = config.${pLang}.sessionVariables;
     };
     programs.zsh = {
