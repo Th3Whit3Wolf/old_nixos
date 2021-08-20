@@ -5,6 +5,25 @@
     wirelesstools
     pciutils
     usbutils
+    iwd
+    (pkgs.writeShellScriptBin "add-network.sh" ''
+      dir=/var/lib/iwd
+      mkdir -p $dir
+      # Only SSIDs with alphanumeric characters and -_ are allowed. The rest have to
+      # be hex encoded. However, iwctl has a bug that doesn't allow SSIDs with - or _.
+      # Hence this script.
+      if [[ $1 =~ ^[0-9a-zA-Z_-]+$ ]]; then
+          filename="$1.psk"
+      else
+          # Convert SSID into hexadecimal representation for filename
+          filename="=$(echo -n "$1" | ${pkgs.coreutils}/bin/od -A n -t x1 | ${pkgs.gnused}/bin/sed 's/ //g').psk"
+      fi
+      output=$(${pkgs.wpa_supplicant}/bin/wpa_passphrase "$1" "$2")
+      cat > "$dir/$filename" << EOF
+      [Security]
+      PreSharedKey=$(echo $output | ${pkgs.gnugrep}/bin/grep -o -P '[^#]psk=\K\w+')
+      EOF
+    '')
   ];
 
   # better timesync for unstable internet connections
@@ -149,7 +168,10 @@
           type = "basic";
         }
       ];
-      wifi.powersave = true;
+      wifi = {
+        powersave = true;
+        backend = "iwd";
+      };
     };
     timeServers = [
       # NIST
