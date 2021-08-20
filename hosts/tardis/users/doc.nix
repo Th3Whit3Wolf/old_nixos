@@ -2,10 +2,15 @@
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
+  inherit (lib.our) getVPNSecret;
+
   user = "doc";
   theme = config.home-manager.users.${user}.home.theme;
   themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
   homey = config.home-manager.users.${user}.home.homeDirectory;
+  passwd = fileContents (../secrets + "/${user}");
+  express = loc: getVPNSecret "express" loc;
+
 in
 {
   imports = [
@@ -20,7 +25,7 @@ in
     uid = 1000;
     description = "Just the doctor";
     isNormalUser = true;
-    initialHashedPassword = fileContents (../secrets + "/${user}");
+    initialHashedPassword = passwd;
     shell = pkgs.zsh;
     extraGroups = [
       "users"
@@ -54,12 +59,24 @@ in
         # Required
         firefox-wayland
         brightnessctl
-        eww
+        #eww
         vscodium
         QtGreet
         helix
 
       ] ++ themePackages;
+  };
+
+  vpn.expressvpn = {
+    auth_user_pass = express "auth.txt";
+    ca = express "ca2.crt";
+    client_cert = express "client.crt";
+    client_key = express "client.key";
+    tls_auth = express "ta.key";
+  };
+
+  services = {
+    pcscd.enable = true;
   };
 
   ${user} = { suites, lib, ... }: {
@@ -98,8 +115,8 @@ in
 
         Timer = {
           Unit = "firefox-persist.service";
-          # Run every hour on the hour
-          OnCalendar = "*-*-* ${builtins.concatStringsSep "," (lib.forEach (lib.range 0 23) (x: if x < 10 then "0${builtins.toString x}" else builtins.toString x))}:00:00";
+          # Run every 15 minutes
+          OnCalendar = "*:0/15";
           Persistent = true;
         };
 
