@@ -11,11 +11,11 @@ in
 rustPlatform.buildRustPackage rec {
   inherit (source) pname version src;
 
-  cargoPatches = [
-    # a patch file to add/update Cargo.lock in the source code
-    ./update-Cargo.lock.patch
-  ];
-  cargoSha256 = "sha256-gPMFrL9D1lmmmoCLUUf/X8BOOt8zmOCCZGVQPzN+zrQ=";
+  #cargoPatches = [
+  # a patch file to add/update Cargo.lock in the source code
+  #  ./update-Cargo.lock.patch
+  #];
+  cargoSha256 = "sha256-SCof8OLmzhoETIGGAfHZr/o0WZx4uHGXi1BXmSorBT8=";
   cargoBuildFlags = [ "--no-default-features" "--features=wayland" ];
   nativeBuildInputs = with pkgs; [
     pkgs.wrapGAppsHook

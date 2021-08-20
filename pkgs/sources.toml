@@ -28,6 +28,12 @@ src.git = "https://github.com/elkowar/eww"
 fetch.github = "elkowar/eww"
 cargo_lock = "Cargo.lock"
 
+[helix]
+src.git = "https://github.com/helix-editor/helix"
+fetch.github = "helix-editor/helix"
+cargo_lock = "Cargo.lock"
+git.fetchSubmodules = true
+
 [rice]
 src.git = "https://github.com/themadprofessor/rice"
 fetch.github = "themadprofessor/rice"

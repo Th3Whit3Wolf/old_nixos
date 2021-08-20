@@ -39,17 +39,17 @@
   };
   eww = {
     pname = "eww";
-    version = "8556e1539576fd39a89500d59acde4b523e9f716";
+    version = "7ffebf69033ca9d9254de50cda9b669933201d72";
     src = fetchgit {
       url = "https://github.com/elkowar/eww";
-      rev = "8556e1539576fd39a89500d59acde4b523e9f716";
+      rev = "7ffebf69033ca9d9254de50cda9b669933201d72";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "0qs63k7m0675jwvpgkvdmza9csvhzl5r5agvh6s2zjfp8fa3414b";
+      sha256 = "0kyy9hkn2y61ynic2x8qddp96nz3vgwniwaq5fxl1bnfpxch1k4w";
     };
     cargoLock = {
-      lockFile = ./eww-8556e1539576fd39a89500d59acde4b523e9f716/Cargo.lock;
+      lockFile = ./eww-7ffebf69033ca9d9254de50cda9b669933201d72/Cargo.lock;
       outputHashes = { };
     };
   };
@@ -77,6 +77,22 @@
       sha256 = "0z6q2953cbxngnzbpd0map2r89dywg3xjagav1qzzbpkyqck32w9";
     };
   };
+  helix = {
+    pname = "helix";
+    version = "1158fc44870ba21e8dabf3547f89a3be9ddaa286";
+    src = fetchgit {
+      url = "https://github.com/helix-editor/helix";
+      rev = "1158fc44870ba21e8dabf3547f89a3be9ddaa286";
+      fetchSubmodules = true;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "15i2nfy9zpjrgg39dxkzkckfjl48324snfm2avri1nagpa9mv6kb";
+    };
+    cargoLock = {
+      lockFile = ./helix-1158fc44870ba21e8dabf3547f89a3be9ddaa286/Cargo.lock;
+      outputHashes = { };
+    };
+  };
   manix = {
     pname = "manix";
     version = "d08e7ca185445b929f097f8bfb1243a8ef3e10e4";
@@ -95,14 +111,14 @@
   };
   nbfc-linux = {
     pname = "nbfc-linux";
-    version = "c78a639c895ed97550f67a2d872d4985fbda0904";
+    version = "d33be8e613264f830d98d3869f2e342417b854a3";
     src = fetchgit {
       url = "https://github.com/nbfc-linux/nbfc-linux";
-      rev = "c78a639c895ed97550f67a2d872d4985fbda0904";
+      rev = "d33be8e613264f830d98d3869f2e342417b854a3";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "1h41szkwhxqc9fhrljc20gizykqkzxzllw8xibazmf5wyy4f058l";
+      sha256 = "1d48c35xhhfhifkp8d48j4bfmwr2ka530psdxi715s3qx722pdz2";
     };
   };
   rainfox = {
@@ -167,14 +183,14 @@
   };
   vimP-parinfer-rust = {
     pname = "vimP-parinfer-rust";
-    version = "0789c4852d09d51ad66b81c44ce2575f421cd031";
+    version = "5def45e1cbbc4f690fe70e44c786ad6bf9437476";
     src = fetchgit {
       url = "https://github.com/eraserhd/parinfer-rust";
-      rev = "0789c4852d09d51ad66b81c44ce2575f421cd031";
+      rev = "5def45e1cbbc4f690fe70e44c786ad6bf9437476";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "1y6y2k6kmj6xkng3vkh7pkgdggcb6hszdrihjbk9spb40l0na5l8";
+      sha256 = "03w1hagbf4pqd84r0mxpdpna701fhkc59zr7clmlb0ymbggz3696";
     };
   };
   vimPlugins-ron-vim = {
