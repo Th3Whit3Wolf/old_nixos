@@ -42,6 +42,9 @@ let
 
     #SWC
 
+    # Node Version Manager
+    fnm
+
 
     postman
   ];
