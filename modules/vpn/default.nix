@@ -34,17 +34,20 @@ let
   '');
 
 
-  vpns = lib.flatten
-    (lib.mapAttrsToList (name: type: if type == "directory" then "${name}" else "")
-      (lib.readDir (./.)));
   toImport = name: value: ./. + ("/" + name);
-  imports = lib.mapAttrsToList toImport vpns;
+  imports = lib.mapAttrsToList toImport
+    (lib.filterAttrs filterCaches (builtins.readDir ./.));
+  filterCaches = key: value: value == "directory";
+
+  vpns = [
+    "expressvpn"
+  ];
 
   vpnPort = vpn: {
-    "express" = "1195";
+    "expressvpn" = "1195";
   }.${vpn};
 
-  enabled = builtins.any (x: x builtins.isBool && x == true) (lib.forEach vpns (x: config.vpn.${x}.enable));
+  enabled = builtins.any (x: builtins.isBool x && x == true) (lib.forEach vpns (x: config.vpn.${x}.enable));
   allowVPNTraffic = builtins.concatStringsSep "\n" (lib.forEach vpns (x: "iptables -A nixos-vpn-killswitch -p udp -m udp --dport ${vpnPort x} -j ACCEPT"));
 in
 {
@@ -53,15 +56,16 @@ in
   config = lib.mkIf enabled {
 
 
-    # 2. Write a script for connecting to the VPN which punches a hole in the firewall
-    #    for the VPN server (and tun0?)
-    # 3. Write a script which explicitly opens firewall for outbound traffic without
-    #    passing through tun0.
-    # 4. Display warning in waybar that outbound traffic is permitted unsecured
+    /*
+      # 2. Write a script for connecting to the VPN which punches a hole in the firewall
+      #    for the VPN server (and tun0?)
+      # 3. Write a script which explicitly opens firewall for outbound traffic without
+      #    passing through tun0.
+      # 4. Display warning in waybar that outbound traffic is permitted unsecured
 
-    # VPN Killswitch
-    # Require VPN to access the internet
-    networking.firewall.extraCommands = ''
+      # VPN Killswitch
+      # Require VPN to access the internet
+      networking.firewall.extraCommands = ''
       # Flush old firewall rules
       iptables -D OUTPUT -j nixos-vpn-killswitch 2> /dev/null || true
       iptables -F "nixos-vpn-killswitch" 2> /dev/null || true
@@ -93,111 +97,112 @@ in
       # ip6tables -P INPUT DROP
       # ip6tables -P OUTPUT DROP
       # ip6tables -P FORWARD DROP
-    '';
+      '';
 
-    # There may be a moment of leakage when we reload the firewall
-    # Ideally we'd fix this by adding commands below
-    # networking.firewall.extraStopCommands = ''
-    # '';
+      # There may be a moment of leakage when we reload the firewall
+      # Ideally we'd fix this by adding commands below
+      # networking.firewall.extraStopCommands = ''
+      # '';
 
-    # networking.firewall.extraStopCommands = ''
-    # '';
+      # networking.firewall.extraStopCommands = ''
+      # '';
 
-    # Scripts to control the killswitch
-    environment.systemPackages =
+      # Scripts to control the killswitch
+      environment.systemPackages =
       [ killswitch-up killswitch-down killswitch-enabled killswitch-toggle ];
 
-    networking.networkmanager.dispatcherScripts = [
+      networking.networkmanager.dispatcherScripts = [
       {
-        source = pkgs.writeScript "03vpnkillswitch" ''
-          interface=$1 status=$2
-          # Automatically turn on killswitch when VPN connects
-          # Require manual disengage on disconnect
-          case $status in
-              vpn-up)
-              ${killswitch-up}/bin/killswitch-up
-              ;;
-          esac
-          exit 0
-        '';
-        type = "basic";
+      source = pkgs.writeScript "03vpnkillswitch" ''
+      interface=$1 status=$2
+      # Automatically turn on killswitch when VPN connects
+      # Require manual disengage on disconnect
+      case $status in
+      vpn-up)
+      ${killswitch-up}/bin/killswitch-up
+      ;;
+      esac
+      exit 0
+      '';
+      type = "basic";
       }
-    ];
+      ];
 
-    # Works but something is slow.
-    # I think DNS is not being routed through the VPN.
-    # May be better to use networkmanager-openvpn anyway.
-    # services.openvpn.servers = {
-    #   nordvpn-us = {
-    #     autoStart = false;
-    #     config = ''
-    #       config /etc/nixos/ovpn/ovpn_udp/us4594.nordvpn.com.udp.ovpn
-    #       auth-user-pass /etc/nixos/nordvpn_auth.txt
-    #     '';
-    #     updateResolvConf = true;
-    #   };
-    #   nordvpn-p2p = {
-    #     autoStart = false;
-    #     config = ''
-    #       config /etc/nixos/ovpn/ovpn_udp/us3395.nordvpn.com.udp.ovpn
-    #       auth-user-pass /etc/nixos/nordvpn_auth.txt
-    #     '';
-    #   };
-    # };
+      # Works but something is slow.
+      # I think DNS is not being routed through the VPN.
+      # May be better to use networkmanager-openvpn anyway.
+      # services.openvpn.servers = {
+      #   nordvpn-us = {
+      #     autoStart = false;
+      #     config = ''
+      #       config /etc/nixos/ovpn/ovpn_udp/us4594.nordvpn.com.udp.ovpn
+      #       auth-user-pass /etc/nixos/nordvpn_auth.txt
+      #     '';
+      #     updateResolvConf = true;
+      #   };
+      #   nordvpn-p2p = {
+      #     autoStart = false;
+      #     config = ''
+      #       config /etc/nixos/ovpn/ovpn_udp/us3395.nordvpn.com.udp.ovpn
+      #       auth-user-pass /etc/nixos/nordvpn_auth.txt
+      #     '';
+      #   };
+      # };
 
-    # networking.nftables.enable = true;
-    # networking.nftables.ruleset = ''
-    #   table ip filter {
-    #     # Block all incomming connections traffic except SSH and "ping".
-    #     chain input {
-    #       type filter hook input priority 0;
+      # networking.nftables.enable = true;
+      # networking.nftables.ruleset = ''
+      #   table ip filter {
+      #     # Block all incomming connections traffic except SSH and "ping".
+      #     chain input {
+      #       type filter hook input priority 0;
 
-    #       # accept any localhost traffic
-    #       iifname lo accept
+      #       # accept any localhost traffic
+      #       iifname lo accept
 
-    #       # accept traffic originated from us
-    #       ct state {established, related} accept
+      #       # accept traffic originated from us
+      #       ct state {established, related} accept
 
-    #       # TODO: ICMP
-    #       # routers may also want: mld-listener-query, nd-router-solicit
-    #       # ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-    #       # ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
+      #       # TODO: ICMP
+      #       # routers may also want: mld-listener-query, nd-router-solicit
+      #       # ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+      #       # ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
 
-    #       # allow "ping"
-    #       # ip6 nexthdr icmpv6 icmpv6 type echo-request accept
-    #       # ip protocol icmp icmp type echo-request accept
+      #       # allow "ping"
+      #       # ip6 nexthdr icmpv6 icmpv6 type echo-request accept
+      #       # ip protocol icmp icmp type echo-request accept
 
-    #       # count and drop any other traffic
-    #       counter drop
-    #     }
+      #       # count and drop any other traffic
+      #       counter drop
+      #     }
 
-    #     # Allow all outgoing connections.
-    #     chain output {
-    #       type filter hook output priority 0;
+      #     # Allow all outgoing connections.
+      #     chain output {
+      #       type filter hook output priority 0;
 
-    #       # accept any localhost traffic
-    #       iifname lo accept
+      #       # accept any localhost traffic
+      #       iifname lo accept
 
-    #       # accept LAN traffic
-    #       daddr 192.168.0.0/24 accept
+      #       # accept LAN traffic
+      #       daddr 192.168.0.0/24 accept
 
-    #       # allow vpn connections
-    #       udp dport 1194 accept
+      #       # allow vpn connections
+      #       udp dport 1194 accept
 
-    #       # allow traffic tunneled over vpn
-    #       iifname tun0 accept
+      #       # allow traffic tunneled over vpn
+      #       iifname tun0 accept
 
-    #       # drop any other traffic
-    #       drop
-    #     }
+      #       # drop any other traffic
+      #       drop
+      #     }
 
-    #     chain forward {
-    #       type filter hook forward priority 0;
+      #     chain forward {
+      #       type filter hook forward priority 0;
 
-    #       # I'm not a router
-    #       drop
-    #     }
-    #   }
-    # '';
+      #       # I'm not a router
+      #       drop
+      #     }
+      #   }
+      # '';
+    */
   };
 }
