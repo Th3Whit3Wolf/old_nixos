@@ -10,6 +10,7 @@
           "/etc/NetworkManager"
           "/etc/ssh"
           "/var/lib/bluetooth"
+          "/var/lib/connman"
           "/var/lib/hercules-ci-agent"
           "/var/lib/NetworkManager"
           "/var/lib/sshguard"
