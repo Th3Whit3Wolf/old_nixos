@@ -37,20 +37,56 @@
       sha256 = "0q27rhjhh7k0qgcdcfm8ly5za6wm4rckh633d0sjz87faffkp90k";
     };
   };
-  eww = {
-    pname = "eww";
-    version = "7ffebf69033ca9d9254de50cda9b669933201d72";
+  bustd = {
+    pname = "bustd";
+    version = "69bbb1c858b956a33f1707e4a8d793400930df13";
     src = fetchgit {
-      url = "https://github.com/elkowar/eww";
-      rev = "7ffebf69033ca9d9254de50cda9b669933201d72";
+      url = "https://github.com/vrmiguel/bustd";
+      rev = "69bbb1c858b956a33f1707e4a8d793400930df13";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "0kyy9hkn2y61ynic2x8qddp96nz3vgwniwaq5fxl1bnfpxch1k4w";
+      sha256 = "0jy4y70338jvzy6saq7slkzqck23kzj4xgwb85fsrkfv94bf6lbk";
+    };
+  };
+  cn = {
+    pname = "cn";
+    version = "0e3921f7415792b8c18e56f723cb74ca34456bc7";
+    src = fetchgit {
+      url = "https://github.com/arijit79/cn";
+      rev = "0e3921f7415792b8c18e56f723cb74ca34456bc7";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "0lxglkvxirqd6aj8fvr1a5dlvka2w2v7ds792hv3hqwz4ydj3jsn";
+    };
+  };
+  eww = {
+    pname = "eww";
+    version = "c380313ba735c324ae518fee5bad5d4a4f897fe9";
+    src = fetchgit {
+      url = "https://github.com/elkowar/eww";
+      rev = "c380313ba735c324ae518fee5bad5d4a4f897fe9";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "0sgya00n76rgbj6a8x8dajg2811b2ndi2xap47j9djpkmpn67n0h";
     };
     cargoLock = {
-      lockFile = ./eww-7ffebf69033ca9d9254de50cda9b669933201d72/Cargo.lock;
+      lockFile = ./eww-c380313ba735c324ae518fee5bad5d4a4f897fe9/Cargo.lock;
       outputHashes = { };
+    };
+  };
+  ff = {
+    pname = "ff";
+    version = "7084353a24ad7938cbc0428e4a75eb433f648aaf";
+    src = fetchgit {
+      url = "https://github.com/vishaltelangre/ff";
+      rev = "7084353a24ad7938cbc0428e4a75eb433f648aaf";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "0cyamgyvcd98mnn0smpy46zd2hxcwzw7kdgd7mfrfpf158iqc3jl";
     };
   };
   firefox-mod-blur = {
@@ -77,20 +113,56 @@
       sha256 = "0z6q2953cbxngnzbpd0map2r89dywg3xjagav1qzzbpkyqck32w9";
     };
   };
+  frawk = {
+    pname = "frawk";
+    version = "259e2c899cfc7e5c88b0ebf1c15fcb2851b2bddb";
+    src = fetchgit {
+      url = "https://github.com/ezrosent/frawk";
+      rev = "259e2c899cfc7e5c88b0ebf1c15fcb2851b2bddb";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "1x3sw9ajhg8x63y6b4ms4qjfnys7fdxkbil77vqkvzl17a5klgpa";
+    };
+  };
+  hck = {
+    pname = "hck";
+    version = "0fdf219c1d3461c6aeb483249c299dc3ead18f37";
+    src = fetchgit {
+      url = "https://github.com/sstadick/hck";
+      rev = "0fdf219c1d3461c6aeb483249c299dc3ead18f37";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "00y7zgsfasjvl8z2qhq622838w9p0fh8z9z6sws6mqw9n39sfa1n";
+    };
+  };
   helix = {
     pname = "helix";
-    version = "1158fc44870ba21e8dabf3547f89a3be9ddaa286";
+    version = "f9375f449c8b7bbf792c88b89903fe38d524f2e5";
     src = fetchgit {
       url = "https://github.com/helix-editor/helix";
-      rev = "1158fc44870ba21e8dabf3547f89a3be9ddaa286";
+      rev = "f9375f449c8b7bbf792c88b89903fe38d524f2e5";
       fetchSubmodules = true;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "15i2nfy9zpjrgg39dxkzkckfjl48324snfm2avri1nagpa9mv6kb";
+      sha256 = "0z9jgmsv5fzb6lcgx84r8q9n0mf39n5p0pwypva5mgdpp7ms3hqf";
     };
     cargoLock = {
-      lockFile = ./helix-1158fc44870ba21e8dabf3547f89a3be9ddaa286/Cargo.lock;
+      lockFile = ./helix-f9375f449c8b7bbf792c88b89903fe38d524f2e5/Cargo.lock;
       outputHashes = { };
+    };
+  };
+  lolcate-rs = {
+    pname = "lolcate-rs";
+    version = "3fa309c021a6616f794c7408e9d4528f03da62d9";
+    src = fetchgit {
+      url = "https://github.com/ngirard/lolcate-rs";
+      rev = "3fa309c021a6616f794c7408e9d4528f03da62d9";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "0xfv8paqm2x8bjfha9wf484vn2yqj0visy0m7hdfbjkgpamqi69r";
     };
   };
   manix = {
@@ -143,6 +215,18 @@
       deepClone = false;
       leaveDotGit = false;
       sha256 = "1gjmfj5cxzdybmw1qqzc09la8ri1azdc5q7x91cn2ykw0f9jfpi9";
+    };
+  };
+  runiq = {
+    pname = "runiq";
+    version = "f26b4d88e58bf1a8296461ab5ca1ba3e124c9313";
+    src = fetchgit {
+      url = "https://github.com/whitfin/runiq";
+      rev = "f26b4d88e58bf1a8296461ab5ca1ba3e124c9313";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "05qpbwbq2v5d6f924v85gd774qxnaph31jdg4lbhh71733sgi1cd";
     };
   };
   sanFrancisco-font = {

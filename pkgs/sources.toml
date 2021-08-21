@@ -38,6 +38,34 @@ git.fetchSubmodules = true
 src.git = "https://github.com/themadprofessor/rice"
 fetch.github = "themadprofessor/rice"
 
+[runiq]
+src.git = "https://github.com/whitfin/runiq"
+fetch.github = "whitfin/runiq"
+
+[frawk]
+src.git = "https://github.com/ezrosent/frawk"
+fetch.github = "ezrosent/frawk"
+
+[lolcate-rs]
+src.git = "https://github.com/ngirard/lolcate-rs"
+fetch.github = "ngirard/lolcate-rs"
+
+[cn]
+src.git = "https://github.com/arijit79/cn"
+fetch.github = "arijit79/cn"
+
+[hck]
+src.git = "https://github.com/sstadick/hck"
+fetch.github = "sstadick/hck"
+
+[ff]
+src.git = "https://github.com/vishaltelangre/ff"
+fetch.github = "vishaltelangre/ff"
+
+[bustd]
+src.git = "https://github.com/vrmiguel/bustd"
+fetch.github = "vrmiguel/bustd"
+
 [QtGreet]
 src.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
 fetch.git = "https://gitlab.com/marcusbritanicus/QtGreet.git"
