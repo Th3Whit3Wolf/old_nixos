@@ -2,24 +2,18 @@
 let
   inherit (builtins) toFile readFile;
   inherit (lib) fileContents mkForce;
-  inherit (lib.our) getVPNSecret;
 
   user = "doc";
   theme = config.home-manager.users.${user}.home.theme;
   themePackages = config.home-manager.users.${user}.home.theme.requiredPackages;
   homey = config.home-manager.users.${user}.home.homeDirectory;
   passwd = fileContents (../secrets + "/${user}");
-  express = loc: getVPNSecret "express" loc;
-
+  express = loc: ../../../secrets/vpn/expressvpn + "/${loc}";
 in
 {
   imports = [
     (lib.mkAliasOptionModule [ "${user}" ] [ "home-manager" "users" "${user}" ])
   ];
-
-  /*
-    https://github.com/ms747/vimsnitch
-  */
 
   users.users.${user} = {
     uid = 1000;
@@ -62,12 +56,14 @@ in
         #eww
         vscodium
         QtGreet
-        helix
+        transmission
+        transmission-gtk
 
       ] ++ themePackages;
   };
 
   vpn.expressvpn = {
+    enable = true;
     auth_user_pass = express "auth.txt";
     ca = express "ca2.crt";
     client_cert = express "client.crt";
@@ -76,7 +72,28 @@ in
   };
 
   services = {
-    pcscd.enable = true;
+    pcscd = {
+      enable = true;
+      plugins = with pkgs; [
+        pcsclite
+        opensc # Encryption
+        openssl
+        pcsctools
+        libusb
+        libusb1
+        ccid
+        pcsc-cyberjack
+        encfs
+        cryptsetup # Encrypted USB sticks etc
+        pinentry # GPG password entry from the terminal
+        gnupg # Encryption key management
+        gnupg1orig
+        pcmciaUtils # PCMCIA Tools
+        acsccid # SmartCard Apps
+        glibc # Para o WebSigner Certsign
+        chrome-token-signing # Chrome and Firefox extension for signing with your eID on the web
+      ];
+    };
   };
 
   ${user} = { suites, lib, ... }: {
