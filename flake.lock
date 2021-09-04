@@ -344,7 +344,7 @@
     "nix-polyglot": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-rTc1I9623h2tMjRC+dzB3/GQqL0zHxGLqYkUBmQ6O0o=",
+        "narHash": "sha256-Xc9JcC0710v2R1lSFi1mGlXImoUBHuP8Cy0sr0DeLxE=",
         "path": "./external/nix-polyglot",
         "type": "path"
       },
