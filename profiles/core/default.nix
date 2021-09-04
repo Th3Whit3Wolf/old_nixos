@@ -144,6 +144,4 @@ in
       fallback = true
     '';
   };
-
-  services.earlyoom.enable = true;
 }
