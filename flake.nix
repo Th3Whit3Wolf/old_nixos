@@ -215,7 +215,7 @@
             suites = with profiles; rec {
               base = [ cachix core ];
               sway = [ desktop.wm.sway ];
-              tardis = [ base laptop  eraseYourDarlings sway ];
+              tardis = [ base laptop eraseYourDarlings sway suede ];
             };
           };
         };
