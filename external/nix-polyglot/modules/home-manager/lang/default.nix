@@ -7,9 +7,5 @@ let
     (lib.filterAttrs filterCaches (builtins.readDir folder));
 in
 {
-
-  #inherit imports;
-  imports = [
-    ./rust
-  ];
+  inherit imports;
 }
