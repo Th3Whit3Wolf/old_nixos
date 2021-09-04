@@ -105,8 +105,8 @@
     };
   };
   networking = {
-    networkmanager = {
-      enable = true;
+    wireless.iwd.enable = true;
+    networkmanager = lib.mkIf (config.networking.networkmanager.enable) {
       dispatcherScripts = [
         {
           source = pkgs.writeText "10-chrony" ''
@@ -170,7 +170,7 @@
       ];
       wifi = {
         powersave = true;
-        backend = "iwd";
+        #backend = "iwd";
       };
     };
     timeServers = [
