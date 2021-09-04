@@ -6,7 +6,11 @@ let
   accessToken = "github.com=" + (fileContents ./secrets/access_token);
 in
 {
-  imports = [ ./users ./hardware-configuration.nix ] ++ suites.tardis;
+  imports = [
+    ./hardware-configuration.nix
+    ./networking.nix
+    ./users
+  ] ++ suites.tardis;
 
   hardware = {
     opengl = {
@@ -81,23 +85,6 @@ in
         #  user = "doc";
         #};
       };
-    };
-  };
-  networking = {
-    networkmanager = {
-      enable = true;
-      packages = with pkgs; [ gnome3.networkmanager-openvpn ];
-    };
-
-    firewall = {
-      enable = true; # Enable firewall
-      allowedTCPPorts = [
-        #22070                           # Syncthing relay
-        #22067                           # Syncthing relay
-      ];
-      allowedUDPPorts = [
-
-      ];
     };
   };
   programs.seahorse.enable = true;
