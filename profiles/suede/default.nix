@@ -18,8 +18,8 @@ in
       # xdg-desktop-portal-wlr
 
       # Network
-      connman
-      iwd
+      #connman
+      #iwd
       # [opennic-up](https://github.com/kewlfft/opennic-up)
 
       #### Performance
@@ -31,7 +31,7 @@ in
       # * [bustd](https://github.com/vrmiguel/bustd/)
       # * [gamemode](https://github.com/FeralInteractive/gamemode) (c)
       # * [resourced](https://gitlab.freedesktop.org/benzea/uresourced) (c)
-      dbus-broker
+      #dbus-broker
       # * Set zram
 
       # Shells, Prompts, & Utilities
@@ -61,7 +61,7 @@ in
       rargs
 
       runiq
-      rm-improved
+      unstable.rm-improved
       frawk
       mdcat
       choose
@@ -86,7 +86,7 @@ in
       alacritty
 
       ### File Manager
-      nautilus
+      gnome.nautilus
       # thunar (daemon mode is nice) (icon issues under wayland)
       # pcmanfm (daemon mode is nice)
 
@@ -100,13 +100,13 @@ in
       slurp
       ffmpeg
       highlight
-      immagemagick
+      imagemagick
       exiftool
       wshowkeys
       flameshot
 
       mpv
-      gnome-podcast
+      gnome-podcasts
       imv
 
       libsForQt5.elisa
@@ -160,20 +160,23 @@ in
     irqbalance.enable = true;
   };
 
-  systemd = {
+  /*
+    systemd = {
     services = {
-      dbus-broker.enable = true;
-      dbus.enable = false;
+    dbus-broker.enable = true;
+    dbus.enable = false;
     };
     user.services = {
-      dbus-broker.enable = true;
-      dbus.enable = false;
-    }
-      };
+    dbus-broker.enable = true;
+    dbus.enable = false;
+    };
+    };
+
 
 
     zramSwap = {
-      enable = true;
-      algorithm = "zstd";
+    enable = true;
+    algorithm = "zstd";
     };
-  }
+  */
+}
